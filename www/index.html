@@ -6,17 +6,18 @@
 
 <body bgcolor="#FFFFFF" text="#000000">
 <h1>SwingHelper project</h1>
-<p>The goal of this project is to collect, test and discuss all kinds of debugging techniques for Swing</p>
+<p>The main goal of this project is to collect, test and discuss all kinds of debugging techniques for Swing</p>
 
-<p>Every experienced Swing developer knows that Swing components must be accessed from Event Dispatch Thread (EDT) only,<br>
-working with JComponents from any other thread may lead to unpredictable result.</p>
+<p>Check the folders under src/java</p>
 
-<p>But how EDT rule violations can be found ?</p>
-
-<p><font color="darkblue">org.swinghelper.debug.CheckThreadViolationRepaintManager</font> will help you to find EDT rule violations in your code</p>
-
-<p>More stuff is coming...</p>
-
+<p><font color="darkblue">org.jdesktop.swinghelper.debug.CheckThreadViolationRepaintManager</font><br/>
+will help you to find Event Dispatch Thread (EDT) rule violations in your code</p>
+<p><font color="darkblue">org.jdesktop.swinghelper.debug.EventDispatchThreadHangMonitor</font><br/>
+will help you to find deadlocks and monitor the EDT for events that take longer than a certain time to be dispatched</p>
+<p>in <font color="darkblue">org.jdesktop.swinghelper.draft</font>
+<br/>you will find examples of some useful techniques for Swing debugging</p>
+<p/>
+<p><font color="darkblue">org.jdesktop.swinghelper.transformer</font> is not about debugging, it is about Swing power and flexibility ;-)</p>
 </body>
 </html>
 
