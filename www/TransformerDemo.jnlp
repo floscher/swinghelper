@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="TransformerDemo.jnlp">
+  <information>
+    <title>JXTransformer demo</title>    
+    <vendor>Alexander Potochkin</vendor>    
+    <homepage href="https://swinghelper.dev.java.net/" />
+    <description>JXTransformer component in action!</description>
+    <offline-allowed />
+  </information>
+  <resources>     
+<j2se version="1.5+"/>
+     <jar href="bin/SwingHelper.jar"/>
+  </resources>  
+<application-desc main-class="org.jdesktop.swinghelper.transformer.TransformerDemo"/>
+</jnlp>
