@@ -28,19 +28,24 @@ public class JXTransformer extends JPanel {
     private Rectangle visibleRect;
     private Map<?,?> renderingHints;
 
-    private AffineTransform at = new AffineTransform();
+    private AffineTransform at;
 
     public JXTransformer() {
         this(null);
     }
 
     public JXTransformer(JComponent view) {
+        this(view, new AffineTransform());
+    }
+
+    public JXTransformer(JComponent view, AffineTransform at) {
         super(null);
+        setTransform(at);
         super.addImpl(glassPane, null, 0);
         setView(view);
         Handler handler = new Handler();
         addHierarchyBoundsListener(handler);
-        addComponentListener(handler);
+        addComponentListener(handler);        
     }
 
     public Component getView() {
@@ -55,6 +60,9 @@ public class JXTransformer extends JPanel {
             super.addImpl(view, null, 1);
         }
         this.view = view;
+        doLayout();
+        revalidate();
+        repaint();
     }
 
     public Map<?,?> getRenderingHints() {
