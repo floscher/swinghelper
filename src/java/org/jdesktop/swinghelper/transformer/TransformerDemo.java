@@ -1,13 +1,9 @@
 package org.jdesktop.swinghelper.transformer;
 
-import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
@@ -33,14 +29,14 @@ public class TransformerDemo extends JFrame implements ChangeListener {
         lafMenu.add(winLaf);
         winLaf.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                setLaf(new WindowsLookAndFeel());
+                setLaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             }
         });
         JMenuItem motifLaf = new JMenuItem("Motif LaF");
         lafMenu.add(motifLaf);
         motifLaf.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                setLaf(new MotifLookAndFeel());
+                setLaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             }
         });
         bar.add(lafMenu);
@@ -48,7 +44,7 @@ public class TransformerDemo extends JFrame implements ChangeListener {
         lafMenu.add(metalLaf);
         metalLaf.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                setLaf(new MetalLookAndFeel());
+                setLaf("javax.swing.plaf.metal.MetalLookAndFeel");
             }
         });
 
@@ -75,7 +71,7 @@ public class TransformerDemo extends JFrame implements ChangeListener {
         pack();
     }
 
-    private void setLaf(LookAndFeel laf) {
+    private void setLaf(String laf) {
         try {
             UIManager.setLookAndFeel(laf);
             SwingUtilities.updateComponentTreeUI(this);
