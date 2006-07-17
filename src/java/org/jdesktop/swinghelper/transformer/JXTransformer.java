@@ -422,7 +422,7 @@ public class JXTransformer extends JPanel {
         if (at == null) {
             throw new IllegalArgumentException("AffineTransform is null");
         }
-        this.at = at;
+        this.at = new AffineTransform(at);
         revalidate();
         repaint();
     }
