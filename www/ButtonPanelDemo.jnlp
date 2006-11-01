@@ -11,5 +11,5 @@
 <j2se version="1.5+"/>
      <jar href="bin/SwingHelper.jar"/>
   </resources>  
-<application-desc main-class="org.jdesktop.swinghelper.buttonpanel.ButtonPanelDemo"/>
+<application-desc main-class="org.jdesktop.swinghelper.buttonpanel.JXButtonPanelDemo"/>
 </jnlp>
