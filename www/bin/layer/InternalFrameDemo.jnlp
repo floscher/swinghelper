@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="bin/layer/InternalFrameDemo.jnlp">
+  <information>
+    <title>JXLayer InternalFrameDemo</title>    
+    <vendor>Alexander Potochkin</vendor>    
+    <homepage href="https://swinghelper.dev.java.net/" />
+    <description>Translucency, BufferedImageOps and Painters demo</description>
+    <offline-allowed />
+  </information>
+  <resources>     
+<j2se version="1.5+"/>
+     <jar href="bin/layer/layer.jar"/>
+     <jar href="bin/layer/layer-demo.jar"/>
+  </resources>  
+<application-desc main-class="org.jdesktop.swinghelper.layer.demo.InternalFrameDemo"/>
+</jnlp>
