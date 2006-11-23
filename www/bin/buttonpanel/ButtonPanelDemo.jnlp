@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="ButtonPanelDemo.jnlp">
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="bin/buttonpanel/ButtonPanelDemo.jnlp">
   <information>
     <title>JXButtonPanel demo</title>    
     <vendor>Alexander Potochkin</vendor>    
@@ -9,7 +9,7 @@
   </information>
   <resources>     
 <j2se version="1.5+"/>
-     <jar href="bin/SwingHelper.jar"/>
+     <jar href="bin/buttonpanel/buttonpanel.jar"/>
   </resources>  
 <application-desc main-class="org.jdesktop.swinghelper.buttonpanel.JXButtonPanelDemo"/>
 </jnlp>
