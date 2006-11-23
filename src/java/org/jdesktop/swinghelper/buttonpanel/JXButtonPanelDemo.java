@@ -10,7 +10,9 @@ import java.awt.event.KeyEvent;
 
 /**
  * @author Alexander Potochkin
+ * 
  * https://swinghelper.dev.java.net/
+ * http://weblogs.java.net/blog/alexfromsun/ 
  */
 public class JXButtonPanelDemo extends JFrame {
     private ButtonGroup radioGroup = new ButtonGroup();
