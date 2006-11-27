@@ -39,11 +39,14 @@ public class ShapingAnimationDemo {
         frame.setVisible(true);
     }
 
-    static JComponent getContent() {
+    static JXLayer getContent() {
         JButton button = new JButton("Shaped button");
         button.setLayout(new FlowLayout());
         button.add(new JButton("Inner button"));
-        return button;
+        JXLayer layer = new JXLayer(button);
+        // We want to see the gradient underneath
+        layer.setOpaque(false);
+        return layer;
     }
 
 
@@ -76,7 +79,7 @@ public class ShapingAnimationDemo {
         horBox.add(vert);
         horBox.add(Box.createHorizontalStrut(30));
 
-        final JXLayer layer = new JXLayer(getContent());
+        final JXLayer layer = getContent();
 
         alphaSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
