@@ -77,7 +77,6 @@ public class JXLayer extends JPanel {
 
         setAdvancedPaintingEnabled(isAdvancedPaintingEnabled);
         setAlpha(1f);
-        setOpaque(false);
     }
 
     public void doLayout() {
@@ -295,13 +294,16 @@ public class JXLayer extends JPanel {
             tempDst = tempSrc;
         }
 
+        if (isOpaque()) {
+            g2.clearRect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
+        }
+    
         if (alpha != 1) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         }
 
         if (backgroundPainter != null) {
             Graphics2D temp = (Graphics2D) g2.create();
-            temp.clearRect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
             backgroundPainter.paint(temp, this);
             temp.dispose();
         }
