@@ -19,6 +19,8 @@
 
 package org.jdesktop.swinghelper.layer.shaper;
 
+import org.jdesktop.swinghelper.layer.JXLayer;
+
 import java.awt.*;
 
 /**
@@ -27,6 +29,6 @@ import java.awt.*;
  * https://swinghelper.dev.java.net/
  * http://weblogs.java.net/blog/alexfromsun/ 
  */ 
-public abstract class Shaper {
-    public abstract Shape getShape(Component c);
+public interface Shaper {
+    public Shape getShape(JXLayer c);
 }

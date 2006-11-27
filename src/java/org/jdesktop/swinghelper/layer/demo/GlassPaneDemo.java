@@ -1,6 +1,5 @@
 package org.jdesktop.swinghelper.layer.demo;
 
-import org.jdesktop.swinghelper.layer.JXContainer;
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.painter.ComponentPainter;
 
@@ -101,13 +100,13 @@ public class GlassPaneDemo {
         frame.setLocationRelativeTo(null);
     }
 
-    static class MagicGlassPane extends JXContainer {
+    static class MagicGlassPane extends JXLayer {
         private ComponentPainter componentPainter;
         private Component oldGlassPane;
 
         public MagicGlassPane() {
             super(new BorderLayout());
-            final JXContainer content = new JXContainer();
+            final JXLayer content = new JXLayer();
             componentPainter = new ComponentPainter();
             content.setForegroundPainter(componentPainter);
             add(content);

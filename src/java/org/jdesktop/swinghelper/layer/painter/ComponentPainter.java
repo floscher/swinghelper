@@ -20,6 +20,7 @@
 package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.painter.Painter;
+import org.jdesktop.swinghelper.layer.JXLayer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -30,7 +31,7 @@ import java.awt.image.BufferedImage;
  * https://swinghelper.dev.java.net/
  * http://weblogs.java.net/blog/alexfromsun/ 
  */ 
-public class ComponentPainter extends Painter {
+public class ComponentPainter implements Painter {
     private Component component;
     private BufferedImage image;
 
@@ -63,7 +64,7 @@ public class ComponentPainter extends Painter {
         component.paint(image.getGraphics());
     }
 
-    public void paint(Graphics2D g2, Component c) {
+    public void paint(Graphics2D g2, JXLayer l) {
         if (image == null) {
             return;
         }

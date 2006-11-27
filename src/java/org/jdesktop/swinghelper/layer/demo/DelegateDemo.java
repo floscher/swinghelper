@@ -18,15 +18,15 @@ public class DelegateDemo {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         frame.setLayout(new GridBagLayout());
-        final JButton button = new JButton("Play with me !");
+        JButton button = new JButton("Play with me !");
         button.setToolTipText("I am an unmodified JButton");
         
-        final JXLayer l = new JXLayer(button);
+        JXLayer l = new JXLayer(button);
         frame.add(l);
         
         l.setForegroundPainter(new Painter() {
-            public void paint(Graphics2D g2, Component c) {
-                JButton b = (JButton) c;
+            public void paint(Graphics2D g2, JXLayer l) {
+                JButton b = (JButton) l.getContentPane();
                 final ButtonModel model = b.getModel();
                 Color color = null;
                 if (model.isRollover()) {
@@ -39,7 +39,7 @@ public class DelegateDemo {
                 if (color != null) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
                     g2.setColor(color);
-                    g2.fillRect(0, 0, c.getWidth(), c.getHeight());
+                    g2.fillRect(0, 0, l.getWidth(), l.getHeight());
                 }
             }
         });

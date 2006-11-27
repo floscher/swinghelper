@@ -78,7 +78,7 @@ public class TabbedPaneAnimationDemo {
         public TabbedAnimatingChangeListener(int delay, final float delta) {
             this.delta = delta;
             painter = new ComponentPainter() {
-                public void paint(Graphics2D g2, Component c) {
+                public void paint(Graphics2D g2, JXLayer l) {
                     Composite composite = g2.getComposite();
                     if (composite instanceof AlphaComposite) {
                         AlphaComposite ac = (AlphaComposite) composite;
@@ -86,7 +86,7 @@ public class TabbedPaneAnimationDemo {
                                 AlphaComposite.getInstance(
                                         AlphaComposite.SRC_OVER, 1 - ac.getAlpha()));
                     }
-                    super.paint(g2, c);
+                    super.paint(g2, l);
                 }
             };            
             timer = new Timer(delay, new ActionListener() {

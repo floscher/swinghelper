@@ -9,17 +9,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Properties;
 
 /**
  * @author Jeff Dinkins
  * @author Alexander Potochkin
- * 
+ *  
  * https://swinghelper.dev.java.net/
- * http://weblogs.java.net/blog/alexfromsun/ 
- */ 
+ * http://weblogs.java.net/blog/alexfromsun/
+ */
 public class InternalFrameDemo extends JPanel {
     int windowCount = 0;
     JDesktopPane desktop = null;
@@ -83,34 +81,33 @@ public class InternalFrameDemo extends JPanel {
     public static void main(String[] args) {
 
         final JFrame frame = new JFrame("JXLayer demo");
-
-        final JXLayer layer = new JXLayer(frame.getContentPane().getLayout());
+        final JXLayer layer = new JXLayer(new BorderLayout());
         frame.setContentPane(layer);
-        
+
         final Painter bacgroundPainter = new Painter() {
-            public void paint(Graphics2D g2, Component c) {
+            public void paint(Graphics2D g2, JXLayer l) {
                 g2.setPaint(new GradientPaint(0, 0, Color.BLACK, 50, 50, Color.RED, true));
-                g2.fillOval(0, 0, c.getWidth(), c.getHeight());
+                g2.fillOval(0, 0, l.getWidth(), l.getHeight());
             }
         };
 
         final Painter foregroundPainter = new Painter() {
-            public void paint(Graphics2D g2, Component c) {
+            public void paint(Graphics2D g2, JXLayer l) {
                 g2.setColor(Color.GREEN.darker());
                 Font font = g2.getFont().deriveFont(40f);
                 g2.setFont(font);
                 g2.drawString("ForegroundPainter",
-                        c.getWidth() / 2, c.getHeight() / 2 + 150);
+                        l.getWidth() / 2, l.getHeight() / 2 + 150);
             }
         };
 
         JMenuBar bar = new JMenuBar();
         JMenu optionsMenu = new JMenu("Options");
-        
+
         final JMenuItem painterItem = new JCheckBoxMenuItem("Set painters and alpha");
         painterItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.ALT_MASK));
         optionsMenu.add(painterItem);
-        
+
         painterItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (!painterItem.isSelected()) {
@@ -124,9 +121,9 @@ public class InternalFrameDemo extends JPanel {
                 }
             }
         });
-        
+
         optionsMenu.addSeparator();
-        
+
         ButtonGroup group = new ButtonGroup();
         final JMenuItem defaultItem = new JRadioButtonMenuItem("No BufferedImageOp");
         defaultItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_MASK));
@@ -140,7 +137,7 @@ public class InternalFrameDemo extends JPanel {
             }
         });
         defaultItem.setSelected(true);
-        
+
         final JMenuItem invertItem = new JRadioButtonMenuItem("Apply InvertBufferedImageOp");
         invertItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.ALT_MASK));
         optionsMenu.add(invertItem);
@@ -152,7 +149,7 @@ public class InternalFrameDemo extends JPanel {
                 }
             }
         });
-        
+
         final JMenuItem posterItem = new JRadioButtonMenuItem("Apply GrayScaleImageOp");
         posterItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.ALT_MASK));
         optionsMenu.add(posterItem);
@@ -164,7 +161,7 @@ public class InternalFrameDemo extends JPanel {
                 }
             }
         });
-        
+
         bar.add(optionsMenu);
         frame.setJMenuBar(bar);
 
@@ -174,7 +171,7 @@ public class InternalFrameDemo extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
-        
+
         frame.setVisible(true);
     }
 
@@ -439,7 +436,7 @@ public class InternalFrameDemo extends JPanel {
         try {
             if (bundle == null) {
                 bundle = new Properties();
-                    bundle.load(getClass().getResourceAsStream("/org/jdesktop/swinghelper/layer/demo/resources/swingset.properties"));
+                bundle.load(getClass().getResourceAsStream("/org/jdesktop/swinghelper/layer/demo/resources/swingset.properties"));
             }
             value = bundle.getProperty(key);
         } catch (Exception e) {

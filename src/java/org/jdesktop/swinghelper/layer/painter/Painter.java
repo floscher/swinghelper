@@ -19,6 +19,8 @@
 
 package org.jdesktop.swinghelper.layer.painter;
 
+import org.jdesktop.swinghelper.layer.JXLayer;
+
 import java.awt.*;
 
 /**
@@ -27,6 +29,6 @@ import java.awt.*;
  * https://swinghelper.dev.java.net/
  * http://weblogs.java.net/blog/alexfromsun/ 
  */ 
-public abstract class Painter {
-    public abstract void paint(Graphics2D g2, Component c);
+public interface Painter {
+    public void paint(Graphics2D g2, JXLayer l);
 }
