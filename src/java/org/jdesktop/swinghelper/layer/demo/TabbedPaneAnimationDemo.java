@@ -39,7 +39,7 @@ public class TabbedPaneAnimationDemo {
         JXLayer l2 = new JXLayer();
         l2.add(new JProgressBar(0, 100));
         l2.add(new JCheckBox("Hello"));
-        l2.add(new JButton("lala"));
+        l2.add(new JCheckBox("World"));
         l2.add(new JButton("lala"));
         l2.add(new JButton("lala"));
         l2.add(new JSlider(0, 100));
@@ -63,7 +63,7 @@ public class TabbedPaneAnimationDemo {
 
         frame.add(pane);
 
-        frame.setSize(280, 200);
+        frame.setSize(310, 210);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
