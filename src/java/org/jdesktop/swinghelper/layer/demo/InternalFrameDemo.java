@@ -2,6 +2,7 @@ package org.jdesktop.swinghelper.layer.demo;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.painter.Painter;
+import org.jdesktop.swinghelper.layer.painter.AbstractPainter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,14 +85,14 @@ public class InternalFrameDemo extends JPanel {
         final JXLayer layer = new JXLayer(new BorderLayout());
         frame.setContentPane(layer);
 
-        final Painter bacgroundPainter = new Painter() {
+        final Painter backgroundPainter = new AbstractPainter(true) {
             public void paint(Graphics2D g2, JXLayer l) {
                 g2.setPaint(new GradientPaint(0, 0, Color.BLACK, 50, 50, Color.RED, true));
                 g2.fillOval(0, 0, l.getWidth(), l.getHeight());
             }
         };
 
-        final Painter foregroundPainter = new Painter() {
+        final Painter foregroundPainter = new AbstractPainter(true) {
             public void paint(Graphics2D g2, JXLayer l) {
                 g2.setColor(Color.GREEN.darker());
                 Font font = g2.getFont().deriveFont(40f);
@@ -115,7 +116,7 @@ public class InternalFrameDemo extends JPanel {
                     layer.setForegroundPainter(null);
                     layer.setAlpha(1);
                 } else {
-                    layer.setBackgroundPainter(bacgroundPainter);
+                    layer.setBackgroundPainter(backgroundPainter);
                     layer.setForegroundPainter(foregroundPainter);
                     layer.setAlpha(.5f);
                 }

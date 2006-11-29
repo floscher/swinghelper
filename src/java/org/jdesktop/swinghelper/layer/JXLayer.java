@@ -282,7 +282,19 @@ public class JXLayer extends JPanel {
 
         bufg.setClip(clipBounds);
 
+        if (backgroundPainter != null && !backgroundPainter.isPaintingOrigin()) {
+            Graphics2D temp = (Graphics2D) bufg.create();
+            backgroundPainter.paint(temp, this);
+            temp.dispose();
+        }
+        
         super.paint(bufg);
+        
+        if (foregroundPainter != null && !foregroundPainter.isPaintingOrigin()) {
+            Graphics2D temp = (Graphics2D) bufg.create();
+            foregroundPainter.paint(temp, this);
+            temp.dispose();
+        }
 
         if (bio != null) {
             if (isConvolveOp) {
@@ -298,19 +310,20 @@ public class JXLayer extends JPanel {
             g2.clearRect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
         }
     
-        if (alpha != 1) {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        }
-
-        if (backgroundPainter != null) {
+        if (backgroundPainter != null && backgroundPainter.isPaintingOrigin()) {
             Graphics2D temp = (Graphics2D) g2.create();
             backgroundPainter.paint(temp, this);
             temp.dispose();
         }
 
+        Composite oldComposite = g2.getComposite();
+        if (alpha != 1) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        }
         g2.drawImage(tempDst, clipBounds.x, clipBounds.y, null);
+        g2.setComposite(oldComposite);
 
-        if (foregroundPainter != null) {
+        if (foregroundPainter != null && foregroundPainter.isPaintingOrigin()) {
             Graphics2D temp = (Graphics2D) g2.create();
             foregroundPainter.paint(temp, this);
             temp.dispose();

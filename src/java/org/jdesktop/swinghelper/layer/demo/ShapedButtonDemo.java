@@ -3,6 +3,7 @@ package org.jdesktop.swinghelper.layer.demo;
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.shaper.Shaper;
 import org.jdesktop.swinghelper.layer.painter.Painter;
+import org.jdesktop.swinghelper.layer.painter.AbstractPainter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ public class ShapedButtonDemo {
         // the <code>false</code> as the paramter switches off 
         // advanced painting (painters, alpha etc...) for this JXLayer
         // and it is used just as an extra "GlassPane"
-        frame.setContentPane(new JXLayer(false));
+//        frame.setContentPane(new JXLayer(false));
         
         JButton button = new JButton("Hello");
         button.setPreferredSize(new Dimension(150, 100));
@@ -46,7 +47,7 @@ public class ShapedButtonDemo {
         // default rectangle border doesn't go
         button.setBorderPainted(false);
 
-        layer.setForegroundPainter(new Painter() {
+        layer.setForegroundPainter(new AbstractPainter() {
             public void paint(Graphics2D g2, JXLayer l) {
                 ButtonModel model = ((JButton) l.getContentPane()).getModel();
 

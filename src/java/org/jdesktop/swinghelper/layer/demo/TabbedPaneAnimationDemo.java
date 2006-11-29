@@ -12,10 +12,10 @@ import java.awt.*;
 
 /**
  * @author Alexander Potochkin
- * 
- * https://swinghelper.dev.java.net/
- * http://weblogs.java.net/blog/alexfromsun/ 
- */ 
+ *         <p/>
+ *         https://swinghelper.dev.java.net/
+ *         http://weblogs.java.net/blog/alexfromsun/
+ */
 public class TabbedPaneAnimationDemo {
     public static void main(String[] args) {
 
@@ -45,7 +45,7 @@ public class TabbedPaneAnimationDemo {
         l2.add(new JSlider(0, 100));
         l2.add(new JProgressBar(0, 100));
         pane.add("Two", l2);
-        
+
         JXLayer l3 = new JXLayer();
         String[] data = {"one", "two", "three", "four"};
         l3.add(new JList(data));
@@ -53,9 +53,9 @@ public class TabbedPaneAnimationDemo {
         l3.add(new JList(data));
         l3.add(new JButton("One more very big button"));
         pane.add("Three", l3);
-        
+
         pane.addChangeListener(new TabbedAnimatingChangeListener(100, .05f));
-        
+
         frame.add(pane);
 
         frame.setSize(280, 200);
@@ -63,7 +63,7 @@ public class TabbedPaneAnimationDemo {
         frame.setResizable(false);
         frame.setVisible(true);
     }
-    
+
     static class TabbedAnimatingChangeListener implements ChangeListener {
         private int index;
         private Timer timer;
@@ -77,23 +77,12 @@ public class TabbedPaneAnimationDemo {
 
         public TabbedAnimatingChangeListener(int delay, final float delta) {
             this.delta = delta;
-            painter = new ComponentPainter() {
-                public void paint(Graphics2D g2, JXLayer l) {
-                    Composite composite = g2.getComposite();
-                    if (composite instanceof AlphaComposite) {
-                        AlphaComposite ac = (AlphaComposite) composite;
-                        g2.setComposite(
-                                AlphaComposite.getInstance(
-                                        AlphaComposite.SRC_OVER, 1 - ac.getAlpha()));
-                    }
-                    super.paint(g2, l);
-                }
-            };            
+            painter = new ComponentPainter(true);
             timer = new Timer(delay, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     JXLayer l = (JXLayer) pane.getSelectedComponent();
                     painter.repaint();
-                    if (l.getAlpha() >= 1 - delta) {                        
+                    if (l.getAlpha() >= 1 - delta) {
                         l.setAlpha(1);
                         timer.stop();
                         return;
@@ -129,7 +118,7 @@ public class TabbedPaneAnimationDemo {
             layer.setAlpha(1 - oldLayer.getAlpha());
             painter.setComponent(pane.getComponentAt(index));
             oldLayer.setBackgroundPainter(null);
-            layer.setBackgroundPainter(painter);            
+            layer.setBackgroundPainter(painter);
             timer.start();
             index = pane.getSelectedIndex();
         }

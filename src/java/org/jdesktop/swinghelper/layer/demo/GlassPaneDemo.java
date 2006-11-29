@@ -81,7 +81,7 @@ public class GlassPaneDemo {
         checkBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (checkBox.isSelected()) {
-                    layer.setBufferedImageOp(org.jdesktop.swinghelper.layer.demo.BufferedImageOps.getConvolveOp(3));
+                    layer.setBufferedImageOp(BufferedImageOps.getConvolveOp(3));
                     layer.setEnabled(false);
                 } else {
                     layer.setBufferedImageOp(null);
@@ -106,10 +106,8 @@ public class GlassPaneDemo {
 
         public MagicGlassPane() {
             super(new BorderLayout());
-            final JXLayer content = new JXLayer();
             componentPainter = new ComponentPainter();
-            content.setForegroundPainter(componentPainter);
-            add(content);
+            setForegroundPainter(componentPainter);
             enableEvents(AWTEvent.MOUSE_EVENT_MASK);
             addComponentListener(new ComponentAdapter() {
                 public void componentResized(ComponentEvent e) {

@@ -31,15 +31,25 @@ import java.awt.image.BufferedImage;
  * https://swinghelper.dev.java.net/
  * http://weblogs.java.net/blog/alexfromsun/ 
  */ 
-public class ComponentPainter implements Painter {
+public class ComponentPainter extends AbstractPainter {
     private Component component;
     private BufferedImage image;
 
     public ComponentPainter() {
+        this(false);
+    }
+    
+    public ComponentPainter(boolean isPaintingOrigin) {
+        setPaintingOrigin(isPaintingOrigin);
+    }
+    
+    public ComponentPainter(Component component) {
+        this(component, false);
     }
 
-    public ComponentPainter(Component component) {
+    public ComponentPainter(Component component, boolean isPaintingOrigin) {
         setComponent(component);
+        setPaintingOrigin(isPaintingOrigin);
     }
 
     public Component getComponent() {
