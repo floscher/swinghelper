@@ -7,7 +7,7 @@ java -cp layer.jar;layer-demo.jar org.jdesktop.swinghelper.layer.demo.InternalFr
 
 Non rectagular shapes support
 
-java -cp layer.jar;layer-demo.jar org.jdesktop.swinghelper.layer.demo.ShapingDemo
+java -cp layer.jar;layer-demo.jar org.jdesktop.swinghelper.layer.demo.ShapingAnimationDemo
 
 ===
 
