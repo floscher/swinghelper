@@ -18,10 +18,17 @@ import java.awt.*;
  */
 public class TabbedPaneAnimationDemo {
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createGui();
+            }
+        });
+    }
 
+    private static void createGui() {
         JFrame frame = new JFrame("TabbedPane demo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setJMenuBar(createLafMenuBar());
+        frame.setJMenuBar(LafMenu.createMenuBar());
 
         final JTabbedPane pane = new JTabbedPane();
         JXLayer l1 = new JXLayer();
@@ -126,28 +133,5 @@ public class TabbedPaneAnimationDemo {
             timer.start();
             index = pane.getSelectedIndex();
         }
-    }
-    
-    private static JMenuBar createLafMenuBar() {
-        final JMenuBar bar = new JMenuBar();
-        JMenu menu = new JMenu("Change LaF");
-        UIManager.LookAndFeelInfo[] lafs = 
-                UIManager.getInstalledLookAndFeels();
-        for (final UIManager.LookAndFeelInfo laf : lafs) {
-            JMenuItem item = new JMenuItem(laf.getName());
-            item.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        UIManager.setLookAndFeel(laf.getClassName());
-                        SwingUtilities.updateComponentTreeUI(bar.getTopLevelAncestor());
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    } 
-                }
-            });
-            menu.add(item);
-        }
-        bar.add(menu);
-        return bar;
     }
 }

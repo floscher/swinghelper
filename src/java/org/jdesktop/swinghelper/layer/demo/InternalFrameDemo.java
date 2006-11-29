@@ -87,6 +87,7 @@ public class InternalFrameDemo extends JPanel {
 
         final Painter backgroundPainter = new AbstractPainter(true) {
             public void paint(Graphics2D g2, JXLayer l) {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, l.getAlpha()));
                 g2.setPaint(new GradientPaint(0, 0, Color.BLACK, 50, 50, Color.RED, true));
                 g2.fillOval(0, 0, l.getWidth(), l.getHeight());
             }
@@ -164,6 +165,7 @@ public class InternalFrameDemo extends JPanel {
         });
 
         bar.add(optionsMenu);
+        bar.add(new LafMenu());
         frame.setJMenuBar(bar);
 
         InternalFrameDemo demo = new InternalFrameDemo();
