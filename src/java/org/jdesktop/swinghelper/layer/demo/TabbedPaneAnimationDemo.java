@@ -12,15 +12,16 @@ import java.awt.*;
 
 /**
  * @author Alexander Potochkin
- *         <p/>
- *         https://swinghelper.dev.java.net/
- *         http://weblogs.java.net/blog/alexfromsun/
+ * 
+ * https://swinghelper.dev.java.net/
+ * http://weblogs.java.net/blog/alexfromsun/
  */
 public class TabbedPaneAnimationDemo {
     public static void main(String[] args) {
 
         JFrame frame = new JFrame("TabbedPane demo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setJMenuBar(createLafMenuBar());
 
         final JTabbedPane pane = new JTabbedPane();
         JXLayer l1 = new JXLayer();
@@ -30,20 +31,21 @@ public class TabbedPaneAnimationDemo {
         l1.add(new JButton("Hello"));
         l1.add(new JButton("Hello"));
         l1.add(new JButton("Hello"));
-        JLabel label = new JLabel("It works !");
-        label.setFont(label.getFont().deriveFont(30f));
+        JLabel label = new JLabel("Select the next tab");
+        label.setFont(label.getFont().deriveFont(25f));
         l1.add(label);
         pane.add("One", l1);
 
         JXLayer l2 = new JXLayer();
         l2.add(new JProgressBar(0, 100));
-        l2.add(new JLabel("Second tab !"));
-        l2.add(new JButton("lala"));
+        l2.add(new JCheckBox("Hello"));
         l2.add(new JButton("lala"));
         l2.add(new JButton("lala"));
         l2.add(new JButton("lala"));
         l2.add(new JSlider(0, 100));
-        l2.add(new JProgressBar(0, 100));
+        JLabel label2 = new JLabel("Do you see the animation ?");
+        label2.setFont(label2.getFont().deriveFont(20f));
+        l2.add(label2);
         pane.add("Two", l2);
 
         JXLayer l3 = new JXLayer();
@@ -51,7 +53,10 @@ public class TabbedPaneAnimationDemo {
         l3.add(new JList(data));
         l3.add(new JList(data));
         l3.add(new JList(data));
-        l3.add(new JButton("One more very big button"));
+        JLabel label3 = new JLabel("It works !");
+        label3.setFont(label3.getFont().deriveFont(25f));
+        l3.add(label3);
+        label3.setForeground(Color.GREEN.darker());
         pane.add("Three", l3);
 
         pane.addChangeListener(new TabbedAnimatingChangeListener(100, .05f));
@@ -60,7 +65,6 @@ public class TabbedPaneAnimationDemo {
 
         frame.setSize(280, 200);
         frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
         frame.setVisible(true);
     }
 
@@ -122,5 +126,28 @@ public class TabbedPaneAnimationDemo {
             timer.start();
             index = pane.getSelectedIndex();
         }
+    }
+    
+    private static JMenuBar createLafMenuBar() {
+        final JMenuBar bar = new JMenuBar();
+        JMenu menu = new JMenu("Change LaF");
+        UIManager.LookAndFeelInfo[] lafs = 
+                UIManager.getInstalledLookAndFeels();
+        for (final UIManager.LookAndFeelInfo laf : lafs) {
+            JMenuItem item = new JMenuItem(laf.getName());
+            item.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        UIManager.setLookAndFeel(laf.getClassName());
+                        SwingUtilities.updateComponentTreeUI(bar.getTopLevelAncestor());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    } 
+                }
+            });
+            menu.add(item);
+        }
+        bar.add(menu);
+        return bar;
     }
 }
