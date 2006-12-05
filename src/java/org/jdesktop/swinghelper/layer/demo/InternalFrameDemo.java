@@ -2,7 +2,6 @@ package org.jdesktop.swinghelper.layer.demo;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.painter.Painter;
-import org.jdesktop.swinghelper.layer.painter.AbstractPainter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -85,15 +84,15 @@ public class InternalFrameDemo extends JPanel {
         final JXLayer layer = new JXLayer(new BorderLayout());
         frame.setContentPane(layer);
 
-        final Painter backgroundPainter = new AbstractPainter(true) {
+        final Painter backgroundPainter = new Painter() {
             public void paint(Graphics2D g2, JXLayer l) {
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, l.getAlpha()));
                 g2.setPaint(new GradientPaint(0, 0, Color.BLACK, 50, 50, Color.RED, true));
                 g2.fillOval(0, 0, l.getWidth(), l.getHeight());
             }
         };
-
-        final Painter foregroundPainter = new AbstractPainter(true) {
+        
+        final Painter foregroundPainter = new Painter() {
             public void paint(Graphics2D g2, JXLayer l) {
                 g2.setColor(Color.GREEN.darker());
                 Font font = g2.getFont().deriveFont(40f);
@@ -102,7 +101,7 @@ public class InternalFrameDemo extends JPanel {
                         l.getWidth() / 2, l.getHeight() / 2 + 150);
             }
         };
-
+        
         JMenuBar bar = new JMenuBar();
         JMenu optionsMenu = new JMenu("Options");
 

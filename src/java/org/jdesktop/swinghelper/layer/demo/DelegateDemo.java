@@ -2,7 +2,6 @@ package org.jdesktop.swinghelper.layer.demo;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.painter.Painter;
-import org.jdesktop.swinghelper.layer.painter.AbstractPainter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +24,7 @@ public class DelegateDemo {
         JXLayer l = new JXLayer(button);
         frame.add(l);
         
-        l.setForegroundPainter(new AbstractPainter() {
+        l.setForegroundPainter(new Painter() {
             public void paint(Graphics2D g2, JXLayer l) {
                 JButton b = (JButton) l.getContentPane();
                 final ButtonModel model = b.getModel();

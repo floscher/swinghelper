@@ -21,6 +21,7 @@ package org.jdesktop.swinghelper.layer;
 
 import org.jdesktop.swinghelper.layer.painter.Painter;
 import org.jdesktop.swinghelper.layer.shaper.Shaper;
+import org.jdesktop.swinghelper.layer.effectlist.EffectList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,24 +30,30 @@ import java.awt.image.*;
 
 /**
  * @author Alexander Potochkin
- * 
+ *
  * https://swinghelper.dev.java.net/
- * http://weblogs.java.net/blog/alexfromsun/ 
+ * http://weblogs.java.net/blog/alexfromsun/
  */
 public class JXLayer extends JPanel {
-    // layering related properties
+    // layering 
     private JComponent contentPane;
     private JComponent glassPane;
 
-    // painting related properties
-    private BufferedImageOp bio;
-    private BufferedImage tempSrc;
-    private BufferedImage tempDst;
+    // painting 
+    private boolean isAdvancedPaintingEnabled;
+    private BufferedImageOp bufferedImageOp;
     private float alpha;
     private Painter backgroundPainter;
+    private boolean isBackgroundPainterOrigin;
     private Painter foregroundPainter;
+    private boolean isForegroundPainterOrigin;
     private Shaper shaper;
-    private boolean isAdvancedPaintingEnabled;
+    private boolean isUseEffectList;
+    private EffectList effectList;
+
+    // temp
+    private BufferedImage tempSrc;
+    private BufferedImage tempDst;
 
     public JXLayer() {
         this(true);
@@ -77,6 +84,9 @@ public class JXLayer extends JPanel {
 
         setAdvancedPaintingEnabled(isAdvancedPaintingEnabled);
         setAlpha(1f);
+        setBackgroundPainterOrigin(true);
+        setForegroundPainterOrigin(true);
+        setUseEffectList(true);
     }
 
     public void doLayout() {
@@ -173,31 +183,37 @@ public class JXLayer extends JPanel {
     }
 
     // painting
-    
+
     public boolean isAdvancedPaintingEnabled() {
         return isAdvancedPaintingEnabled;
     }
 
-    public void setAdvancedPaintingEnabled(boolean advancedPaintingEnabled) {
-        if (isAdvancedPaintingEnabled != advancedPaintingEnabled) {
-            isAdvancedPaintingEnabled = advancedPaintingEnabled;
+    public void setAdvancedPaintingEnabled(boolean isAdvancedPaintingEnabled) {
+        if (isAdvancedPaintingEnabled() != isAdvancedPaintingEnabled) {
+            this.isAdvancedPaintingEnabled = isAdvancedPaintingEnabled;
             repaint();
         }
     }
 
     public BufferedImageOp getBufferedImageOp() {
-        return bio;
+        if (isUseEffectList && effectList != null) {
+            return effectList.getBufferedImageOp(bufferedImageOp, this);
+        }
+        return bufferedImageOp;
     }
 
     public void setBufferedImageOp(BufferedImageOp bio) {
         if (bio instanceof AffineTransformOp) {
             throw new IllegalArgumentException("AffineTransformOp is not supported");
         }
-        this.bio = bio;
+        this.bufferedImageOp = bio;
         repaint();
     }
 
     public float getAlpha() {
+        if (isUseEffectList && effectList != null) {
+            return effectList.getAlpha(alpha, this);
+        }
         return alpha;
     }
 
@@ -210,20 +226,50 @@ public class JXLayer extends JPanel {
     }
 
     public Painter getBackgroundPainter() {
+        if (isUseEffectList && effectList != null) {
+            return effectList.getBackgroundPainter(backgroundPainter, this);
+        }
         return backgroundPainter;
     }
 
-    public void setBackgroundPainter(Painter bacgroundPainter) {
-        this.backgroundPainter = bacgroundPainter;
+    public void setBackgroundPainter(Painter backgroundPainter) {
+        this.backgroundPainter = backgroundPainter;
+        repaint();
+    }
+
+    public boolean isBackgroundPainterOrigin() {
+        if (isUseEffectList && effectList != null) {
+            return effectList.isBackgroundPainterOrigin(isBackgroundPainterOrigin, this);
+        }
+        return isBackgroundPainterOrigin;
+    }
+
+    public void setBackgroundPainterOrigin(boolean backgroundPainterOrigin) {
+        isBackgroundPainterOrigin = backgroundPainterOrigin;
         repaint();
     }
 
     public Painter getForegroundPainter() {
+        if (isUseEffectList && effectList != null) {
+            return effectList.getForegroundPainter(foregroundPainter, this);
+        }
         return foregroundPainter;
     }
 
     public void setForegroundPainter(Painter foregroundPainter) {
         this.foregroundPainter = foregroundPainter;
+        repaint();
+    }
+
+    public boolean isForegroundPainterOrigin() {
+        if (isUseEffectList && effectList != null) {
+            return effectList.isForegroundPainterOrigin(isForegroundPainterOrigin, this);
+        }
+        return isForegroundPainterOrigin;
+    }
+
+    public void setForegroundPainterOrigin(boolean foregroundPainterOrigin) {
+        isForegroundPainterOrigin = foregroundPainterOrigin;
         repaint();
     }
 
@@ -238,10 +284,18 @@ public class JXLayer extends JPanel {
         }
 
         Graphics2D g2 = (Graphics2D) g.create();
-        
+
+        BufferedImageOp bufferedImageOp = getBufferedImageOp();
+        float alpha = getAlpha();
+        Painter backgroundPainter = getBackgroundPainter();
+        boolean isBackgroundPainterOrigin = isBackgroundPainterOrigin();
+        Painter foregroundPainter = getForegroundPainter();
+        boolean isForegroundPainterOrigin = isForegroundPainterOrigin();
+        Shaper shaper = getShaper();
+
         Shape clip = g2.getClip();
         if (shaper != null) {
-            Shape shape = getShape();
+            Shape shape = getLayerShape();
             if (clip == null) {
                 g2.setClip(shape);
             } else {
@@ -260,10 +314,10 @@ public class JXLayer extends JPanel {
             return;
         }
 
-        boolean isConvolveOp = bio instanceof ConvolveOp;
+        boolean isConvolveOp = bufferedImageOp instanceof ConvolveOp;
 
         if (isConvolveOp) {
-            ConvolveOp cop = (ConvolveOp) bio;
+            ConvolveOp cop = (ConvolveOp) bufferedImageOp;
             Kernel kernel = cop.getKernel();
             clipBounds.grow(kernel.getWidth() / 2, kernel.getHeight() / 2);
         }
@@ -282,25 +336,25 @@ public class JXLayer extends JPanel {
 
         bufg.setClip(clipBounds);
 
-        if (backgroundPainter != null && !backgroundPainter.isPaintingOrigin()) {
+        if (backgroundPainter != null && !isBackgroundPainterOrigin) {
             Graphics2D temp = (Graphics2D) bufg.create();
             backgroundPainter.paint(temp, this);
             temp.dispose();
         }
-        
+
         super.paint(bufg);
-        
-        if (foregroundPainter != null && !foregroundPainter.isPaintingOrigin()) {
+
+        if (foregroundPainter != null && !isForegroundPainterOrigin) {
             Graphics2D temp = (Graphics2D) bufg.create();
             foregroundPainter.paint(temp, this);
             temp.dispose();
         }
 
-        if (bio != null) {
+        if (bufferedImageOp != null) {
             if (isConvolveOp) {
-                tempDst = bio.filter(tempSrc, tempDst);
+                tempDst = bufferedImageOp.filter(tempSrc, tempDst);
             } else {
-                tempDst = bio.filter(tempSrc, tempSrc);
+                tempDst = bufferedImageOp.filter(tempSrc, tempSrc);
             }
         } else {
             tempDst = tempSrc;
@@ -309,8 +363,8 @@ public class JXLayer extends JPanel {
         if (isOpaque()) {
             g2.clearRect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
         }
-    
-        if (backgroundPainter != null && backgroundPainter.isPaintingOrigin()) {
+
+        if (backgroundPainter != null && isBackgroundPainterOrigin) {
             Graphics2D temp = (Graphics2D) g2.create();
             backgroundPainter.paint(temp, this);
             temp.dispose();
@@ -323,7 +377,7 @@ public class JXLayer extends JPanel {
         g2.drawImage(tempDst, clipBounds.x, clipBounds.y, null);
         g2.setComposite(oldComposite);
 
-        if (foregroundPainter != null && foregroundPainter.isPaintingOrigin()) {
+        if (foregroundPainter != null && isForegroundPainterOrigin) {
             Graphics2D temp = (Graphics2D) g2.create();
             foregroundPainter.paint(temp, this);
             temp.dispose();
@@ -332,17 +386,21 @@ public class JXLayer extends JPanel {
     }
 
     // Shaping
-    
+
     public Shaper getShaper() {
+        if (isUseEffectList && effectList != null) {
+            return effectList.getShaper(shaper, this);
+        }
         return shaper;
     }
 
     /**
-     * Never returns <code>null</code> 
+     * Never returns <code>null</code>
      */
-    public Shape getShape() {
+    public Shape getLayerShape() {
+        Shaper shaper = getShaper();
         if (shaper != null) {
-            Shape shape = shaper.getShape(this);
+            Shape shape = shaper.getLayerShape(this);
             if (shape != null) {
                 return shape;
             }
@@ -356,9 +414,29 @@ public class JXLayer extends JPanel {
     }
 
     public boolean contains(int x, int y) {
-        if (shaper != null) {
-            return getShape().contains(x, y);
+        if (getShaper() != null) {
+            return getLayerShape().contains(x, y);
         }
         return super.contains(x, y);
+    }
+
+    // EffectList
+
+    public boolean isUseEffectList() {
+        return isUseEffectList;
+    }
+
+    public void setUseEffectList(boolean useEffectList) {
+        isUseEffectList = useEffectList;
+        repaint();
+    }
+
+    public EffectList getEffectList() {
+        return effectList;
+    }
+
+    public void setEffectList(EffectList effectList) {
+        this.effectList = effectList;
+        repaint();
     }
 }

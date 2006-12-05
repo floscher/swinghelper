@@ -88,7 +88,7 @@ public class TabbedPaneAnimationDemo {
 
         public TabbedAnimatingChangeListener(int delay, final float delta) {
             this.delta = delta;
-            painter = new ComponentPainter(true);
+            painter = new ComponentPainter();
             timer = new Timer(delay, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     JXLayer l = (JXLayer) pane.getSelectedComponent();

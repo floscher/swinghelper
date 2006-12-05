@@ -31,5 +31,4 @@ import java.awt.*;
  */ 
 public interface Painter {
     public void paint(Graphics2D g2, JXLayer l);
-    public boolean isPaintingOrigin();
 }

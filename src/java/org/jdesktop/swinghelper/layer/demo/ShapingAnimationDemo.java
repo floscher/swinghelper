@@ -123,7 +123,7 @@ public class ShapingAnimationDemo {
     static class TetragonShaper implements Shaper {
         private int x, y;
 
-        public Shape getShape(JXLayer l) {
+        public Shape getLayerShape(JXLayer l) {
             if (x > l.getWidth()) {
                 x = 0;
             }

@@ -1,9 +1,9 @@
 package org.jdesktop.swinghelper.layer.demo;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.shaper.Shaper;
+import org.jdesktop.swinghelper.layer.effectlist.DefaultEffectList;
 import org.jdesktop.swinghelper.layer.painter.Painter;
-import org.jdesktop.swinghelper.layer.painter.AbstractPainter;
+import org.jdesktop.swinghelper.layer.shaper.Shaper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,7 @@ public class ShapedButtonDemo {
         // the <code>false</code> as the paramter switches off 
         // advanced painting (painters, alpha etc...) for this JXLayer
         // and it is used just as an extra "GlassPane"
-//        frame.setContentPane(new JXLayer(false));
+        frame.setContentPane(new JXLayer(false));
         
         JButton button = new JButton("Hello");
         button.setPreferredSize(new Dimension(150, 100));
@@ -39,7 +39,7 @@ public class ShapedButtonDemo {
         
         // Ellipse shape for the layer
         layer.setShaper(new Shaper() {
-            public Shape getShape(JXLayer l) {
+            public Shape getLayerShape(JXLayer l) {
                 return new Ellipse2D.Float(0, 0, l.getWidth(), l.getHeight());
             }
         });
@@ -47,7 +47,7 @@ public class ShapedButtonDemo {
         // default rectangle border doesn't go
         button.setBorderPainted(false);
 
-        layer.setForegroundPainter(new AbstractPainter() {
+        layer.setForegroundPainter(new Painter() {
             public void paint(Graphics2D g2, JXLayer l) {
                 ButtonModel model = ((JButton) l.getContentPane()).getModel();
 
@@ -63,10 +63,10 @@ public class ShapedButtonDemo {
                 // paint shaped border
                 g2.setColor(new Color(184, 207, 229));
                 g2.setStroke(new BasicStroke(2f));
-                g2.draw(l.getShape());
+                g2.draw(l.getLayerShape());
             }
         });
-
+        
         frame.setSize(250, 200);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

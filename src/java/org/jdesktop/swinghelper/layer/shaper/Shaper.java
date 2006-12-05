@@ -30,5 +30,5 @@ import java.awt.*;
  * http://weblogs.java.net/blog/alexfromsun/ 
  */ 
 public interface Shaper {
-    public Shape getShape(JXLayer l);
+    public Shape getLayerShape(JXLayer l);
 }

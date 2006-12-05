@@ -108,6 +108,7 @@ public class GlassPaneDemo {
             super(new BorderLayout());
             componentPainter = new ComponentPainter();
             setForegroundPainter(componentPainter);
+            setForegroundPainterOrigin(false);
             enableEvents(AWTEvent.MOUSE_EVENT_MASK);
             addComponentListener(new ComponentAdapter() {
                 public void componentResized(ComponentEvent e) {
