@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="bin/layer/ShapingAnimationDemo.jnlp">
+  <information>
+    <title>JXLayer shaping and translucency effects</title>    
+    <vendor>Alexander Potochkin</vendor>    
+    <homepage href="https://swinghelper.dev.java.net/" />
+    <description>JXLayer shaping and translucency demo</description>
+    <offline-allowed />
+  </information>
+  <resources>     
+<j2se version="1.5+"/>
+     <jar href="bin/layer/layer-demo.jar"/>
+     <jar href="bin/layer/layer.jar"/>
+  </resources>  
+<application-desc main-class="org.jdesktop.swinghelper.layer.demo.ShapingAnimationDemo"/>
+</jnlp>
