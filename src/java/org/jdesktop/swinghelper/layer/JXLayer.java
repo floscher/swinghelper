@@ -324,9 +324,9 @@ public class JXLayer extends JPanel {
 
         if (tempSrc == null ||
                 tempSrc.getWidth() != clipBounds.width || tempSrc.getHeight() != clipBounds.height) {
-            tempSrc = getGraphicsConfiguration().createCompatibleImage(clipBounds.width, clipBounds.height);
+            tempSrc = new BufferedImage(clipBounds.width, clipBounds.height, BufferedImage.TYPE_INT_ARGB);
             if (isConvolveOp) {
-                tempDst = getGraphicsConfiguration().createCompatibleImage(clipBounds.width, clipBounds.height);
+                tempDst = new BufferedImage(clipBounds.width, clipBounds.height, BufferedImage.TYPE_INT_ARGB);
             }
         }
 
