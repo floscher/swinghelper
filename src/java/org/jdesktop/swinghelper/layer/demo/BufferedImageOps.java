@@ -26,7 +26,19 @@ public class BufferedImageOps {
             invert[i] = (byte) (255 - i);
             straight[i] = (byte) i;
         }
-        LookupTable table = new ByteLookupTable(0, invert);
+        byte[][] result = new byte[4][];
+        Arrays.fill(result, straight);
+        if (red) {
+            result[0] = invert;
+        }
+        if (green) {
+            result[1] = invert;
+        }
+        if (blue) {
+            result[2] = invert;
+        }
+        result[3] = straight; 
+        LookupTable table = new ByteLookupTable(0, result);
         return new LookupOp(table, null);
     }
 

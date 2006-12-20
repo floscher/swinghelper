@@ -324,9 +324,10 @@ public class JXLayer extends JPanel {
 
         if (tempSrc == null ||
                 tempSrc.getWidth() != clipBounds.width || tempSrc.getHeight() != clipBounds.height) {
-            tempSrc = new BufferedImage(clipBounds.width, clipBounds.height, BufferedImage.TYPE_INT_ARGB);
+            // TYPE_4BYTE_ABGR the only type which works properly on Linux and Solaris
+            tempSrc = new BufferedImage(clipBounds.width, clipBounds.height, BufferedImage.TYPE_4BYTE_ABGR);
             if (isConvolveOp) {
-                tempDst = new BufferedImage(clipBounds.width, clipBounds.height, BufferedImage.TYPE_INT_ARGB);
+                tempDst = new BufferedImage(clipBounds.width, clipBounds.height, BufferedImage.TYPE_4BYTE_ABGR);
             }
         }
 
