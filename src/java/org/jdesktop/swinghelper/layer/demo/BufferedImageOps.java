@@ -20,34 +20,23 @@ public class BufferedImageOps {
     }
 
     public static LookupOp getInvertColorOp(boolean red, boolean green, boolean blue) {
-        short[] invert = new short[256];
-        short[] straight = new short[256];
+        byte[] invert = new byte[256];
+        byte[] straight = new byte[256];
         for (int i = 0; i < invert.length; i++) {
-            invert[i] = (short) (255 - i);
-            straight[i] = (short) i;
+            invert[i] = (byte) (255 - i);
+            straight[i] = (byte) i;
         }
-        short[][] result = new short[3][];
-        Arrays.fill(result, straight);
-        if (red) {
-            result[0] = invert;
-        }
-        if (green) {
-            result[1] = invert;
-        }
-        if (blue) {
-            result[2] = invert;
-        }
-        LookupTable table = new ShortLookupTable(0, result);
+        LookupTable table = new ByteLookupTable(0, invert);
         return new LookupOp(table, null);
     }
 
     public static LookupOp getPosterizeOp() {
-        short[] posterize = new short[256];
+        byte[] posterize = new byte[256];
         for (int i = 0; i < posterize.length; i++) {
-            posterize[i] = (short) (i - (i % 32));
-//            posterize[i] = (short) (i - (i % 256));
+            posterize[i] = (byte) (i - (i % 32));
+//            posterize[i] = (byte) (i - (i % 256));
         }
-        LookupTable table = new ShortLookupTable(0, posterize);
+        LookupTable table = new ByteLookupTable(0, posterize);
         return new LookupOp(table, null);
     }
     
