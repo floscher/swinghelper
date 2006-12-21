@@ -91,7 +91,6 @@ public class JXLayer extends JPanel {
 
     public void doLayout() {
         if (contentPane != null) {
-            setPreferredSize(contentPane.getPreferredSize());
             contentPane.setLocation(0, 0);
             contentPane.setSize(getWidth(), getHeight());
         }
