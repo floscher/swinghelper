@@ -1,16 +1,17 @@
 package org.jdesktop.swinghelper.layer.demo;
 
-import org.jdesktop.swinghelper.layer.painter.*;
-import org.jdesktop.swinghelper.layer.painter.model.PainterModel;
-import org.jdesktop.swinghelper.layer.demo.util.LafMenu;
 import org.jdesktop.swinghelper.layer.JXLayer;
+import org.jdesktop.swinghelper.layer.demo.util.LafMenu;
+import org.jdesktop.swinghelper.layer.painter.ComponentPainter;
+import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
+import org.jdesktop.swinghelper.layer.painter.model.PainterModel;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class TabbedPaneAnimationDemo {
     public static void main(String[] args) {
@@ -75,7 +76,7 @@ public class TabbedPaneAnimationDemo {
     static class TabbedAnimatingChangeListener implements ChangeListener {
         private int index;
         private Timer timer;
-        private CompoundPainter<JComponent> mainPainter;
+        private JXLayer<JComponent> layer;
         private ComponentPainter<JComponent> painter;
         private float delta;
 
@@ -84,15 +85,13 @@ public class TabbedPaneAnimationDemo {
         }
 
         public TabbedAnimatingChangeListener(int delay, final float delta) {
-            this.delta = delta;
+            this.delta = delta;            
+            painter = new AnimationPainter();            
             
-            painter = new ComponentPainter<JComponent>();
-            painter.getModel().setAlpha(0);
-            
-            mainPainter = new CompoundPainter<JComponent>(new DefaultPainter(), painter);
             timer = new Timer(delay, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
+                    painter.repaint(layer);
                     PainterModel model = painter.getModel();
 
                     if (model.getAlpha() <= delta) {
@@ -100,7 +99,7 @@ public class TabbedPaneAnimationDemo {
                         timer.stop();
                         return;
                     }
-                    painter.repaint();
+                    
                     model.setAlpha(model.getAlpha() - delta);
                 }
             });
@@ -124,21 +123,40 @@ public class TabbedPaneAnimationDemo {
         public void setDelay(int delay) {
             timer.setDelay(delay);
         }
-
+        
         public void stateChanged(ChangeEvent e) {
             JTabbedPane pane = (JTabbedPane) e.getSource();
-            JXLayer<JComponent> layer = (JXLayer<JComponent>) pane.getSelectedComponent();
+            layer = (JXLayer<JComponent>) pane.getSelectedComponent();
             JXLayer<JComponent> oldLayer = (JXLayer<JComponent>) pane.getComponentAt(index);
-            PainterModel model = this.painter.getModel();
-            model.setAlpha(1 - model.getAlpha());
-            this.painter.setComponent(oldLayer);
-
-            layer.setPainter(mainPainter);
-            oldLayer.setPainter(new DefaultPainter<JComponent>());
             
-            painter.repaint();            
+            PainterModel model = painter.getModel();
+            model.setAlpha(1 - model.getAlpha());
+            
+            // set oldLayer as a foreground
+            painter.setComponent(oldLayer);            
+            // swap painters
+            oldLayer.setPainter(layer.getPainter());
+            layer.setPainter(painter);
+            
+            painter.repaint(layer);            
             timer.start();
             index = pane.getSelectedIndex();
+        }
+    }
+    
+    static class AnimationPainter extends ComponentPainter<JComponent> {
+        private DefaultPainter defaultPainter;
+
+        public AnimationPainter() {
+            defaultPainter = new DefaultPainter();
+            getModel().setAlpha(0);
+        }
+
+        public void paint(Graphics2D g2, JXLayer<JComponent> l) {
+            // paint the layer
+            defaultPainter.paint(g2, l);
+            // paint the old layer with diminishing alpha
+            super.paint(g2, l);            
         }
     }
 }

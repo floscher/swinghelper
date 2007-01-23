@@ -1,23 +1,50 @@
+/*
+ * Copyright (c) 2006 Alexander Potochkin
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
 package org.jdesktop.swinghelper.layer.painter.model;
 
-import org.jdesktop.swinghelper.layer.ExtendedChangeSupport;
+import org.jdesktop.swinghelper.layer.AbstractLayerItem;
 
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.RenderingHints.Key;
 import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultPainterModel implements PainterModel {
+public class DefaultPainterModel 
+        extends AbstractLayerItem implements PainterModel {
+    private Shape shape;
     private Composite composite;
     private Map<Key, Object> renderingHints;
     private AffineTransform transform;
-    private ExtendedChangeSupport changeSupport;
 
     public DefaultPainterModel() {         
         renderingHints = new HashMap<Key, Object>();
-        changeSupport = new ExtendedChangeSupport(this);
+    }
+
+    // Clip
+    public Shape getClip() {
+        return shape;
+    }
+
+    public void setClip(Shape shape) {
+        this.shape = shape;
+        fireStateChanged();
     }
 
     // Composite
@@ -61,22 +88,5 @@ public class DefaultPainterModel implements PainterModel {
     public void setTransform(AffineTransform transform) {
         this.transform = transform == null ? null : new AffineTransform(transform);
         fireStateChanged();
-    }
-
-    // Notifications
-    public void addChangeListener(ChangeListener l) {
-        changeSupport.addChangeListener(l);
-    }
-
-    public void removeChangeListener(ChangeListener l) {
-        changeSupport.removeChangeListener(l);
-    }
-
-    public ChangeListener[] getChangeListeners() {
-        return changeSupport.getChangeListeners();
-    }
-
-    protected void fireStateChanged() {
-        changeSupport.fireStateChanged();
     }
 }

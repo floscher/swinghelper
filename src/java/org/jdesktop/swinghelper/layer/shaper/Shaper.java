@@ -1,46 +1,28 @@
+/*
+ * Copyright (c) 2006 Alexander Potochkin
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
 package org.jdesktop.swinghelper.layer.shaper;
 
+import org.jdesktop.swinghelper.layer.LayerItem;
 import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.ExtendedChangeSupport;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
 
-public abstract class Shaper <V extends JComponent> {
-    private boolean isEnabled;
-    private ExtendedChangeSupport changeSupport;
-
-    protected Shaper() {
-        changeSupport = new ExtendedChangeSupport(this);
-        isEnabled = true;
-    }
-
-    public abstract Shape getShape(JXLayer<V> l);
-
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
-        fireStateChanged();
-    }
-
-    // Notifications
-    public void addChangeListener(ChangeListener l) {        
-        changeSupport.addChangeListener(l);
-    }
-
-    public void removeChangeListener(ChangeListener l) {
-        changeSupport.removeChangeListener(l);
-    }
-
-    public ChangeListener[] getChangeListeners() {
-        return changeSupport.getChangeListeners();
-    }
-
-    protected void fireStateChanged() {
-        changeSupport.fireStateChanged();
-    }
+public interface Shaper<V extends JComponent> extends LayerItem {
+    public boolean contains(int x, int y, JXLayer<V> l);
 }

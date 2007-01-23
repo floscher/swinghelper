@@ -12,49 +12,76 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 /**
  * @author Alexander Potochkin
- * 
- * https://swinghelper.dev.java.net/
- * http://weblogs.java.net/blog/alexfromsun/ 
+ *         <p/>
+ *         https://swinghelper.dev.java.net/
+ *         http://weblogs.java.net/blog/alexfromsun/
  */
-public class GlassPaneDemo {
-    private static ActionListener action;
+public class GlassPaneDemo extends JFrame {
+    private JXLayer<JComponent> glassPaneLayer;
+    private JXLayer<JComponent> buttonLayer;
+    private JButton glassPaneButton;
+    private JCheckBox buttonCheckBox;
 
-    public static void main(String[] args) {
-        final JFrame frame = new JFrame("GlassPane demo");
+    public GlassPaneDemo() {
+        super("GlassPane demo");
+        fillUpTheFrame();
 
-        BufferedPainter p = new BufferedPainter(new ComponentPainter(frame.getLayeredPane()));
-        p.setEffects(new ImageOpEffect(ImageOpFactory.getConvolveOp(5)));
-        final JXLayer gp = new JXLayer(p);
+        ComponentPainter<JComponent> glassPanePainter =
+                new ComponentPainter<JComponent>(getLayeredPane(),
+                        new ImageOpEffect(ImageOpFactory.getConvolveOp(5)));
 
-        frame.setGlassPane(gp);
-        action = new ActionListener() {
+        glassPaneLayer = new JXLayer<JComponent>(glassPanePainter);
+        setGlassPane(glassPaneLayer);
+
+        glassPaneButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // use invokeLater to return the button to not pressed state
                 SwingUtilities.invokeLater(new Runnable() {
+
                     public void run() {
-                        gp.getPainter().repaint();
-                        frame.getGlassPane().setVisible(true);
-                        JOptionPane.showConfirmDialog(frame, "Do you the effect ?", "Hello", JOptionPane.DEFAULT_OPTION);
-                        frame.getGlassPane().setVisible(false);
+                        // it is important to not call repaint during painting process 
+                        glassPaneLayer.getPainter().repaint(glassPaneLayer);
+                        getGlassPane().setVisible(true);
+                        JOptionPane.showConfirmDialog(GlassPaneDemo.this,
+                                "Do you the effect ?", "Hello", JOptionPane.DEFAULT_OPTION);
+                        getGlassPane().setVisible(false);
                     }
                 });
             }
-        };
+        });
 
-        fillUpTheFrame(frame);
+        buttonLayer.setPainter(new BufferedPainter<JComponent>(
+                new DefaultPainter<JComponent>(),
+                new ImageOpEffect(ImageOpFactory.getConvolveOp(5))));
 
-        frame.setResizable(false);
-        frame.setVisible(true);
+        buttonLayer.getPainter().setEnabled(false);
+
+        buttonCheckBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                buttonLayer.getPainter().setEnabled(buttonCheckBox.isSelected());
+            }
+        });
     }
 
-    private static void fillUpTheFrame(final JFrame frame) {
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new GlassPaneDemo().setVisible(true);
+            }
+        });
+    }
+
+    private void fillUpTheFrame() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JMenuBar bar = new JMenuBar();
         bar.add(new JMenu("Dummy Menu"));
-        frame.setJMenuBar(bar);
+        setJMenuBar(bar);
 
         JTable table = new JTable(new AbstractTableModel() {
             public int getColumnCount() {
@@ -69,39 +96,26 @@ public class GlassPaneDemo {
                 return rowIndex + " " + columnIndex;
             }
         });
-        frame.add(new JScrollPane(table), BorderLayout.SOUTH);
-
-        final JPanel topPanel = new JPanel(new BorderLayout());
+        add(new JScrollPane(table), BorderLayout.SOUTH);
+        JPanel topPanel = new JPanel(new BorderLayout());
         JPanel temp = new JPanel();
 
-        final JCheckBox checkBox = new JCheckBox("\"Disable\" the little button");
-        temp.add(checkBox);
-        final JButton b = new JButton("I am the little button");
+        buttonCheckBox = new JCheckBox("\"Disable\" the little button");
+        temp.add(buttonCheckBox);
 
-        final ImageOpEffect effect = new ImageOpEffect(ImageOpFactory.getConvolveOp(5));
-        effect.setEnabled(false);
-        BufferedPainter p = new BufferedPainter(new DefaultPainter());
-        p.setEffects(effect);
+        JButton b = new JButton("I am the little button");
+        buttonLayer = new JXLayer<JComponent>(b);
+        temp.add(buttonLayer);
 
-        final JXLayer layer = new JXLayer(b, p);
-        temp.add(layer);
-
-        JButton button = new JButton("Show me more with a GlassPane!");
-        button.addActionListener(action);
-
-        checkBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                effect.setEnabled(checkBox.isSelected());
-            }
-        });
-
+        glassPaneButton = new JButton("Show me more with a GlassPane!");
         topPanel.add(temp);
         temp = new JPanel();
-        temp.add(button);
-        topPanel.add(temp, BorderLayout.SOUTH);
-        frame.add(topPanel);
+        temp.add(glassPaneButton);
 
-        frame.setSize(700, 550);
-        frame.setLocationRelativeTo(null);
+        topPanel.add(temp, BorderLayout.SOUTH);
+        add(topPanel);
+        setSize(700, 550);
+        setLocationRelativeTo(null);
+        setResizable(false);
     }
 }

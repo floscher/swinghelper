@@ -16,14 +16,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package org.jdesktop.swinghelper.layer.effect;
+package org.jdesktop.swinghelper.layer;
 
-import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.LayerItem;
+import javax.swing.event.ChangeListener;
 
-import javax.swing.*;
-import java.awt.image.BufferedImage;
+public interface LayerItem {
+    public boolean isEnabled();
+    public void setEnabled(boolean b);
 
-public interface Effect<V extends JComponent> extends LayerItem {
-    public BufferedImage apply(BufferedImage buf, JXLayer<V> l);
+    public void addChangeListener(ChangeListener l);
+    public void removeChangeListener(ChangeListener l);
+    public ChangeListener[] getChangeListeners();
 }

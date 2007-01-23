@@ -5,8 +5,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class LafMenu extends JMenu {
+
     public LafMenu() {
-        super("LookAndFeel");
+        this("LookAndFeel");
+    }
+
+    public LafMenu(String s) {
+        super(s);
         UIManager.LookAndFeelInfo[] lafs =
                 UIManager.getInstalledLookAndFeels();
         for (final UIManager.LookAndFeelInfo laf : lafs) {
@@ -24,7 +29,8 @@ public class LafMenu extends JMenu {
             add(item);
         }
     }
-    
+
+
     public static JMenuBar createMenuBar() {
         JMenuBar bar = new JMenuBar();
         bar.add(new LafMenu());

@@ -5,8 +5,8 @@ import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.painter.CompoundPainter;
 import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 import org.jdesktop.swinghelper.layer.painter.Painter;
-import org.jdesktop.swinghelper.layer.shaper.MouseClipShaper;
-import org.jdesktop.swinghelper.layer.shaper.Shaper;
+import org.jdesktop.swinghelper.layer.painter.AbstractPainter;
+import org.jdesktop.swinghelper.layer.painter.configurator.DefaultConfigurator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,22 +38,15 @@ public class ShapedButtonDemo {
         JXLayer<AbstractButton> layer = new JXLayer<AbstractButton>(button);
         frame.add(layer);
         
-        // Ellipse shape for the layer
-        layer.setMouseClipShaper(new Shaper() {
-            public Shape getShape(JXLayer l) {                
-                return new Ellipse2D.Float(0, 0, l.getWidth(), l.getHeight());
-            }
-        });
-        
         // default rectangle border doesn't go
         button.setBorderPainted(false);
         button.setBackground(Color.GREEN.darker());
 
-        Painter<AbstractButton> customPainter = new Painter<AbstractButton>() {
+        Painter<AbstractButton> customPainter = new DefaultPainter<AbstractButton>() {
             public void paint(Graphics2D g2, JXLayer<AbstractButton> l) {
+                super.paint(g2, l);
 
                 ButtonModel model = l.getView().getModel();
-
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 // new rollover effect (just for fun)
@@ -68,15 +61,18 @@ public class ShapedButtonDemo {
                 // paint shaped border
                 g2.setColor(Color.BLACK);
                 g2.setStroke(new BasicStroke(3f));
-                g2.draw(l.getMouseClipShaper().getShape(l));               
+                g2.draw(g2.getClip());
             }
         };
         
-        layer.setPainter(
-                new CompoundPainter<AbstractButton>(
-                        new DefaultPainter(), customPainter));
+        layer.setPainter(customPainter);
         
-        layer.getPainter().setClipShaper(new MouseClipShaper<AbstractButton>());
+        // Ellipse shape for the layer
+        layer.getPainter().setConfigurator(new DefaultConfigurator<AbstractButton>() {
+            public Shape getClip(JXLayer<AbstractButton> l) {
+                return new Ellipse2D.Float(0, 0, l.getWidth(), l.getHeight());
+            }
+        });
         frame.setSize(250, 200);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

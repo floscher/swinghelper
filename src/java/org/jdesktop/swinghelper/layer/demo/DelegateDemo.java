@@ -1,9 +1,8 @@
 package org.jdesktop.swinghelper.layer.demo;
 
-import org.jdesktop.swinghelper.layer.painter.Painter;
-import org.jdesktop.swinghelper.layer.painter.CompoundPainter;
-import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 import org.jdesktop.swinghelper.layer.JXLayer;
+import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
+import org.jdesktop.swinghelper.layer.painter.Painter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,8 +22,10 @@ public class DelegateDemo {
         JButton button = new JButton("Play with me !");
         button.setToolTipText("I am an unmodified JButton");
         
-        Painter<AbstractButton> customPainter = new Painter<AbstractButton>() {
+        Painter<AbstractButton> customPainter = new DefaultPainter<AbstractButton>() {
             public void paint(Graphics2D g2, JXLayer<AbstractButton> l) {
+                super.paint(g2, l);
+                
                 final ButtonModel model = l.getView().getModel();
                 Color color = null;
                 if (model.isRollover()) {
@@ -44,8 +45,7 @@ public class DelegateDemo {
             }
         };
         
-        JXLayer<AbstractButton> l = new JXLayer<AbstractButton>(button, 
-                new CompoundPainter<AbstractButton>(new DefaultPainter(), customPainter));
+        JXLayer<AbstractButton> l = new JXLayer<AbstractButton>(button, customPainter);
         frame.add(l);
 
         frame.setSize(200, 200);

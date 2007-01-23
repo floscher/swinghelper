@@ -1,10 +1,27 @@
+/*
+ * Copyright (c) 2006 Alexander Potochkin
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
 package org.jdesktop.swinghelper.layer;
 
-import org.jdesktop.swinghelper.layer.painter.Painter;
 import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
+import org.jdesktop.swinghelper.layer.painter.Painter;
+import org.jdesktop.swinghelper.layer.shaper.DefaultShaper;
 import org.jdesktop.swinghelper.layer.shaper.Shaper;
-import org.jdesktop.swinghelper.layer.shaper.MouseClipShaper;
-import org.jdesktop.swinghelper.layer.shaper.NullShaper;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -12,7 +29,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
-public class JXLayer<V extends JComponent> extends JComponent {
+public class JXLayer <V extends JComponent> extends JComponent {
     public V view;
     private Shaper<V> mouseClipShaper;
     private JComponent glassPane;
@@ -40,7 +57,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
         setGlassPane(new JXGlassPane());
         setLayout(LayerLayout.getSharedInstance());
         setPainter(painter);
-        setMouseClipShaper(new NullShaper<V>());
+        setMouseClipShaper(new DefaultShaper<V>());
     }
 
     // Main setters and getters
@@ -81,8 +98,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     public void setPainter(Painter<V> painter) {
         if (painter == null) {
-            throw new IllegalArgumentException(
-                    "Null painter is not supported; set DefaultPainter");
+            throw new IllegalArgumentException("Null painter is not supported; set DefaultPainter");
         }
         Painter<V> oldPainter = getPainter();
         if (painter != oldPainter) {
@@ -101,15 +117,9 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     public void setMouseClipShaper(Shaper<V> mouseClipShaper) {
         if (mouseClipShaper == null) {
-            throw new IllegalArgumentException(
-                    "Null shaper is not supported; set DefaultShaper");
-        }
-        if (mouseClipShaper instanceof MouseClipShaper) {
-            throw new IllegalArgumentException(
-                    "MouseClipShaper class is designed for Painter.setClipShaper()");
+            throw new IllegalArgumentException("Null shaper is not supported; set NullShaper");
         }
         Shaper<V> oldShaper = getMouseClipShaper();
-
         if (mouseClipShaper != oldShaper) {
             if (oldShaper != null) {
                 oldShaper.removeChangeListener(changeListener);
@@ -164,19 +174,18 @@ public class JXLayer<V extends JComponent> extends JComponent {
     public boolean contains(int x, int y) {
         Shaper<V> mouseShaper = getMouseClipShaper();
         if (mouseShaper.isEnabled()) {
-            Shape shape = mouseShaper.getShape(this);
-            if (shape != null) {
-                return shape.contains(x, y);
-            }
+            return mouseShaper.contains(x, y, this);
         }
         return super.contains(x, y);
     }
 
-    // PropertyChangeListener    
+    // ChangeListener    
     private ChangeListener createChangeListener() {
         return new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                repaint();
+                if (view != null) {
+                    view.repaint();
+                }
             }
         };
     }

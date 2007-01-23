@@ -3,8 +3,7 @@ package org.jdesktop.swinghelper.layer.demo;
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 import org.jdesktop.swinghelper.layer.painter.BufferedPainter;
-import org.jdesktop.swinghelper.layer.shaper.Shaper;
-import org.jdesktop.swinghelper.layer.shaper.MouseClipShaper;
+import org.jdesktop.swinghelper.layer.painter.configurator.DefaultConfigurator;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -79,8 +78,7 @@ public class ShapingAnimationDemo {
         final BufferedPainter<AbstractButton> painter 
                 = new BufferedPainter<AbstractButton>(new DefaultPainter());
         
-        layer.setMouseClipShaper(shaper);
-        painter.setClipShaper(new MouseClipShaper<AbstractButton>());
+        painter.setConfigurator(shaper);
         layer.setPainter(painter);
 
         alphaSlider.addChangeListener(new ChangeListener() {
@@ -118,10 +116,10 @@ public class ShapingAnimationDemo {
     }
 
 
-    static class TetragonShaper<T extends JComponent> extends Shaper<T> {
+    static class TetragonShaper<T extends JComponent> extends DefaultConfigurator<T> {
         private int x, y;
 
-        public Shape getShape(JXLayer<T> l) {
+        public Shape getClip(JXLayer<T> l) {
             if (x > l.getWidth()) {
                 x = 0;
             }
