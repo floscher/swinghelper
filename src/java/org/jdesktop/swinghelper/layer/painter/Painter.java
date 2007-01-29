@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,8 +19,7 @@
 package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.LayerItem;
-import org.jdesktop.swinghelper.layer.painter.configurator.Configurator;
+import org.jdesktop.swinghelper.layer.item.LayerItem;
 import org.jdesktop.swinghelper.layer.painter.model.PainterModel;
 
 import javax.swing.*;
@@ -30,9 +29,5 @@ public interface Painter<V extends JComponent> extends LayerItem {
     public PainterModel getModel();
     public void setModel(PainterModel model);
     
-    public Configurator<V> getConfigurator();
-    public void setConfigurator(Configurator<V> c);
-    
     public void paint(Graphics2D g2, JXLayer<V> l);
-    public void repaint(JXLayer<V> l);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,29 +18,27 @@
 
 package org.jdesktop.swinghelper.layer.painter;
 
-import org.jdesktop.swinghelper.layer.AbstractLayerItem;
 import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.painter.configurator.Configurator;
-import org.jdesktop.swinghelper.layer.painter.configurator.DefaultConfigurator;
+import org.jdesktop.swinghelper.layer.shaper.Shaper;
+import org.jdesktop.swinghelper.layer.item.AbstractLayerItem;
+import org.jdesktop.swinghelper.layer.item.LayerItemEvent;
+import org.jdesktop.swinghelper.layer.item.LayerItemListener;
 import org.jdesktop.swinghelper.layer.painter.model.DefaultPainterModel;
 import org.jdesktop.swinghelper.layer.painter.model.PainterModel;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.Map;
 
-public abstract class AbstractPainter <V extends JComponent> 
-        extends AbstractLayerItem implements Painter<V> {
+abstract public class AbstractPainter <V extends JComponent> 
+        extends AbstractLayerItem implements Painter<V>, Shaper<V> {
     private PainterModel model;
-    private Configurator<V> configurator;
     private Handler handler;
 
     protected AbstractPainter() {
         setModel(new DefaultPainterModel());
-        setConfigurator(new DefaultConfigurator<V>());
     }
 
     public PainterModel getModel() {
@@ -56,66 +54,55 @@ public abstract class AbstractPainter <V extends JComponent>
 
         if (model != oldModel) {
             if (oldModel != null) {
-                oldModel.removeChangeListener(getHandler());
+                oldModel.removeLayerItemListener(getHandler());
             }
-            model.addChangeListener(getHandler());
+            model.addLayerItemListener(getHandler());
             this.model = model;
-            fireStateChanged();
+            fireLayerItemChanged();
         }
     }
 
-    public Configurator<V> getConfigurator() {
-        return configurator;
-    }
-
-    public void setConfigurator(Configurator<V> configurator) {
-        if (configurator == null) {
-            throw new IllegalArgumentException(
-                    "Null configurator is not supported; set DefaultConfigurator");
-        }
-        Configurator oldConfigurator = getConfigurator();
-        if (configurator != oldConfigurator) {
-            if (oldConfigurator != null) {
-                oldConfigurator.removeChangeListener(getHandler());
-            }
-            configurator.addChangeListener(getHandler());
-        }
-        this.configurator = configurator;
-        fireStateChanged();
-    }
-
+    // Painting
     protected void configure(Graphics2D g2, JXLayer<V> l) {
         if (getModel().isEnabled()) {
-            applyModel(g2);
+            applyComposite(g2, getComposite(l));
+            applyTransform(g2, getTransform(l));
+            applyClip(g2, getClip(l));
+            applyRenderingHints(g2, getRenderingHints(l));
         }
-        if (getConfigurator().isEnabled()) {
-            applyConfigurator(g2, l);
-        } 
+    }
+    
+    abstract public void paint(Graphics2D g2, JXLayer<V> l);
+    
+    public Composite getComposite(JXLayer<V> l) {
+        return getModel().getComposite();
+    }
+    
+    public AffineTransform getTransform(JXLayer<V> l) {
+        return getModel().getTransform();
+    }
+    
+    public Shape getClip(JXLayer<V> l) {
+        return getModel().getClip();
+    }
+    
+    public Map<RenderingHints.Key, Object> getRenderingHints(JXLayer<V> l) {
+        return getModel().getRenderingHints();
+    }
+    
+    protected void applyComposite(Graphics2D g2, Composite composite) {
+        if (composite != null) {
+            g2.setComposite(composite);
+        }
     }
 
-    private void applyModel(Graphics2D g2) {
-        if (getModel().getComposite() != null) {
-            g2.setComposite(getModel().getComposite());
+    protected void applyTransform(Graphics2D g2, AffineTransform transform) {
+        if (transform != null) {
+            g2.transform(transform);
         }
-        if (getModel().getTransform() != null) {
-            g2.transform(getModel().getTransform());
-        }
-        applyClip(g2, getModel().getClip());
-        applyRenderingHints(g2, getModel().getRenderingHints());
     }
-    
-    private void applyConfigurator(Graphics2D g2, JXLayer<V> l) {
-        if (getConfigurator().getComposite(l) != null) {
-            g2.setComposite(getConfigurator().getComposite(l));
-        }
-        if (getConfigurator().getTransform(l) != null) {
-            g2.transform(getConfigurator().getTransform(l));
-        }
-        applyClip(g2, getConfigurator().getClip(l));
-        applyRenderingHints(g2, getConfigurator().getRenderingHints(l));
-    }
-    
-    private void applyClip(Graphics2D g2, Shape clip) {
+
+    protected void applyClip(Graphics2D g2, Shape clip) {
         if (clip != null) {
             if (g2.getClip() == null) {
                 g2.setClip(clip);
@@ -127,7 +114,7 @@ public abstract class AbstractPainter <V extends JComponent>
         }
     }
 
-    private void applyRenderingHints(Graphics2D g2, Map<RenderingHints.Key, Object> hints) {
+    protected void applyRenderingHints(Graphics2D g2, Map<RenderingHints.Key, Object> hints) {
         if (hints != null) {
             for (RenderingHints.Key key : hints.keySet()) {
                 Object value = hints.get(key);
@@ -136,23 +123,19 @@ public abstract class AbstractPainter <V extends JComponent>
                 }
             }
         }
-    }
+    }    
     
-    public abstract void paint(Graphics2D g2, JXLayer<V> l);
-
-    public void repaint(JXLayer<V> l) {
-    }
-
-    protected ChangeListener getHandler() {
+    // Event processing
+    protected LayerItemListener getHandler() {
         if (handler == null) {
             handler = new Handler();
         }
         return handler;
     }
 
-    private class Handler implements ChangeListener {
-        public void stateChanged(ChangeEvent e) {
-            fireStateChanged();
+    private class Handler implements LayerItemListener {
+        public void layerItemChanged(LayerItemEvent e) {
+            fireLayerItemChanged(e.getClip());
         }
     }
 }

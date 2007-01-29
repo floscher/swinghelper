@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,25 +49,25 @@ public class ComponentPainter <V extends JComponent>
 
     public void setComponent(JComponent component) {
         this.component = component;
-        fireStateChanged();
+        fireLayerItemChanged();
     }
 
-    public void repaint(JXLayer<V> l) {
+    public void repaint() {
         if (component != null &&
                 component.getWidth() != 0 && component.getHeight() != 0) {
             if (getBuffer() == null ||
                     getBuffer().getWidth() != component.getWidth() ||
                     getBuffer().getHeight() != component.getHeight()) {
-                setBuffer(createBuffer(null, component.getWidth(), component.getHeight()));
+                setBuffer(createBuffer(component.getWidth(), component.getHeight()));
             }
             Graphics g = getBuffer().getGraphics();
             component.paint(g);
             g.dispose();            
-            setBuffer(processEffects(getBuffer(), l));
+            processEffects(null);
         }
     }
 
-    protected BufferedImage createBuffer(Graphics2D g2, int width, int height) {
+    protected BufferedImage createBuffer(int width, int height) {
         return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,7 +18,7 @@
 
 package org.jdesktop.swinghelper.layer.painter.model;
 
-import org.jdesktop.swinghelper.layer.AbstractLayerItem;
+import org.jdesktop.swinghelper.layer.item.AbstractLayerItem;
 
 import java.awt.*;
 import java.awt.RenderingHints.Key;
@@ -44,7 +44,7 @@ public class DefaultPainterModel
 
     public void setClip(Shape shape) {
         this.shape = shape;
-        fireStateChanged();
+        fireLayerItemChanged();
     }
 
     // Composite
@@ -54,7 +54,7 @@ public class DefaultPainterModel
 
     public void setComposite(Composite composite) {
         this.composite = composite;
-        fireStateChanged();
+        fireLayerItemChanged();
     }
 
     public float getAlpha() {
@@ -77,7 +77,7 @@ public class DefaultPainterModel
     public void setRenderingHints(Map<Key, Object> renderingHints) {
         this.renderingHints = renderingHints == null ?
                 new HashMap<Key, Object>() : new HashMap<Key, Object>(renderingHints);
-        fireStateChanged();
+        fireLayerItemChanged();
     }
 
     // AffineTransform
@@ -87,6 +87,6 @@ public class DefaultPainterModel
 
     public void setTransform(AffineTransform transform) {
         this.transform = transform == null ? null : new AffineTransform(transform);
-        fireStateChanged();
+        fireLayerItemChanged();
     }
 }

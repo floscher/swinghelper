@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,7 @@ import org.jdesktop.swinghelper.layer.effect.Effect;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class BufferedPainter<V extends JComponent>
         extends AbstractBufferedPainter<V> {
@@ -48,7 +49,7 @@ public class BufferedPainter<V extends JComponent>
     
     public void setPainter(Painter<V> painter) {
         this.painter = painter;
-        fireStateChanged();
+        fireLayerItemChanged();
     }
 
     public void paint(Graphics2D g2, JXLayer<V> l) {
@@ -62,15 +63,14 @@ public class BufferedPainter<V extends JComponent>
             Graphics2D bufg = (Graphics2D) getBuffer().getGraphics();
             bufg.setClip(g2.getClip());
             painter.paint(bufg, l);
-            setBuffer(processEffects(getBuffer(), l));
+            processEffects(g2.getClip());
             bufg.dispose();
             g2.drawImage(getBuffer(), 0, 0, null);
         }
     }
-
-    public void repaint(JXLayer<V> l) {
-        if (painter != null) {
-            painter.repaint(l);
-        }
+    
+    protected BufferedImage createBuffer(Graphics2D g2, int width, int height) {
+        return g2.getDeviceConfiguration().
+                createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 }

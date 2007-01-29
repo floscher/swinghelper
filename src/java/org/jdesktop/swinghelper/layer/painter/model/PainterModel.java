@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,7 +18,7 @@
 
 package org.jdesktop.swinghelper.layer.painter.model;
 
-import org.jdesktop.swinghelper.layer.LayerItem;
+import org.jdesktop.swinghelper.layer.item.LayerItem;
 
 import java.awt.*;
 import java.awt.RenderingHints.Key;

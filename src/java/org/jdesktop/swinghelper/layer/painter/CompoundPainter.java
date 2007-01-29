@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -47,14 +47,14 @@ public class CompoundPainter <V extends JComponent>
             painters = new Painter[0];
         }
         for (Painter<V> painter : getPainters()) {
-            painter.removeChangeListener(getHandler());
+            painter.removeLayerItemListener(getHandler());
         }
         this.painters = new Painter[painters.length];
         System.arraycopy(painters, 0, this.painters, 0, painters.length);
         for (Painter<V> painter : painters) {
-            painter.addChangeListener(getHandler());
+            painter.addLayerItemListener(getHandler());
         }
-        fireStateChanged();
+        fireLayerItemChanged();
     }
 
     public void paint(Graphics2D g2, JXLayer<V> l) {
@@ -65,12 +65,6 @@ public class CompoundPainter <V extends JComponent>
                 painter.paint(temp, l);
             }
             temp.dispose();
-        }
-    }
-
-    public void repaint(JXLayer<V> l) {
-        for (Painter<V> painter : painters) {
-            painter.repaint(l);
         }
     }
 }

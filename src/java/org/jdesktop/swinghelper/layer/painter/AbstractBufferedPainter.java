@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,7 +18,6 @@
 
 package org.jdesktop.swinghelper.layer.painter;
 
-import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.effect.Effect;
 
 import javax.swing.*;
@@ -31,17 +30,15 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     private BufferedImage buffer;
     private Effect[] effects = new Effect[0];
 
-    protected BufferedImage getBuffer() {
+    public BufferedImage getBuffer() {
         return buffer;
     }
 
     protected void setBuffer(BufferedImage buffer) {
+        if (buffer == null) {
+            throw new IllegalArgumentException("BufferedImage is null");
+        }
         this.buffer = buffer;
-    }
-
-    protected BufferedImage createBuffer(Graphics2D g2, int width, int height) {
-        return g2.getDeviceConfiguration().
-                createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
     public void setEffects(Effect<V>... effects) {
@@ -49,14 +46,14 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
             effects = new Effect[0];
         }
         for (Effect<V> effect : getEffects()) {
-            effect.removeChangeListener(getHandler());
+            effect.removeLayerItemListener(getHandler());
         }
         this.effects = new Effect[effects.length];
         System.arraycopy(effects, 0, this.effects, 0, effects.length);
         for (Effect<V> effect : effects) {
-            effect.addChangeListener(getHandler());
+            effect.addLayerItemListener(getHandler());
         }
-        fireStateChanged();
+        fireLayerItemChanged();
     }
 
     public Effect<V>[] getEffects() {
@@ -65,12 +62,14 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         return result;
     }
 
-    protected BufferedImage processEffects(BufferedImage buffer, JXLayer<V> l) {
+    protected void processEffects(Shape clip) {
+        if (getBuffer() == null) {
+            throw new IllegalStateException("Buffer is null");
+        }
         for (Effect<V> e : getEffects()) {
             if (e.isEnabled()) {
-                buffer = e.apply(buffer, l);
+                e.apply(getBuffer(), clip);
             }
         }
-        return buffer;
     }
 }
