@@ -10,9 +10,9 @@ import java.awt.geom.Ellipse2D;
 
 /**
  * @author Alexander Potochkin
- *         <p/>
- *         https://swinghelper.dev.java.net/
- *         http://weblogs.java.net/blog/alexfromsun/
+ *         
+ * https://swinghelper.dev.java.net/
+ * http://weblogs.java.net/blog/alexfromsun/
  */
 public class ShapedButtonDemo {
 

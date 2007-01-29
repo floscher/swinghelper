@@ -12,10 +12,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.GeneralPath;
 
+/**
+ * @author Alexander Potochkin
+ *         
+ * https://swinghelper.dev.java.net/
+ * http://weblogs.java.net/blog/alexfromsun/
+ */
 public class ShapingAnimationDemo {
 
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createGui();
+            }
+        });
+    }
 
+    private static void createGui() {
         JFrame frame = new JFrame("ShapingDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -118,7 +131,7 @@ public class ShapingAnimationDemo {
             setPainter(new DefaultPainter<AbstractButton>());
         }
 
-        public Shape getClip(JXLayer l) {
+        public Shape getClip(JXLayer<AbstractButton> l) {
             if (x > l.getWidth()) {
                 x = 0;
             }

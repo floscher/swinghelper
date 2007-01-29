@@ -13,6 +13,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author Alexander Potochkin
+ *         
+ * https://swinghelper.dev.java.net/
+ * http://weblogs.java.net/blog/alexfromsun/
+ */
 public class TabbedPaneAnimationDemo {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -76,7 +82,6 @@ public class TabbedPaneAnimationDemo {
     static class TabbedAnimatingChangeListener implements ChangeListener {
         private int index;
         private Timer timer;
-        private JXLayer<JComponent> layer;
         private ComponentPainter<JComponent> painter;
         private float delta;
 
@@ -126,8 +131,10 @@ public class TabbedPaneAnimationDemo {
         
         public void stateChanged(ChangeEvent e) {
             JTabbedPane pane = (JTabbedPane) e.getSource();
-            layer = (JXLayer<JComponent>) pane.getSelectedComponent();
-            JXLayer<JComponent> oldLayer = (JXLayer<JComponent>) pane.getComponentAt(index);
+            JXLayer<JComponent> layer = 
+                    (JXLayer<JComponent>) pane.getSelectedComponent();
+            JXLayer<JComponent> oldLayer = 
+                    (JXLayer<JComponent>) pane.getComponentAt(index);
             
             PainterModel model = painter.getModel();
             model.setAlpha(1 - model.getAlpha());
@@ -145,10 +152,10 @@ public class TabbedPaneAnimationDemo {
     }
     
     static class AnimationPainter extends ComponentPainter<JComponent> {
-        private DefaultPainter defaultPainter;
+        private DefaultPainter<JComponent> defaultPainter;
 
         public AnimationPainter() {
-            defaultPainter = new DefaultPainter();
+            defaultPainter = new DefaultPainter<JComponent>();
             getModel().setAlpha(0);
         }
 

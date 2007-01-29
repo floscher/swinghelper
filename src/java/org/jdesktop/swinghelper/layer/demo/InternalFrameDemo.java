@@ -19,9 +19,9 @@ import java.util.Properties;
 /**
  * @author Jeff Dinkins
  * @author Alexander Potochkin
- *         <p/>
- *         https://swinghelper.dev.java.net/
- *         http://weblogs.java.net/blog/alexfromsun/
+ *         
+ * https://swinghelper.dev.java.net/
+ * http://weblogs.java.net/blog/alexfromsun/
  */
 public class InternalFrameDemo extends JPanel {
     int windowCount = 0;
@@ -84,7 +84,14 @@ public class InternalFrameDemo extends JPanel {
      * main method allows us to run as a standalone demo.
      */
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createGui();
+            }
+        });      
+    }
 
+    private static void createGui() {
         final JFrame frame = new JFrame("JXLayer demo");
         InternalFrameDemo demo = new InternalFrameDemo();
 
@@ -157,7 +164,6 @@ public class InternalFrameDemo extends JPanel {
         frame.setLocationRelativeTo(null);
 
         frame.setVisible(true);
-
     }
 
     static class CoverPainter extends AbstractPainter<JComponent> {

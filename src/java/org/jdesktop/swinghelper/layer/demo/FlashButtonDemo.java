@@ -10,6 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 
+/**
+ * @author Alexander Potochkin
+ * 
+ * https://swinghelper.dev.java.net/
+ * http://weblogs.java.net/blog/alexfromsun/ 
+ */ 
 public class FlashButtonDemo {
     private static void createGui() {
         JFrame frame = new JFrame("FlashButtonDemo");

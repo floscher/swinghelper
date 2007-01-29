@@ -17,12 +17,11 @@ import java.awt.event.ItemEvent;
 
 /**
  * @author Alexander Potochkin
- *         <p/>
- *         https://swinghelper.dev.java.net/
- *         http://weblogs.java.net/blog/alexfromsun/
- */
+ * 
+ * https://swinghelper.dev.java.net/
+ * http://weblogs.java.net/blog/alexfromsun/ 
+ */ 
 public class GlassPaneDemo extends JFrame {
-    private JXLayer<JComponent> glassPaneLayer;
     private JXLayer<JComponent> buttonLayer;
     private JButton glassPaneButton;
     private JCheckBox buttonCheckBox;
@@ -35,7 +34,7 @@ public class GlassPaneDemo extends JFrame {
                 new ComponentPainter<JComponent>(getLayeredPane(),
                         new ImageOpEffect(ImageOpFactory.getConvolveOp(5)));
 
-        glassPaneLayer = new JXLayer<JComponent>(glassPanePainter);
+        JXLayer<JComponent> glassPaneLayer = new JXLayer<JComponent>(glassPanePainter);
         setGlassPane(glassPaneLayer);
 
         glassPaneButton.addActionListener(new ActionListener() {
