@@ -19,8 +19,6 @@
 package org.jdesktop.swinghelper.layer.shaper;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.painter.model.PainterModel;
-import org.jdesktop.swinghelper.layer.painter.configurator.Configurator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,18 +26,7 @@ import java.awt.*;
 public class DefaultShaper <V extends JComponent>
         extends AbstractShaper<V> {
 
-    public boolean contains(int x, int y, JXLayer<V> l) {
-        Shape clip = null;
-        if (l.getPainter().isEnabled()) {
-            PainterModel model = l.getPainter().getModel();
-            if (model.isEnabled()) {
-                clip = model.getClip();
-            }
-            Configurator<V> configurator = l.getPainter().getConfigurator();
-            if (configurator.isEnabled() && configurator.getClip(l) != null) {
-                clip = configurator.getClip(l);
-            }
-        }
-        return clip == null ? true : clip.contains(x, y);
+    public Shape getClip(JXLayer<V> l) {
+        return null;
     }
 }

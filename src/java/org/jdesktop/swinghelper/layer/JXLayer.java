@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,11 +22,11 @@ import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 import org.jdesktop.swinghelper.layer.painter.Painter;
 import org.jdesktop.swinghelper.layer.shaper.DefaultShaper;
 import org.jdesktop.swinghelper.layer.shaper.Shaper;
+import org.jdesktop.swinghelper.layer.item.LayerItemEvent;
+import org.jdesktop.swinghelper.layer.item.LayerItemListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class JXLayer <V extends JComponent> extends JComponent {
@@ -35,7 +35,7 @@ public class JXLayer <V extends JComponent> extends JComponent {
     private JComponent glassPane;
     public Painter<V> painter;
     private boolean isPainting;
-    private ChangeListener changeListener;
+    private LayerItemListener itemListener;
 
     // Constructors
     public JXLayer() {
@@ -51,7 +51,7 @@ public class JXLayer <V extends JComponent> extends JComponent {
     }
 
     public JXLayer(V view, Painter<V> painter) {
-        changeListener = createChangeListener();
+        itemListener = createLayerItemListener();
         setView(view);
         setPainter(painter);
         setGlassPane(new JXGlassPane());
@@ -103,9 +103,9 @@ public class JXLayer <V extends JComponent> extends JComponent {
         Painter<V> oldPainter = getPainter();
         if (painter != oldPainter) {
             if (oldPainter != null) {
-                oldPainter.removeChangeListener(changeListener);
+                oldPainter.removeLayerItemListener(itemListener);
             }
-            painter.addChangeListener(changeListener);
+            painter.addLayerItemListener(itemListener);
         }
         this.painter = painter;
         repaint();
@@ -117,14 +117,14 @@ public class JXLayer <V extends JComponent> extends JComponent {
 
     public void setMouseClipShaper(Shaper<V> mouseClipShaper) {
         if (mouseClipShaper == null) {
-            throw new IllegalArgumentException("Null shaper is not supported; set NullShaper");
+            throw new IllegalArgumentException("Null shaper is not supported; set DefaultShaper");
         }
         Shaper<V> oldShaper = getMouseClipShaper();
         if (mouseClipShaper != oldShaper) {
             if (oldShaper != null) {
-                oldShaper.removeChangeListener(changeListener);
+                oldShaper.removeLayerItemListener(itemListener);
             }
-            mouseClipShaper.addChangeListener(changeListener);
+            mouseClipShaper.addLayerItemListener(itemListener);
         }
         this.mouseClipShaper = mouseClipShaper;
         repaint();
@@ -166,25 +166,29 @@ public class JXLayer <V extends JComponent> extends JComponent {
     }
 
     public void setBorder(Border border) {
-        if (border != null) {
-            throw new IllegalArgumentException("JXLayer.setBorder() is not supported");
-        }
+        throw new UnsupportedOperationException("JXLayer.setBorder() is not supported");
     }
 
     public boolean contains(int x, int y) {
         Shaper<V> mouseShaper = getMouseClipShaper();
-        if (mouseShaper.isEnabled()) {
-            return mouseShaper.contains(x, y, this);
+        if (mouseShaper.isEnabled() && mouseShaper.getClip(this) != null) {
+            return mouseShaper.getClip(this).contains(x, y);
         }
         return super.contains(x, y);
     }
 
     // ChangeListener    
-    private ChangeListener createChangeListener() {
-        return new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
+    private LayerItemListener createLayerItemListener() {
+        return new LayerItemListener() {
+            public void layerItemChanged(LayerItemEvent e) {
+                Rectangle clipBounds = e.getClip() == null ?
+                        new Rectangle(getSize()) : e.getClip().getBounds();
                 if (view != null) {
-                    view.repaint();
+                    view.repaint(clipBounds.x, clipBounds.y,
+                            clipBounds.width, clipBounds.height);
+                } else {
+                    repaint(clipBounds.x, clipBounds.y,
+                            clipBounds.width, clipBounds.height);
                 }
             }
         };

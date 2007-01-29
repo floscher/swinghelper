@@ -178,8 +178,6 @@ public class InternalFrameDemo extends JPanel {
                     new BackgroundPainter(),
                     backgroundImpl);
             mainPainter = new BufferedPainter<JComponent>(new DefaultPainter<JComponent>());
-            effect = new ImageOpEffect();
-            mainPainter.setEffects(effect);
 
             foregroundPainter = new AbstractPainter() {
                 public void paint(Graphics2D g2, JXLayer l) {
@@ -199,7 +197,7 @@ public class InternalFrameDemo extends JPanel {
         public void setEffect(Effect effect) {
             this.effect = effect;
             mainPainter.setEffects(effect);
-            fireStateChanged();
+            fireLayerItemChanged();
         }
 
         public boolean isShowPainters() {
@@ -213,7 +211,7 @@ public class InternalFrameDemo extends JPanel {
             } else {
                 mainPainter.getModel().setAlpha(1);
             }
-            fireStateChanged();
+            fireLayerItemChanged();
         }
 
         public void paint(Graphics2D g2, JXLayer<JComponent> l) {

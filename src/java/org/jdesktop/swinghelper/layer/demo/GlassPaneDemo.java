@@ -31,7 +31,7 @@ public class GlassPaneDemo extends JFrame {
         super("GlassPane demo");
         fillUpTheFrame();
 
-        ComponentPainter<JComponent> glassPanePainter =
+        final ComponentPainter<JComponent> glassPanePainter =
                 new ComponentPainter<JComponent>(getLayeredPane(),
                         new ImageOpEffect(ImageOpFactory.getConvolveOp(5)));
 
@@ -45,7 +45,7 @@ public class GlassPaneDemo extends JFrame {
 
                     public void run() {
                         // it is important to not call repaint during painting process 
-                        glassPaneLayer.getPainter().repaint(glassPaneLayer);
+                        glassPanePainter.repaint();
                         getGlassPane().setVisible(true);
                         JOptionPane.showConfirmDialog(GlassPaneDemo.this,
                                 "Do you the effect ?", "Hello", JOptionPane.DEFAULT_OPTION);

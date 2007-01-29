@@ -1,9 +1,8 @@
 package org.jdesktop.swinghelper.layer.demo;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 import org.jdesktop.swinghelper.layer.painter.BufferedPainter;
-import org.jdesktop.swinghelper.layer.painter.configurator.DefaultConfigurator;
+import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -72,14 +71,11 @@ public class ShapingAnimationDemo {
         horBox.add(Box.createHorizontalStrut(30));
 
         final JXLayer<AbstractButton> layer = getLayer();
-        
-        final TetragonShaper<AbstractButton> shaper = new TetragonShaper<AbstractButton>();
 
-        final BufferedPainter<AbstractButton> painter 
-                = new BufferedPainter<AbstractButton>(new DefaultPainter());
-        
-        painter.setConfigurator(shaper);
+        final AnimatedPainter painter = new AnimatedPainter();
+
         layer.setPainter(painter);
+        layer.setMouseClipShaper(painter);
 
         alphaSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -100,7 +96,7 @@ public class ShapingAnimationDemo {
 
         final Timer timer = new Timer(20, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                shaper.next();
+                painter.next();
             }
         });
 
@@ -115,11 +111,14 @@ public class ShapingAnimationDemo {
         });
     }
 
-
-    static class TetragonShaper<T extends JComponent> extends DefaultConfigurator<T> {
+    static class AnimatedPainter extends BufferedPainter<AbstractButton> {
         private int x, y;
 
-        public Shape getClip(JXLayer<T> l) {
+        public AnimatedPainter() {
+            setPainter(new DefaultPainter<AbstractButton>());
+        }
+
+        public Shape getClip(JXLayer l) {
             if (x > l.getWidth()) {
                 x = 0;
             }
@@ -138,7 +137,7 @@ public class ShapingAnimationDemo {
         public void next() {
             x += 2;
             y += 1;
-            fireStateChanged();
+            fireLayerItemChanged();
         }
     }
 

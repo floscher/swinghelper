@@ -18,11 +18,12 @@
 
 package org.jdesktop.swinghelper.layer.shaper;
 
-import org.jdesktop.swinghelper.layer.LayerItem;
+import org.jdesktop.swinghelper.layer.item.LayerItem;
 import org.jdesktop.swinghelper.layer.JXLayer;
 
 import javax.swing.*;
+import java.awt.*;
 
 public interface Shaper<V extends JComponent> extends LayerItem {
-    public boolean contains(int x, int y, JXLayer<V> l);
+    public Shape getClip(JXLayer<V> l);
 }

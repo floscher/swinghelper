@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,22 +18,23 @@
 
 package org.jdesktop.swinghelper.layer.effect;
 
-import org.jdesktop.swinghelper.layer.AbstractLayerItem;
-import org.jdesktop.swinghelper.layer.JXLayer;
+import org.jdesktop.swinghelper.layer.item.AbstractLayerItem;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 
-public class ImageOpEffect<V extends JComponent>
+public class ImageOpEffect <V extends JComponent>
         extends AbstractLayerItem implements Effect<V> {
-    private BufferedImageOp bufferedImageOp;
-
-    public ImageOpEffect() {
-    }
+    private final BufferedImageOp bufferedImageOp;
+    private BufferedImage srcBuffer;
 
     public ImageOpEffect(BufferedImageOp bufferedImageOp) {
+        if (bufferedImageOp == null) {
+            throw new IllegalArgumentException("BufferedImageOp is null");
+        }
         this.bufferedImageOp = bufferedImageOp;
     }
 
@@ -41,24 +42,57 @@ public class ImageOpEffect<V extends JComponent>
         return bufferedImageOp;
     }
 
-    public void setBufferedImageOp(BufferedImageOp bufferedImageOp) {
-        this.bufferedImageOp = bufferedImageOp;
-        fireStateChanged();
-    }
-
-    private boolean isInPlace() {
-        return !(bufferedImageOp instanceof ConvolveOp);
-    }
-
-    public BufferedImage apply(BufferedImage buf, JXLayer<V> l) {
-        if (bufferedImageOp != null) {
-            if (isInPlace()) {
-                return bufferedImageOp.filter(buf, buf);
-            }
-            BufferedImage dest =
-                    bufferedImageOp.createCompatibleDestImage(buf, buf.getColorModel());
-            return bufferedImageOp.filter(buf, dest);
+    protected Shape getTransformedClip(Shape clip) {
+        if (bufferedImageOp instanceof ConvolveOp) {
+            ConvolveOp cop = (ConvolveOp) bufferedImageOp;
+            Rectangle clipBounds = clip.getBounds();
+            clipBounds.grow(cop.getKernel().getWidth() / 2,
+                    cop.getKernel().getHeight() / 2);
+            return clipBounds;
         }
-        return buf;
+        return clip;
+    }
+
+    public void apply(BufferedImage buffer, Shape clip) {
+        if (buffer == null) {
+            throw new IllegalArgumentException("BufferedImage is null");
+        }
+        Rectangle bufferSize = new Rectangle(buffer.getWidth(), buffer.getHeight());
+        if (clip == null) {
+            clip = bufferSize;
+        } else {
+            clip = getTransformedClip(clip);
+        }
+        Rectangle clipBounds = clip.getBounds().intersection(bufferSize);
+
+        if (clipBounds.isEmpty() ||
+                buffer.getWidth() <= clipBounds.x ||
+                buffer.getHeight() <= clipBounds.y) {
+            return;
+        }
+
+        int x = clipBounds.x;
+        int y = clipBounds.y;
+        int width = clipBounds.width;
+        int height = clipBounds.height;
+
+        if (buffer.getWidth() < x + width) {
+            width = buffer.getWidth() - x;
+        }
+        if (buffer.getHeight() < y + height) {
+            height = buffer.getHeight() - y;
+        }
+
+        if (srcBuffer == null ||
+                srcBuffer.getWidth() != width ||
+                srcBuffer.getHeight() != height) {
+            srcBuffer = new BufferedImage(width, height, buffer.getType());
+        }
+
+        BufferedImage subImage
+                = buffer.getSubimage(x, y, width, height);
+        subImage.copyData(srcBuffer.getRaster());
+
+        bufferedImageOp.filter(srcBuffer, subImage);
     }
 }

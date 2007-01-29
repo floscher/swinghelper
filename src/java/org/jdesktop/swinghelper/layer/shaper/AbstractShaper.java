@@ -18,10 +18,10 @@
 
 package org.jdesktop.swinghelper.layer.shaper;
 
-import org.jdesktop.swinghelper.layer.AbstractLayerItem;
+import org.jdesktop.swinghelper.layer.item.AbstractLayerItem;
 
 import javax.swing.*;
 
-public abstract class AbstractShaper <V extends JComponent>
+abstract public class AbstractShaper <V extends JComponent>
         extends AbstractLayerItem implements Shaper<V> {
 }

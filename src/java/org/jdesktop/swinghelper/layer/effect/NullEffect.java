@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,17 +18,16 @@
 
 package org.jdesktop.swinghelper.layer.effect;
 
-import org.jdesktop.swinghelper.layer.JXLayer;
+import org.jdesktop.swinghelper.layer.item.LayerItemListener;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 final public class NullEffect <V extends JComponent>
         implements Effect<V> {
 
-    public BufferedImage apply(BufferedImage buf, JXLayer<V> l) {
-        return buf;
+    public void apply(BufferedImage buf, Shape clip) {
     }
 
     public boolean isEnabled() {
@@ -38,13 +37,13 @@ final public class NullEffect <V extends JComponent>
     public void setEnabled(boolean b) {
     }
 
-    public void addChangeListener(ChangeListener l) {
+    public void addLayerItemListener(LayerItemListener l) {
     }
 
-    public void removeChangeListener(ChangeListener l) {
+    public LayerItemListener[] getLayerItemListeners() {
+        return new LayerItemListener[0];
     }
 
-    public ChangeListener[] getChangeListeners() {
-        return new ChangeListener[0];
+    public void removeLayerItemListener(LayerItemListener l) {
     }
 }

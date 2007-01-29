@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Alexander Potochkin
+ * Copyright (C) 2006,2007 Alexander Potochkin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,12 +18,12 @@
 
 package org.jdesktop.swinghelper.layer.effect;
 
-import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.LayerItem;
+import org.jdesktop.swinghelper.layer.item.LayerItem;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public interface Effect<V extends JComponent> extends LayerItem {
-    public BufferedImage apply(BufferedImage buf, JXLayer<V> l);
+    public void apply(BufferedImage buf, Shape clip);
 }
