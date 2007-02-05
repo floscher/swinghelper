@@ -28,18 +28,23 @@ import java.awt.image.ConvolveOp;
 
 public class ImageOpEffect <V extends JComponent>
         extends AbstractLayerItem implements Effect<V> {
-    private final BufferedImageOp bufferedImageOp;
+    private BufferedImageOp bufferedImageOp;
     private BufferedImage srcBuffer;
 
+    public ImageOpEffect() {
+    }
+
     public ImageOpEffect(BufferedImageOp bufferedImageOp) {
-        if (bufferedImageOp == null) {
-            throw new IllegalArgumentException("BufferedImageOp is null");
-        }
         this.bufferedImageOp = bufferedImageOp;
     }
 
     public BufferedImageOp getBufferedImageOp() {
         return bufferedImageOp;
+    }
+
+    public void setBufferedImageOp(BufferedImageOp bufferedImageOp) {
+        this.bufferedImageOp = bufferedImageOp;
+        fireLayerItemChanged();
     }
 
     protected Shape getTransformedClip(Shape clip) {
@@ -54,6 +59,9 @@ public class ImageOpEffect <V extends JComponent>
     }
 
     public void apply(BufferedImage buffer, Shape clip) {
+        if (bufferedImageOp == null) {
+            return;
+        }
         if (buffer == null) {
             throw new IllegalArgumentException("BufferedImage is null");
         }
