@@ -28,14 +28,27 @@ import org.jdesktop.swinghelper.layer.item.LayerItemListener;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
 
-public class JXLayer <V extends JComponent> extends JComponent {
+public class JXLayer<V extends JComponent> extends JComponent {
     public V view;
     private Shaper<V> mouseClipShaper;
     private JComponent glassPane;
     public Painter<V> painter;
     private boolean isPainting;
     private LayerItemListener itemListener;
+
+    // Enabled/disabled support
+    private static final FocusTraversalPolicy
+            disabledPolicy = new LayoutFocusTraversalPolicy() {
+        protected boolean accept(Component aComponent) {
+            return false;
+        }
+    };
+    private final static MouseListener nullMouseListener = new MouseAdapter() {
+    };
+    private Component recentFocusOwner;
 
     // Constructors
     public JXLayer() {
@@ -58,6 +71,8 @@ public class JXLayer <V extends JComponent> extends JComponent {
         setLayout(LayerLayout.getSharedInstance());
         setPainter(painter);
         setMouseClipShaper(new DefaultShaper<V>());
+        // it doesn't effect until we setFocusTraversalPolicyProvider(true);  
+        setFocusTraversalPolicy(disabledPolicy);
     }
 
     // Main setters and getters
@@ -192,6 +207,33 @@ public class JXLayer <V extends JComponent> extends JComponent {
                 }
             }
         };
+    }
+
+    public void setEnabled(boolean enabled) {
+        if (enabled != isEnabled()) {
+            if (enabled) {
+                getGlassPane().removeMouseListener(nullMouseListener);
+                setFocusTraversalPolicyProvider(false);
+                boolean isGlassPaneFocused = getGlassPane().isFocusOwner();
+                getGlassPane().setFocusable(false);
+                if (isGlassPaneFocused && recentFocusOwner != null) {
+                    recentFocusOwner.requestFocusInWindow();
+                }
+                recentFocusOwner = null;
+            } else {
+                getGlassPane().addMouseListener(nullMouseListener);
+                setFocusTraversalPolicyProvider(true);
+
+                KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+                Component focusOwner = kfm.getFocusOwner();
+                if (focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this)) {
+                    recentFocusOwner = focusOwner;
+                    getGlassPane().setFocusable(true);
+                    getGlassPane().requestFocusInWindow();
+                }
+            }
+        }
+        super.setEnabled(enabled);
     }
 }
 
