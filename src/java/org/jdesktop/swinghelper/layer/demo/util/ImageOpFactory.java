@@ -32,7 +32,8 @@ public class ImageOpFactory {
             result[2] = invert;
         }
         result[3] = straight;
-        LookupTable table = new ByteLookupTable(0, result);
+        // Wrapper is used as workaround for the buggy color convertion in *nix 
+        LookupTable table = new LookupTableWrapper(new ByteLookupTable(0, result));
         return new LookupOp(table, null);
     }
 
@@ -42,7 +43,8 @@ public class ImageOpFactory {
             posterize[i] = (byte) (i - (i % 32));
 //            posterize[i] = (byte) (i - (i % 256));
         }
-        LookupTable table = new ByteLookupTable(0, posterize);
+        // Wrapper is used as workaround for the buggy color convertion in *nix
+        LookupTable table = new LookupTableWrapper(new ByteLookupTable(0, posterize));
         return new LookupOp(table, null);
     }
 
