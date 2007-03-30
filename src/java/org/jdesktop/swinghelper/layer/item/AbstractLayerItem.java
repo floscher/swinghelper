@@ -48,7 +48,7 @@ abstract public class AbstractLayerItem implements LayerItem {
     }
 
     public LayerItemListener[] getLayerItemListeners() {
-        return (LayerItemListener[]) listenerList.getListeners(LayerItemListener.class);
+        return listenerList.getListeners(LayerItemListener.class);
     }
 
     protected void fireLayerItemChanged() {
@@ -57,7 +57,7 @@ abstract public class AbstractLayerItem implements LayerItem {
 
     protected void fireLayerItemChanged(Shape clip) {
         fireLayerItemChanged(new LayerItemEvent(this, clip));
-    }    
+    }
 
     private void fireLayerItemChanged(LayerItemEvent event) {
         // Guaranteed to return a non-null array

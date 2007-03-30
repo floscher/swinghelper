@@ -19,6 +19,7 @@
 package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.effect.Effect;
+import org.jdesktop.swinghelper.layer.JXLayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,5 +72,54 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
                 e.apply(getBuffer(), clip);
             }
         }
+    }
+
+    public void paint(Graphics2D g2, JXLayer<V> l) {
+        if (isLayerValid(l) && isPainterValid()) {
+            configure(g2, l);
+            // if image is not valid it should be repainted
+            if (!isImageValid(g2, l)) {
+                // if buffer is not valid it should be recreated
+                if (!isBufferValid(g2, l)) {
+                    setBuffer(createBuffer(g2, l.getWidth(), l.getHeight()));
+                }
+                Graphics2D bufg = (Graphics2D) getBuffer().getGraphics();
+                bufg.setClip(g2.getClip());
+                paintToBuffer(bufg, l);
+                processEffects(g2.getClip());
+                bufg.dispose();
+            }
+            g2.drawImage(getBuffer(), 0, 0, null);
+        }
+    }
+
+    protected boolean isPainterValid() {
+        return true;
+    }
+
+    protected boolean isBufferValid(Graphics2D g2, JXLayer<V> l) {
+        return getBuffer() != null &&
+                getBuffer().getWidth() == l.getWidth() &&
+                getBuffer().getHeight() == l.getHeight();
+    }
+
+    /**
+     * It will be repainted each time by default
+     */
+    protected boolean isImageValid(Graphics2D g2, JXLayer<V> l) {
+        return false;
+    }
+
+    protected boolean isLayerValid(JXLayer<V> l) {
+        return l.getWidth() != 0 && l.getHeight() != 0;
+    }
+
+    protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
+
+    }
+
+    protected BufferedImage createBuffer(Graphics2D g2, int width, int height) {
+        return g2.getDeviceConfiguration().
+                createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 }

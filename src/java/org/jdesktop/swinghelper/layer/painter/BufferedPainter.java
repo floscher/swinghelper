@@ -23,7 +23,6 @@ import org.jdesktop.swinghelper.layer.effect.Effect;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class BufferedPainter<V extends JComponent>
         extends AbstractBufferedPainter<V> {
@@ -31,7 +30,7 @@ public class BufferedPainter<V extends JComponent>
     private Painter<V> painter;
 
     public BufferedPainter() {
-        this(null, (Effect<V>[]) null);
+        this(new DefaultPainter<V>(), (Effect<V>[]) null);
     }
 
     public BufferedPainter(Painter<V> painter) {
@@ -46,31 +45,17 @@ public class BufferedPainter<V extends JComponent>
     public Painter<V> getPainter() {
         return painter;
     }
-    
+
     public void setPainter(Painter<V> painter) {
         this.painter = painter;
         fireLayerItemChanged();
     }
 
-    public void paint(Graphics2D g2, JXLayer<V> l) {
-        if (painter != null) {
-            configure(g2, l);
-            if (getBuffer() == null ||
-                    getBuffer().getWidth() != l.getWidth() ||
-                    getBuffer().getHeight() != l.getHeight()) {
-                setBuffer(createBuffer(g2, l.getWidth(), l.getHeight()));
-            }
-            Graphics2D bufg = (Graphics2D) getBuffer().getGraphics();
-            bufg.setClip(g2.getClip());
-            painter.paint(bufg, l);
-            processEffects(g2.getClip());
-            bufg.dispose();
-            g2.drawImage(getBuffer(), 0, 0, null);
-        }
+    protected boolean isPainterValid() {
+        return painter != null;
     }
-    
-    protected BufferedImage createBuffer(Graphics2D g2, int width, int height) {
-        return g2.getDeviceConfiguration().
-                createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+
+    protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
+        painter.paint(g2, l);
     }
 }

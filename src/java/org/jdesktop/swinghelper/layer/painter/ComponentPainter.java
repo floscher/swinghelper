@@ -53,8 +53,7 @@ public class ComponentPainter <V extends JComponent>
     }
 
     public void repaint() {
-        if (component != null &&
-                component.getWidth() != 0 && component.getHeight() != 0) {
+        if (isPainterValid()) {
             if (getBuffer() == null ||
                     getBuffer().getWidth() != component.getWidth() ||
                     getBuffer().getHeight() != component.getHeight()) {
@@ -67,14 +66,16 @@ public class ComponentPainter <V extends JComponent>
         }
     }
 
-    protected BufferedImage createBuffer(int width, int height) {
-        return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    protected boolean isPainterValid() {
+        return component != null &&
+                component.getWidth() != 0 && component.getHeight() != 0;
     }
 
-    public void paint(Graphics2D g2, JXLayer<V> l) {
-        if (getBuffer() != null) {
-            configure(g2, l);
-            g2.drawImage(getBuffer(), 0, 0, null);
-        }
+    protected boolean isImageValid(Graphics2D g2, JXLayer<V> l) {
+        return true;
+    }
+    
+    protected BufferedImage createBuffer(int width, int height) {
+        return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
 }

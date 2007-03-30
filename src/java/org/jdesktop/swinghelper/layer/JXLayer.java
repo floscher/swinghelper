@@ -18,12 +18,12 @@
 
 package org.jdesktop.swinghelper.layer;
 
-import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
-import org.jdesktop.swinghelper.layer.painter.Painter;
-import org.jdesktop.swinghelper.layer.shaper.DefaultShaper;
-import org.jdesktop.swinghelper.layer.shaper.Shaper;
 import org.jdesktop.swinghelper.layer.item.LayerItemEvent;
 import org.jdesktop.swinghelper.layer.item.LayerItemListener;
+import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
+import org.jdesktop.swinghelper.layer.painter.Painter;
+import org.jdesktop.swinghelper.layer.shaper.NullShaper;
+import org.jdesktop.swinghelper.layer.shaper.Shaper;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -70,7 +70,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
         setGlassPane(new JXGlassPane());
         setLayout(LayerLayout.getSharedInstance());
         setPainter(painter);
-        setMouseClipShaper(new DefaultShaper<V>());
+        setMouseClipShaper(new NullShaper<V>());
         // it doesn't effect until we setFocusTraversalPolicyProvider(true);  
         setFocusTraversalPolicy(disabledPolicy);
     }
@@ -132,7 +132,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     public void setMouseClipShaper(Shaper<V> mouseClipShaper) {
         if (mouseClipShaper == null) {
-            throw new IllegalArgumentException("Null shaper is not supported; set DefaultShaper");
+            throw new IllegalArgumentException("Null shaper is not supported; set NullShaper");
         }
         Shaper<V> oldShaper = getMouseClipShaper();
         if (mouseClipShaper != oldShaper) {
@@ -186,8 +186,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     public boolean contains(int x, int y) {
         Shaper<V> mouseShaper = getMouseClipShaper();
-        if (mouseShaper.isEnabled() && mouseShaper.getClip(this) != null) {
-            return mouseShaper.getClip(this).contains(x, y);
+        if (mouseShaper != null && mouseShaper.isEnabled()) {
+            return mouseShaper.contains(x, y, this);
         }
         return super.contains(x, y);
     }

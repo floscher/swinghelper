@@ -95,7 +95,7 @@ public class GlassPaneDemo extends JFrame {
                 return rowIndex + " " + columnIndex;
             }
         });
-        add(new JScrollPane(table), BorderLayout.SOUTH);
+        add(new JScrollPane(table));
         JPanel topPanel = new JPanel(new BorderLayout());
         JPanel temp = new JPanel();
 
@@ -112,9 +112,8 @@ public class GlassPaneDemo extends JFrame {
         temp.add(glassPaneButton);
 
         topPanel.add(temp, BorderLayout.SOUTH);
-        add(topPanel);
+        add(topPanel, BorderLayout.NORTH);
         setSize(700, 550);
         setLocationRelativeTo(null);
-        setResizable(false);
     }
 }

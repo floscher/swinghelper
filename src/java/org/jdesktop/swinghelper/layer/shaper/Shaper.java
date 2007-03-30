@@ -25,5 +25,5 @@ import javax.swing.*;
 import java.awt.*;
 
 public interface Shaper<V extends JComponent> extends LayerItem {
-    public Shape getClip(JXLayer<V> l);
+    public boolean contains(int x, int y, JXLayer<V> l);
 }

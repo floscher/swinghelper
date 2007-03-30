@@ -138,4 +138,9 @@ abstract public class AbstractPainter <V extends JComponent>
             fireLayerItemChanged(e.getClip());
         }
     }
+
+    public boolean contains(int x, int y, JXLayer<V> l) {
+        Shape clip = getClip(l);
+        return clip == null || clip.contains(x, y);
+    }
 }

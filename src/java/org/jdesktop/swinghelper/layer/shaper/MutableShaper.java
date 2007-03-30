@@ -33,12 +33,16 @@ public class MutableShaper<V extends JComponent> extends AbstractShaper<V> {
         this.clip = clip;
     }
 
-    public Shape getClip(JXLayer<V> l) {
-        return clip;
+    public boolean contains(int x, int y, JXLayer<V> l) {
+        return clip != null && clip.contains(x, y);
     }
 
     public void setClip(Shape clip) {
         this.clip = clip;
         fireLayerItemChanged();
+    }
+
+    public Shape getClip() {
+        return clip;
     }
 }

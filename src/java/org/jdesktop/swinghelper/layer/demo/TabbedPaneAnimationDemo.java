@@ -70,11 +70,11 @@ public class TabbedPaneAnimationDemo {
         label3.setForeground(Color.GREEN.darker());
         pane.add("Three", new JXLayer<JComponent>(p3));
 
-        pane.addChangeListener(new TabbedAnimatingChangeListener(100, .05f));
+        pane.addChangeListener(new TabbedAnimatingChangeListener(50, .05f));
 
         frame.add(pane);
 
-        frame.setSize(310, 210);
+        frame.setSize(310, 230);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
