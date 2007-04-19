@@ -19,7 +19,6 @@
 package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.shaper.Shaper;
 import org.jdesktop.swinghelper.layer.item.AbstractLayerItem;
 import org.jdesktop.swinghelper.layer.item.LayerItemEvent;
 import org.jdesktop.swinghelper.layer.item.LayerItemListener;
@@ -33,7 +32,7 @@ import java.awt.geom.Area;
 import java.util.Map;
 
 abstract public class AbstractPainter <V extends JComponent> 
-        extends AbstractLayerItem implements Painter<V>, Shaper<V> {
+        extends AbstractLayerItem implements Painter<V> {
     private PainterModel model;
     private Handler handler;
 

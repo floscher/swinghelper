@@ -30,4 +30,5 @@ public interface Painter<V extends JComponent> extends LayerItem {
     public void setModel(PainterModel model);
     
     public void paint(Graphics2D g2, JXLayer<V> l);
+    public boolean contains(int x, int y, JXLayer<V> l);
 }

@@ -88,7 +88,6 @@ public class ShapingAnimationDemo {
         final AnimatedPainter painter = new AnimatedPainter();
 
         layer.setPainter(painter);
-        layer.setMouseClipShaper(painter);
 
         alphaSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {

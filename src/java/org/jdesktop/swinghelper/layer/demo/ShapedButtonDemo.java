@@ -66,7 +66,6 @@ public class ShapedButtonDemo {
             }
         };
 
-        layer.setMouseClipShaper(customPainter);
         layer.setPainter(customPainter);
         
         frame.setSize(250, 200);
