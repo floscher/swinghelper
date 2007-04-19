@@ -164,7 +164,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
     public boolean contains(int x, int y) {
         Painter<V> painter = getPainter();
         if (painter != null && painter.isEnabled()) {
-            return painter.contains(x, y, this);
+            return super.contains(x, y) && painter.contains(x, y, this);
         }
         return super.contains(x, y);
     }
