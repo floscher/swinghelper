@@ -37,6 +37,10 @@ public class BufferedPainter<V extends JComponent>
         this(painter, (Effect<V>[]) null);
     }
 
+    public BufferedPainter(Effect<V>... effects) {
+        this(new DefaultPainter<V>(), effects);
+    }
+
     public BufferedPainter(Painter<V> painter, Effect<V>... effects) {
         setPainter(painter);
         setEffects(effects);
