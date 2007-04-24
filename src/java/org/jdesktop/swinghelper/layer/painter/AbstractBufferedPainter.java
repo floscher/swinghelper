@@ -30,6 +30,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
 
     private BufferedImage buffer;
     private Effect[] effects = new Effect[0];
+    private boolean isIgnorePartialRepaint;
 
     public BufferedImage getBuffer() {
         return buffer;
@@ -103,11 +104,25 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
                 getBuffer().getHeight() == l.getHeight();
     }
 
+    public boolean isIgnorePartialRepaint() {
+        return isIgnorePartialRepaint;
+    }
+
     /**
-     * It will be repainted each time by default
+     * Set it to true to make repaint the buffered image
+     * only if the whole layer is repainted
+     * It is useful when you want to speed the painting up
+     * and when there is only one component inside the layer
+     * @param ignorePartialRepaint
      */
+    public void setIgnorePartialRepaint(boolean ignorePartialRepaint) {
+        isIgnorePartialRepaint = ignorePartialRepaint;
+        fireLayerItemChanged();
+    }
+
     protected boolean isImageValid(Graphics2D g2, JXLayer<V> l) {
-        return false;
+        return isIgnorePartialRepaint() &&
+                !l.getVisibleRect().equals(g2.getClipBounds());
     }
 
     protected boolean isLayerValid(JXLayer<V> l) {
