@@ -30,18 +30,18 @@ public class BufferedPainter<V extends JComponent>
     private Painter<V> painter;
 
     public BufferedPainter() {
-        this(new DefaultPainter<V>(), (Effect<V>[]) null);
+        this(new DefaultPainter<V>(), (Effect[]) null);
     }
 
     public BufferedPainter(Painter<V> painter) {
-        this(painter, (Effect<V>[]) null);
+        this(painter, (Effect[]) null);
     }
 
-    public BufferedPainter(Effect<V>... effects) {
+    public BufferedPainter(Effect... effects) {
         this(new DefaultPainter<V>(), effects);
     }
 
-    public BufferedPainter(Painter<V> painter, Effect<V>... effects) {
+    public BufferedPainter(Painter<V> painter, Effect... effects) {
         setPainter(painter);
         setEffects(effects);
     }

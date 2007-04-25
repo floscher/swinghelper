@@ -31,14 +31,14 @@ public class ComponentPainter <V extends JComponent>
     private JComponent component;
 
     public ComponentPainter() {
-        this(null, (Effect<V>[]) null);
+        this(null, (Effect[]) null);
     }
 
     public ComponentPainter(JComponent component) {
-        this(component, (Effect<V>[]) null);
+        this(component, (Effect[]) null);
     }
 
-    public ComponentPainter(JComponent component, Effect<V>... effects) {
+    public ComponentPainter(JComponent component, Effect... effects) {
         setComponent(component);
         setEffects(effects);
     }

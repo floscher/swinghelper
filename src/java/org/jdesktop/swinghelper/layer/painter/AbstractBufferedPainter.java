@@ -30,7 +30,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
 
     private BufferedImage buffer;
     private Effect[] effects = new Effect[0];
-    private boolean isIgnorePartialRepaint;
+    private boolean isIncrementalUpdate = true;
 
     public BufferedImage getBuffer() {
         return buffer;
@@ -43,23 +43,23 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         this.buffer = buffer;
     }
 
-    public void setEffects(Effect<V>... effects) {
+    public void setEffects(Effect... effects) {
         if (effects == null) {
             effects = new Effect[0];
         }
-        for (Effect<V> effect : getEffects()) {
+        for (Effect effect : getEffects()) {
             effect.removeLayerItemListener(getHandler());
         }
         this.effects = new Effect[effects.length];
         System.arraycopy(effects, 0, this.effects, 0, effects.length);
-        for (Effect<V> effect : effects) {
+        for (Effect effect : effects) {
             effect.addLayerItemListener(getHandler());
         }
         fireLayerItemChanged();
     }
 
-    public Effect<V>[] getEffects() {
-        Effect<V>[] result = new Effect[effects.length];
+    public Effect[] getEffects() {
+        Effect[] result = new Effect[effects.length];
         System.arraycopy(effects, 0, result, 0, result.length);
         return result;
     }
@@ -68,7 +68,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         if (getBuffer() == null) {
             throw new IllegalStateException("Buffer is null");
         }
-        for (Effect<V> e : getEffects()) {
+        for (Effect e : getEffects()) {
             if (e.isEnabled()) {
                 e.apply(getBuffer(), clip);
             }
@@ -85,9 +85,11 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
                     setBuffer(createBuffer(g2, l.getWidth(), l.getHeight()));
                 }
                 Graphics2D bufg = (Graphics2D) getBuffer().getGraphics();
-                bufg.setClip(g2.getClip());
+                if (isIncrementalUpdate()) {
+                    bufg.setClip(g2.getClip());
+                }
                 paintToBuffer(bufg, l);
-                processEffects(g2.getClip());
+                processEffects(bufg.getClip());
                 bufg.dispose();
             }
             g2.drawImage(getBuffer(), 0, 0, null);
@@ -104,25 +106,17 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
                 getBuffer().getHeight() == l.getHeight();
     }
 
-    public boolean isIgnorePartialRepaint() {
-        return isIgnorePartialRepaint;
+    public boolean isIncrementalUpdate() {
+        return isIncrementalUpdate;
     }
 
-    /**
-     * Set it to true to make repaint the buffered image
-     * only if the whole layer is repainted
-     * It is useful when you want to speed the painting up
-     * and when there is only one component inside the layer
-     * @param ignorePartialRepaint
-     */
-    public void setIgnorePartialRepaint(boolean ignorePartialRepaint) {
-        isIgnorePartialRepaint = ignorePartialRepaint;
+    public void setIncrementalUpdate(boolean incrementalUpdate) {
+        isIncrementalUpdate = incrementalUpdate;
         fireLayerItemChanged();
     }
 
     protected boolean isImageValid(Graphics2D g2, JXLayer<V> l) {
-        return isIgnorePartialRepaint() &&
-                !l.getVisibleRect().equals(g2.getClipBounds());
+        return false;
     }
 
     protected boolean isLayerValid(JXLayer<V> l) {

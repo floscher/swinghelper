@@ -20,14 +20,11 @@ package org.jdesktop.swinghelper.layer.effect;
 
 import org.jdesktop.swinghelper.layer.item.AbstractLayerItem;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
-import java.awt.image.ConvolveOp;
 
-public class ImageOpEffect <V extends JComponent>
-        extends AbstractLayerItem implements Effect<V> {
+public class ImageOpEffect extends AbstractLayerItem implements Effect {
     private BufferedImageOp bufferedImageOp;
     private BufferedImage srcBuffer;
 
@@ -47,17 +44,6 @@ public class ImageOpEffect <V extends JComponent>
         fireLayerItemChanged();
     }
 
-    protected Shape getTransformedClip(Shape clip) {
-        if (bufferedImageOp instanceof ConvolveOp) {
-            ConvolveOp cop = (ConvolveOp) bufferedImageOp;
-            Rectangle clipBounds = clip.getBounds();
-            clipBounds.grow(cop.getKernel().getWidth() / 2,
-                    cop.getKernel().getHeight() / 2);
-            return clipBounds;
-        }
-        return clip;
-    }
-
     public void apply(BufferedImage buffer, Shape clip) {
         if (bufferedImageOp == null) {
             return;
@@ -66,10 +52,9 @@ public class ImageOpEffect <V extends JComponent>
             throw new IllegalArgumentException("BufferedImage is null");
         }
         Rectangle bufferSize = new Rectangle(buffer.getWidth(), buffer.getHeight());
+
         if (clip == null) {
             clip = bufferSize;
-        } else {
-            clip = getTransformedClip(clip);
         }
         Rectangle clipBounds = clip.getBounds().intersection(bufferSize);
 

@@ -20,10 +20,9 @@ package org.jdesktop.swinghelper.layer.effect;
 
 import org.jdesktop.swinghelper.layer.item.LayerItem;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public interface Effect<V extends JComponent> extends LayerItem {
+public interface Effect extends LayerItem {
     public void apply(BufferedImage buf, Shape clip);
 }

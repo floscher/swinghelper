@@ -20,12 +20,10 @@ package org.jdesktop.swinghelper.layer.effect;
 
 import org.jdesktop.swinghelper.layer.item.LayerItemListener;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-final public class NullEffect <V extends JComponent>
-        implements Effect<V> {
+final public class NullEffect implements Effect {
 
     public void apply(BufferedImage buf, Shape clip) {
     }
