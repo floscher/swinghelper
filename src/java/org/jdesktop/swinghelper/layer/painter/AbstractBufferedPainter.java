@@ -31,6 +31,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     private BufferedImage buffer;
     private Effect[] effects = new Effect[0];
     private boolean isIncrementalUpdate = true;
+    private boolean isIgnorePartialRepaint;
 
     public BufferedImage getBuffer() {
         return buffer;
@@ -96,6 +97,39 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         }
     }
 
+    public boolean isIgnorePartialRepaint() {
+        return isIgnorePartialRepaint;
+    }
+
+    /**
+     * Set it to true to repaint the buffered image
+     * only if the whole visible area of the layer is repainted
+     * It is useful when you want to speed the painting up
+     * and when there is only one component inside the layer
+     *
+     * @param ignorePartialRepaint
+     */
+    public void setIgnorePartialRepaint(boolean ignorePartialRepaint) {
+        isIgnorePartialRepaint = ignorePartialRepaint;
+        fireLayerItemChanged();
+    }
+
+    public boolean isIncrementalUpdate() {
+        return isIncrementalUpdate;
+    }
+
+    /**
+     * If set to true the buffer is repainted incrementally,
+     * respecting the current clip area
+     * otherwise the whole buffer is repainted each time
+     *
+     * @param incrementalUpdate
+     */
+    public void setIncrementalUpdate(boolean incrementalUpdate) {
+        isIncrementalUpdate = incrementalUpdate;
+        fireLayerItemChanged();
+    }
+
     protected boolean isPainterValid() {
         return true;
     }
@@ -106,17 +140,9 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
                 getBuffer().getHeight() == l.getHeight();
     }
 
-    public boolean isIncrementalUpdate() {
-        return isIncrementalUpdate;
-    }
-
-    public void setIncrementalUpdate(boolean incrementalUpdate) {
-        isIncrementalUpdate = incrementalUpdate;
-        fireLayerItemChanged();
-    }
-
     protected boolean isImageValid(Graphics2D g2, JXLayer<V> l) {
-        return false;
+        return isIgnorePartialRepaint() &&
+                !l.getVisibleRect().equals(g2.getClipBounds());
     }
 
     protected boolean isLayerValid(JXLayer<V> l) {
