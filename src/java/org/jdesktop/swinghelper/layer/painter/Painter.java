@@ -26,9 +26,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public interface Painter<V extends JComponent> extends LayerItem {
-    public PainterModel getModel();
-    public void setModel(PainterModel model);
-    
+    public PainterModel getModel();    
     public void paint(Graphics2D g2, JXLayer<V> l);
     public boolean contains(int x, int y, JXLayer<V> l);
 }
+ 

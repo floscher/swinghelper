@@ -152,16 +152,13 @@ public class TabbedPaneAnimationDemo {
     }
     
     static class AnimationPainter extends ComponentPainter<JComponent> {
-        private DefaultPainter<JComponent> defaultPainter;
-
         public AnimationPainter() {
-            defaultPainter = new DefaultPainter<JComponent>();
             getModel().setAlpha(0);
         }
 
         public void paint(Graphics2D g2, JXLayer<JComponent> l) {
             // paint the layer
-            defaultPainter.paint(g2, l);
+            l.paint(g2);
             // paint the old layer with diminishing alpha
             super.paint(g2, l);            
         }

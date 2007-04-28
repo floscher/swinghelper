@@ -32,35 +32,25 @@ import java.awt.geom.Area;
 import java.util.Map;
 
 abstract public class AbstractPainter <V extends JComponent> 
-        extends AbstractLayerItem implements Painter<V> {
+        extends AbstractLayerItem implements Painter<V>, LayerItemListener {
     private PainterModel model;
-    private Handler handler;
 
     protected AbstractPainter() {
-        setModel(new DefaultPainterModel());
+        this(new DefaultPainterModel());
+    }
+    
+    protected AbstractPainter(PainterModel model) {
+        if (model == null) {
+            throw new IllegalArgumentException("PainterModel is null");
+        }
+        this.model = model;
+        model.addLayerItemListener(this);
     }
 
     public PainterModel getModel() {
         return model;
     }
-
-    public void setModel(PainterModel model) {
-        if (model == null) {
-            throw new IllegalArgumentException(
-                    "Null model is not supported; set DefaultPainterModel");
-        }
-        PainterModel oldModel = getModel();
-
-        if (model != oldModel) {
-            if (oldModel != null) {
-                oldModel.removeLayerItemListener(getHandler());
-            }
-            model.addLayerItemListener(getHandler());
-            this.model = model;
-            fireLayerItemChanged();
-        }
-    }
-
+    
     // Painting
     protected void configure(Graphics2D g2, JXLayer<V> l) {
         if (getModel().isEnabled()) {
@@ -122,20 +112,10 @@ abstract public class AbstractPainter <V extends JComponent>
                 }
             }
         }
-    }    
-    
-    // Event processing
-    protected LayerItemListener getHandler() {
-        if (handler == null) {
-            handler = new Handler();
-        }
-        return handler;
     }
 
-    private class Handler implements LayerItemListener {
-        public void layerItemChanged(LayerItemEvent e) {
-            fireLayerItemChanged(e.getClip());
-        }
+    public void layerItemChanged(LayerItemEvent e) {
+        fireLayerItemChanged(e.getClip());
     }
 
     public boolean contains(int x, int y, JXLayer<V> l) {

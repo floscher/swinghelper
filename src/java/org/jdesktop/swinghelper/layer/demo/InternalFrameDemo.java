@@ -174,16 +174,16 @@ public class InternalFrameDemo extends JPanel {
         private Painter<JComponent> foregroundPainter;
 
         public CoverPainter() {
-            Painter backgroundImpl = new AbstractPainter() {
+            backgroundPainter = new AbstractPainter() {
                 public void paint(Graphics2D g2, JXLayer l) {
+                    g2.setColor(l.getView().getBackground());
+                    g2.fillRect(0, 0, l.getWidth(), l.getHeight());
                     g2.setPaint(new GradientPaint(0, 0, Color.BLACK, 50, 50, Color.RED, true));
                     g2.fillOval(0, 0, l.getWidth(), l.getHeight());
                 }
             };
-            backgroundPainter = new CompoundPainter<JComponent>(
-                    new BackgroundPainter(),
-                    backgroundImpl);
-            mainPainter = new BufferedPainter<JComponent>(new DefaultPainter<JComponent>());
+
+            mainPainter = new BufferedPainter<JComponent>();
 
             foregroundPainter = new AbstractPainter() {
                 public void paint(Graphics2D g2, JXLayer l) {

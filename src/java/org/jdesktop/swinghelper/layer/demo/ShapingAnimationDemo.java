@@ -126,10 +126,6 @@ public class ShapingAnimationDemo {
     static class AnimatedPainter extends BufferedPainter<AbstractButton> {
         private int x, y;
 
-        public AnimatedPainter() {
-            setPainter(new DefaultPainter<AbstractButton>());
-        }
-
         public Shape getClip(JXLayer<AbstractButton> l) {
             if (x > l.getWidth()) {
                 x = 0;

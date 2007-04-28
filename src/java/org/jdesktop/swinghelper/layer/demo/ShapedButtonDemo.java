@@ -57,7 +57,7 @@ public class ShapedButtonDemo {
                 // paint shaped border
                 g2.setColor(Color.BLACK);
                 g2.setStroke(new BasicStroke(3f));
-                g2.draw(g2.getClip());
+                g2.draw(getClip(l));
             }
 
             // Ellipse shape for the painter

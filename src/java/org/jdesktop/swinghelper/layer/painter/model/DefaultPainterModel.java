@@ -26,7 +26,7 @@ import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultPainterModel 
+public class DefaultPainterModel
         extends AbstractLayerItem implements PainterModel {
     private Shape shape;
     private Composite composite;

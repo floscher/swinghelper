@@ -18,8 +18,10 @@
 
 package org.jdesktop.swinghelper.layer.painter;
 
-import org.jdesktop.swinghelper.layer.effect.Effect;
 import org.jdesktop.swinghelper.layer.JXLayer;
+import org.jdesktop.swinghelper.layer.effect.Effect;
+import org.jdesktop.swinghelper.layer.painter.model.BufferedPainterModel;
+import org.jdesktop.swinghelper.layer.painter.model.DefaultBufferedPainterModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,8 +32,33 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
 
     private BufferedImage buffer;
     private Effect[] effects = new Effect[0];
-    private boolean isIncrementalUpdate = true;
-    private boolean isIgnorePartialRepaint;
+
+    protected AbstractBufferedPainter() {
+        super(new DefaultBufferedPainterModel());
+    }
+    
+    public BufferedPainterModel getModel() {
+        return (BufferedPainterModel) super.getModel();
+    }
+
+    /**
+     * Set it to true to repaint the buffered image
+     * only if the whole visible area of the layer is repainted
+     * It is useful when you want to speed the painting up
+     * and when there is only one component inside the layer
+     */
+    public boolean isIgnorePartialRepaint(JXLayer<V> l) {
+        return getModel().isIgnorePartialRepaint();
+    }
+
+    /**
+     * If set to true the buffer is repainted incrementally,
+     * respecting the current clip area
+     * otherwise the whole buffer is repainted each time
+     */
+    public boolean isIncrementalUpdate(JXLayer<V> l) {
+        return getModel().isIncrementalUpdate();
+    }
 
     public BufferedImage getBuffer() {
         return buffer;
@@ -49,12 +76,12 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
             effects = new Effect[0];
         }
         for (Effect effect : getEffects()) {
-            effect.removeLayerItemListener(getHandler());
+            effect.removeLayerItemListener(this);
         }
         this.effects = new Effect[effects.length];
         System.arraycopy(effects, 0, this.effects, 0, effects.length);
         for (Effect effect : effects) {
-            effect.addLayerItemListener(getHandler());
+            effect.addLayerItemListener(this);
         }
         fireLayerItemChanged();
     }
@@ -86,7 +113,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
                     setBuffer(createBuffer(g2, l.getWidth(), l.getHeight()));
                 }
                 Graphics2D bufg = (Graphics2D) getBuffer().getGraphics();
-                if (isIncrementalUpdate()) {
+                if (isIncrementalUpdate(l)) {
                     bufg.setClip(g2.getClip());
                 }
                 paintToBuffer(bufg, l);
@@ -95,39 +122,6 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
             }
             g2.drawImage(getBuffer(), 0, 0, null);
         }
-    }
-
-    public boolean isIgnorePartialRepaint() {
-        return isIgnorePartialRepaint;
-    }
-
-    /**
-     * Set it to true to repaint the buffered image
-     * only if the whole visible area of the layer is repainted
-     * It is useful when you want to speed the painting up
-     * and when there is only one component inside the layer
-     *
-     * @param ignorePartialRepaint
-     */
-    public void setIgnorePartialRepaint(boolean ignorePartialRepaint) {
-        isIgnorePartialRepaint = ignorePartialRepaint;
-        fireLayerItemChanged();
-    }
-
-    public boolean isIncrementalUpdate() {
-        return isIncrementalUpdate;
-    }
-
-    /**
-     * If set to true the buffer is repainted incrementally,
-     * respecting the current clip area
-     * otherwise the whole buffer is repainted each time
-     *
-     * @param incrementalUpdate
-     */
-    public void setIncrementalUpdate(boolean incrementalUpdate) {
-        isIncrementalUpdate = incrementalUpdate;
-        fireLayerItemChanged();
     }
 
     protected boolean isPainterValid() {
@@ -141,7 +135,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     }
 
     protected boolean isImageValid(Graphics2D g2, JXLayer<V> l) {
-        return isIgnorePartialRepaint() &&
+        return isIgnorePartialRepaint(l) &&
                 !l.getVisibleRect().equals(g2.getClipBounds());
     }
 

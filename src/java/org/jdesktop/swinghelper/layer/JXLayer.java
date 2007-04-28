@@ -65,8 +65,9 @@ public class JXLayer<V extends JComponent> extends JComponent {
         setView(view);
         setPainter(painter);
         setGlassPane(new JXGlassPane());
-        setLayout(LayerLayout.getSharedInstance());
+        setLayout(LayerLayout.getSharedInstance());        
         setPainter(painter);
+        setOpaque(true);
         // it doesn't effect until we setFocusTraversalPolicyProvider(true);  
         setFocusTraversalPolicy(disabledPolicy);
     }
@@ -150,6 +151,13 @@ public class JXLayer<V extends JComponent> extends JComponent {
             g2.dispose();
         } else {
             super.paint(g);
+        }
+    }
+
+    protected void paintComponent(Graphics g) {
+        if (isOpaque()) {
+            g.setColor(getBackground());
+            g.fillRect(0, 0, getWidth(), getHeight());
         }
     }
 
