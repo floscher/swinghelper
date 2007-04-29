@@ -11,6 +11,7 @@
 <j2se version="1.5+"/>
      <jar href="bin/layer/layer-demo.jar"/>
      <jar href="bin/layer/layer.jar"/>
+     <jar href="bin/layer/filters.jar"/>
   </resources>  
 <application-desc main-class="org.jdesktop.swinghelper.layer.demo.DisabledLayerDemo"/>
 </jnlp>
