@@ -22,6 +22,7 @@ import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.effect.Effect;
 import org.jdesktop.swinghelper.layer.painter.model.BufferedPainterModel;
 import org.jdesktop.swinghelper.layer.painter.model.DefaultBufferedPainterModel;
+import org.jdesktop.swinghelper.layer.painter.model.DefaultPainterModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +35,11 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     private Effect[] effects = new Effect[0];
 
     protected AbstractBufferedPainter() {
-        super(new DefaultBufferedPainterModel());
+        this(new DefaultBufferedPainterModel());
+    }
+    
+    protected AbstractBufferedPainter(BufferedPainterModel model) {
+        super(model);
     }
     
     public BufferedPainterModel getModel() {
@@ -42,19 +47,10 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     }
 
     /**
-     * Set it to true to repaint the buffered image
-     * only if the whole visible area of the layer is repainted
-     * It is useful when you want to speed the painting up
-     * and when there is only one component inside the layer
-     */
-    public boolean isIgnorePartialRepaint(JXLayer<V> l) {
-        return getModel().isIgnorePartialRepaint();
-    }
-
-    /**
      * If set to true the buffer is repainted incrementally,
      * respecting the current clip area
      * otherwise the whole buffer is repainted each time
+     * and only if all visible area of the JXLayer is repainted  
      */
     public boolean isIncrementalUpdate(JXLayer<V> l) {
         return getModel().isIncrementalUpdate();
@@ -135,7 +131,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     }
 
     protected boolean isImageValid(Graphics2D g2, JXLayer<V> l) {
-        return isIgnorePartialRepaint(l) &&
+        return !isIncrementalUpdate(l) &&
                 !l.getVisibleRect().equals(g2.getClipBounds());
     }
 

@@ -91,8 +91,8 @@ public class DisabledLayerDemo {
             } 
         }
 
-        public boolean isIgnorePartialRepaint(JXLayer<V> l) {
-            return !l.isEnabled();
+        public boolean isIncrementalUpdate(JXLayer<V> l) {
+            return l.isEnabled();
         }
     }
 }
