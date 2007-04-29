@@ -1,6 +1,7 @@
 package org.jdesktop.swinghelper.layer.demo;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
+import org.jdesktop.swinghelper.layer.demo.util.LafMenu;
 import org.jdesktop.swinghelper.layer.effect.Effect;
 import org.jdesktop.swinghelper.layer.effect.ImageOpEffect;
 import org.jdesktop.swinghelper.layer.painter.BufferedPainter;
@@ -80,6 +81,8 @@ public class DisabledLayerDemo extends JFrame {
 
         JMenuBar bar = new JMenuBar();
         bar.add(menu);
+
+        bar.add(new LafMenu());
         return bar;
     }
 
