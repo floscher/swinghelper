@@ -41,7 +41,7 @@ public class DisabledLayerDemo extends JFrame {
         add(layer);
         add(createToolPanel(), BorderLayout.EAST);
         setJMenuBar(createMenuBar());
-        setSize(430, 230);
+        setSize(430, 250);
         setLocationRelativeTo(null);
     }
 
