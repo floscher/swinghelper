@@ -26,8 +26,8 @@ import org.jdesktop.swinghelper.layer.painter.Painter;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
 
 public class JXLayer<V extends JComponent> extends JComponent {
     public V view;
@@ -37,14 +37,23 @@ public class JXLayer<V extends JComponent> extends JComponent {
     private LayerItemListener itemListener;
 
     // Enabled/disabled support
-    private static final FocusTraversalPolicy
+    private final FocusTraversalPolicy
             disabledPolicy = new LayoutFocusTraversalPolicy() {
         protected boolean accept(Component aComponent) {
-            return false;
+            return aComponent == getGlassPane();
         }
     };
-    private final static MouseListener nullMouseListener = new MouseAdapter() {
+
+    private final static FocusListener
+            glassPaneFocusListener = new FocusListener() {
+        public void focusGained(FocusEvent e) {
+            e.getComponent().repaint();
+        }
+
+        public void focusLost(FocusEvent e) {
+        }
     };
+
     private Component recentFocusOwner;
 
     // Constructors
@@ -65,7 +74,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
         setView(view);
         setPainter(painter);
         setGlassPane(new JXGlassPane());
-        setLayout(LayerLayout.getSharedInstance());        
+        setLayout(LayerLayout.getSharedInstance());
         setPainter(painter);
         setOpaque(true);
         // it doesn't effect until we setFocusTraversalPolicyProvider(true);  
@@ -99,8 +108,10 @@ public class JXLayer<V extends JComponent> extends JComponent {
         JComponent oldGlassPane = getGlassPane();
         if (oldGlassPane != null) {
             super.remove(oldGlassPane);
+            oldGlassPane.removeFocusListener(glassPaneFocusListener);
         }
         super.addImpl(glassPane, null, 0);
+        glassPane.addFocusListener(glassPaneFocusListener);
         this.glassPane = glassPane;
     }
 
@@ -170,6 +181,9 @@ public class JXLayer<V extends JComponent> extends JComponent {
     }
 
     public boolean contains(int x, int y) {
+        if (!isEnabled()) {
+            return false;
+        }
         Painter<V> painter = getPainter();
         if (painter != null && painter.isEnabled()) {
             return super.contains(x, y) && painter.contains(x, y, this);
@@ -197,7 +211,6 @@ public class JXLayer<V extends JComponent> extends JComponent {
     public void setEnabled(boolean enabled) {
         if (enabled != isEnabled()) {
             if (enabled) {
-                getGlassPane().removeMouseListener(nullMouseListener);
                 setFocusTraversalPolicyProvider(false);
                 boolean isGlassPaneFocused = getGlassPane().isFocusOwner();
                 getGlassPane().setFocusable(false);
@@ -206,9 +219,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
                 }
                 recentFocusOwner = null;
             } else {
-                getGlassPane().addMouseListener(nullMouseListener);
                 setFocusTraversalPolicyProvider(true);
-
                 KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
                 Component focusOwner = kfm.getFocusOwner();
                 if (focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this)) {
