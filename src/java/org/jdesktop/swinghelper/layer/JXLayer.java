@@ -213,7 +213,6 @@ public class JXLayer<V extends JComponent> extends JComponent {
             if (enabled) {
                 setFocusTraversalPolicyProvider(false);
                 boolean isGlassPaneFocused = getGlassPane().isFocusOwner();
-                getGlassPane().setFocusable(false);
                 if (isGlassPaneFocused && recentFocusOwner != null) {
                     recentFocusOwner.requestFocusInWindow();
                 }
@@ -224,7 +223,6 @@ public class JXLayer<V extends JComponent> extends JComponent {
                 Component focusOwner = kfm.getFocusOwner();
                 if (focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this)) {
                     recentFocusOwner = focusOwner;
-                    getGlassPane().setFocusable(true);
                     getGlassPane().requestFocusInWindow();
                 }
             }
