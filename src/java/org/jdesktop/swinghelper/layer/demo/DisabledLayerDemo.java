@@ -24,7 +24,6 @@ import java.awt.image.BufferedImageOp;
  */
 public class DisabledLayerDemo extends JFrame {
     private JXLayer<JComponent> layer;
-    private Painter<JComponent> simplePainter = new SimplePainter<JComponent>();
     private Painter<JComponent> translucentPainter = new TranslucentPainter<JComponent>();
     private Painter<JComponent> blurPainter = new ImageOpPainter<JComponent>(new BlurFilter());
     private Painter<JComponent> embossPainter = new ImageOpPainter<JComponent>(new EmbossFilter());
@@ -35,7 +34,6 @@ public class DisabledLayerDemo extends JFrame {
         }
     });
 
-    private JRadioButtonMenuItem titleItem = new JRadioButtonMenuItem("Title");
     private JRadioButtonMenuItem translucentItem = new JRadioButtonMenuItem("Translucent color");
     private JRadioButtonMenuItem blurItem = new JRadioButtonMenuItem("Blur effect");
     private JRadioButtonMenuItem embossItem = new JRadioButtonMenuItem("Emboss effect");
@@ -44,7 +42,7 @@ public class DisabledLayerDemo extends JFrame {
         super("Disabled/enabled layer demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         layer = new JXLayer<JComponent>(createLayerPanel());
-        layer.setPainter(simplePainter);
+        layer.setPainter(translucentPainter);
         add(layer);
         add(createToolPanel(), BorderLayout.EAST);
         setJMenuBar(createMenuBar());
@@ -64,30 +62,24 @@ public class DisabledLayerDemo extends JFrame {
         menu.add(disablingMenuItem);
         menu.addSeparator();
 
-        titleItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_MASK));
-        titleItem.setSelected(true);
-        menu.add(titleItem);
-
-        translucentItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_MASK));
+        translucentItem.setSelected(true);
+        translucentItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_MASK));
         menu.add(translucentItem);
 
-        blurItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.CTRL_MASK));
+        blurItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_MASK));
         menu.add(blurItem);
 
-        embossItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.CTRL_MASK));
+        embossItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.CTRL_MASK));
         menu.add(embossItem);
 
         ButtonGroup group = new ButtonGroup();
-        group.add(titleItem);
         group.add(translucentItem);
         group.add(blurItem);
         group.add(embossItem);
 
         ItemListener menuListener = new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (titleItem.isSelected()) {
-                    layer.setPainter(simplePainter);
-                } else if (translucentItem.isSelected()) {
+                if (translucentItem.isSelected()) {
                     layer.setPainter(translucentPainter);
                 } else if(blurItem.isSelected()) {
                     layer.setPainter(blurPainter);
@@ -97,7 +89,6 @@ public class DisabledLayerDemo extends JFrame {
             }
         };
 
-        titleItem.addItemListener(menuListener);
         translucentItem.addItemListener(menuListener);
         blurItem.addItemListener(menuListener);
         embossItem.addItemListener(menuListener);
@@ -132,9 +123,6 @@ public class DisabledLayerDemo extends JFrame {
         box.add(Box.createGlue());
         box.add(button);
         box.add(Box.createGlue());
-        JRadioButton simple = new JRadioButton("Title");
-        simple.setModel(titleItem.getModel());
-        box.add(simple);
         JRadioButton translucent = new JRadioButton("Translucent");
         translucent.setModel(translucentItem.getModel());
         box.add(translucent);
