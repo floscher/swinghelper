@@ -8,7 +8,6 @@ import org.jdesktop.swinghelper.layer.effect.Effect;
 import org.jdesktop.swinghelper.layer.effect.ImageOpEffect;
 import org.jdesktop.swinghelper.layer.painter.AbstractPainter;
 import org.jdesktop.swinghelper.layer.painter.BufferedPainter;
-import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 import org.jdesktop.swinghelper.layer.painter.Painter;
 
 import javax.swing.*;
@@ -134,17 +133,6 @@ public class DisabledLayerDemo extends JFrame {
         box.add(emboss);
         box.add(Box.createGlue());
         return box;
-    }
-
-    static class SimplePainter<V extends JComponent> extends DefaultPainter<V> {
-        public void paint(Graphics2D g2, JXLayer<V> l) {
-            super.paint(g2, l);
-            if (!l.isEnabled()) {
-                g2.setColor(Color.RED);
-                g2.setFont(g2.getFont().deriveFont(30f));
-                g2.drawString("Disabled", 20, 100);
-            }
-        }
     }
 
     static class TranslucentPainter<V extends JComponent> extends AbstractPainter<V> {
