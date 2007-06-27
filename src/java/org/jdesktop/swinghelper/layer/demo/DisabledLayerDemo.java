@@ -27,9 +27,20 @@ public class DisabledLayerDemo extends JFrame {
     private Painter<JComponent> blurPainter = new ImageOpPainter<JComponent>(new BlurFilter());
     private Painter<JComponent> embossPainter = new ImageOpPainter<JComponent>(new EmbossFilter());
 
-    private JCheckBoxMenuItem disablingMenuItem = new JCheckBoxMenuItem(new AbstractAction("Disable the layer") {
+    private JCheckBoxMenuItem disablingItem = new JCheckBoxMenuItem(new AbstractAction("Disable the layer") {
         public void actionPerformed(ActionEvent e) {
+            
             layer.setEnabled(!layer.isEnabled());
+            
+            if (layer.isEnabled()) {
+                // Reset cursor for enabled layer
+                layer.getGlassPane().setCursor(null);
+            }
+            
+            translucentItem.setEnabled(!layer.isEnabled());
+            blurItem.setEnabled(!layer.isEnabled());
+            embossItem.setEnabled(!layer.isEnabled());
+            waitCursorItem.setEnabled(!layer.isEnabled());
         }
     });
 
@@ -37,6 +48,15 @@ public class DisabledLayerDemo extends JFrame {
     private JRadioButtonMenuItem blurItem = new JRadioButtonMenuItem("Blur effect");
     private JRadioButtonMenuItem embossItem = new JRadioButtonMenuItem("Emboss effect");
 
+    private JCheckBoxMenuItem waitCursorItem = new JCheckBoxMenuItem(new AbstractAction("Set the wait cursor") {
+        public void actionPerformed(ActionEvent e) {
+            Cursor cursor = waitCursorItem.isSelected() ? 
+                    Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR): null;
+            // Note: we need to set cursor to the layer's GlassPane
+            // because it covers the whole layer
+            layer.getGlassPane().setCursor(cursor);
+        }
+    });
     public DisabledLayerDemo() {
         super("Disabled/enabled layer demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,9 +76,9 @@ public class DisabledLayerDemo extends JFrame {
     private JMenuBar createMenuBar() {
         JMenu menu = new JMenu("Menu");
 
-        disablingMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
+        disablingItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
 
-        menu.add(disablingMenuItem);
+        menu.add(disablingItem);
         menu.addSeparator();
 
         translucentItem.setSelected(true);
@@ -75,6 +95,10 @@ public class DisabledLayerDemo extends JFrame {
         group.add(translucentItem);
         group.add(blurItem);
         group.add(embossItem);
+        
+        translucentItem.setEnabled(false);
+        blurItem.setEnabled(false);
+        embossItem.setEnabled(false);
 
         ItemListener menuListener = new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -91,6 +115,10 @@ public class DisabledLayerDemo extends JFrame {
         translucentItem.addItemListener(menuListener);
         blurItem.addItemListener(menuListener);
         embossItem.addItemListener(menuListener);
+        
+        menu.addSeparator();
+        menu.add(waitCursorItem);
+        waitCursorItem.setEnabled(false);
 
         JMenuBar bar = new JMenuBar();
         bar.add(menu);
@@ -117,8 +145,8 @@ public class DisabledLayerDemo extends JFrame {
 
     private JComponent createToolPanel() {
         JComponent box = Box.createVerticalBox();
-        JCheckBox button = new JCheckBox(disablingMenuItem.getText());
-        button.setModel(disablingMenuItem.getModel());
+        JCheckBox button = new JCheckBox(disablingItem.getText());
+        button.setModel(disablingItem.getModel());
         box.add(Box.createGlue());
         box.add(button);
         box.add(Box.createGlue());
@@ -131,6 +159,11 @@ public class DisabledLayerDemo extends JFrame {
         JRadioButton emboss = new JRadioButton("Emboss effect");
         emboss.setModel(embossItem.getModel());
         box.add(emboss);
+        box.add(Box.createGlue());
+        JCheckBox cursor = new JCheckBox("Set wait cursor");
+        cursor.setToolTipText("Set cursor for the disabled layer");
+        cursor.setModel(waitCursorItem.getModel());
+        box.add(cursor);        
         box.add(Box.createGlue());
         return box;
     }
