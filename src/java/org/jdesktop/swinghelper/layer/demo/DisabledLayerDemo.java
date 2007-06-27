@@ -35,6 +35,8 @@ public class DisabledLayerDemo extends JFrame {
             if (layer.isEnabled()) {
                 // Reset cursor for enabled layer
                 layer.getGlassPane().setCursor(null);
+            } else if (waitCursorItem.isSelected()) {
+                layer.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             }
             
             translucentItem.setEnabled(!layer.isEnabled());
