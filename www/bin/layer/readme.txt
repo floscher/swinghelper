@@ -33,4 +33,10 @@ java -cp layer-demo.jar org.jdesktop.swinghelper.layer.demo.DelegateDemo
 Disabling/enabling demo
 (Ability to disable child components)
 
+on Windows:
+
 java -cp layer-demo.jar;filters.jar org.jdesktop.swinghelper.layer.demo.DisabledLayerDemo
+
+on *nix
+
+java -cp layer-demo.jar:filters.jar org.jdesktop.swinghelper.layer.demo.DisabledLayerDemo
