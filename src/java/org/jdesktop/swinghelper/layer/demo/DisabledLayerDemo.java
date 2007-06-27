@@ -120,6 +120,8 @@ public class DisabledLayerDemo extends JFrame {
         
         menu.addSeparator();
         menu.add(waitCursorItem);
+        waitCursorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
+        
         waitCursorItem.setEnabled(false);
 
         JMenuBar bar = new JMenuBar();
