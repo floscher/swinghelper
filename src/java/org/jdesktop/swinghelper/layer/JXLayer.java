@@ -28,6 +28,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseAdapter;
 
 public class JXLayer<V extends JComponent> extends JComponent {
     public V view;
@@ -39,8 +41,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
     // Enabled/disabled support
     private final FocusTraversalPolicy
             disabledPolicy = new LayoutFocusTraversalPolicy() {
-        protected boolean accept(Component aComponent) {
-            return aComponent == getGlassPane();
+        protected boolean accept(Component component) {
+            return component == getGlassPane();
         }
     };
 
@@ -54,7 +56,12 @@ public class JXLayer<V extends JComponent> extends JComponent {
         }
     };
 
+    private final static MouseListener 
+            emptyMouseListener = new MouseAdapter() {
+    };
+
     private Component recentFocusOwner;
+    private boolean enabled = true;
 
     // Constructors
     public JXLayer() {
@@ -181,9 +188,6 @@ public class JXLayer<V extends JComponent> extends JComponent {
     }
 
     public boolean contains(int x, int y) {
-        if (!isEnabled()) {
-            return false;
-        }
         Painter<V> painter = getPainter();
         if (painter != null && painter.isEnabled()) {
             return super.contains(x, y) && painter.contains(x, y, this);
@@ -209,8 +213,10 @@ public class JXLayer<V extends JComponent> extends JComponent {
     }
 
     public void setEnabled(boolean enabled) {
-        if (enabled != isEnabled()) {
+        boolean oldEnabled = isEnabled();
+        if (enabled != oldEnabled) {
             if (enabled) {
+                getGlassPane().removeMouseListener(emptyMouseListener);
                 setFocusTraversalPolicyProvider(false);
                 boolean isGlassPaneFocused = getGlassPane().isFocusOwner();
                 if (isGlassPaneFocused && recentFocusOwner != null) {
@@ -218,6 +224,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
                 }
                 recentFocusOwner = null;
             } else {
+                getGlassPane().addMouseListener(emptyMouseListener);
                 setFocusTraversalPolicyProvider(true);
                 KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
                 Component focusOwner = kfm.getFocusOwner();
@@ -226,8 +233,14 @@ public class JXLayer<V extends JComponent> extends JComponent {
                     getGlassPane().requestFocusInWindow();
                 }
             }
+            this.enabled = enabled;
+            firePropertyChange("enabled", oldEnabled, enabled);
+            repaint();
         }
-        super.setEnabled(enabled);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }
 
