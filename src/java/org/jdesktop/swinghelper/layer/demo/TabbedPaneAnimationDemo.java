@@ -96,7 +96,7 @@ public class TabbedPaneAnimationDemo {
             timer = new Timer(delay, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
-                    painter.repaint();
+                    painter.update();
                     PainterModel model = painter.getModel();
 
                     if (model.getAlpha() <= delta) {
@@ -145,7 +145,7 @@ public class TabbedPaneAnimationDemo {
             oldLayer.setPainter(layer.getPainter());
             layer.setPainter(painter);
             
-            painter.repaint();            
+            painter.update();            
             timer.start();
             index = pane.getSelectedIndex();
         }

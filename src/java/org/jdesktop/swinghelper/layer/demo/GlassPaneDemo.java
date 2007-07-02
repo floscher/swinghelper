@@ -34,8 +34,7 @@ public class GlassPaneDemo extends JFrame {
                 new ComponentPainter<JComponent>(getLayeredPane(),
                         new ImageOpEffect(ImageOpFactory.getConvolveOp(5)));
 
-        JXLayer<JComponent> glassPaneLayer = new JXLayer<JComponent>(glassPanePainter);
-        setGlassPane(glassPaneLayer);
+        setGlassPane(new JXLayer<JComponent>(glassPanePainter));
 
         glassPaneButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -44,7 +43,7 @@ public class GlassPaneDemo extends JFrame {
 
                     public void run() {
                         // it is important to not call repaint during painting process 
-                        glassPanePainter.repaint();
+                        glassPanePainter.update();
                         getGlassPane().setVisible(true);
                         JOptionPane.showConfirmDialog(GlassPaneDemo.this,
                                 "Do you the effect ?", "Hello", JOptionPane.DEFAULT_OPTION);
@@ -54,11 +53,13 @@ public class GlassPaneDemo extends JFrame {
             }
         });
 
-        buttonLayer.setPainter(new BufferedPainter<JComponent>(
+        BufferedPainter<JComponent> buttonPainter = new BufferedPainter<JComponent>(
                 new DefaultPainter<JComponent>(),
-                new ImageOpEffect(ImageOpFactory.getConvolveOp(5))));
+                new ImageOpEffect(ImageOpFactory.getConvolveOp(5)));
+        buttonLayer.setPainter(buttonPainter);
 
-        buttonLayer.getPainter().setEnabled(false);
+        buttonPainter.setEnabled(false);
+        buttonPainter.getModel().setIncrementalUpdate(false);
 
         buttonCheckBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
