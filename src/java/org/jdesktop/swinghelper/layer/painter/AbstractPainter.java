@@ -122,4 +122,8 @@ abstract public class AbstractPainter <V extends JComponent>
         Shape clip = getClip(l);
         return clip == null || clip.contains(x, y);
     }
+
+    public void update() {
+        fireLayerItemChanged();
+    }
 }

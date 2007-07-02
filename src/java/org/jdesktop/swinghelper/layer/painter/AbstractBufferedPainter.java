@@ -101,7 +101,6 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
 
     public void paint(Graphics2D g2, JXLayer<V> l) {
         if (isLayerValid(l) && isPainterValid()) {
-            configure(g2, l);
             // if image is not valid it should be repainted
             if (!isImageValid(g2, l)) {
                 // if buffer is not valid it should be recreated
@@ -116,6 +115,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
                 processEffects(bufg.getClip());
                 bufg.dispose();
             }
+            configure(g2, l);
             g2.drawImage(getBuffer(), 0, 0, null);
         }
     }
@@ -146,5 +146,9 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     protected BufferedImage createBuffer(Graphics2D g2, int width, int height) {
         return g2.getDeviceConfiguration().
                 createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+    }
+    
+    protected BufferedImage createBuffer(int width, int height) {
+        return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
 }

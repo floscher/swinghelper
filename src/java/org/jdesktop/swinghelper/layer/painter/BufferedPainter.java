@@ -42,24 +42,40 @@ public class BufferedPainter<V extends JComponent>
     }
 
     public BufferedPainter(Painter<V> painter, Effect... effects) {
-        setPainter(painter);
+        setDelegatePainter(painter);
         setEffects(effects);
     }
 
-    public Painter<V> getPainter() {
+    public Painter<V> getDelegatePainter() {
         return painter;
     }
 
-    public void setPainter(Painter<V> painter) {
-        this.painter = painter;
-        fireLayerItemChanged();
+    public void setDelegatePainter(Painter<V> painter) {
+        if (this.painter != painter) {
+            if (this.painter != null) {
+                this.painter.removeLayerItemListener(this);
+            }
+            if (painter != null) {
+                painter.addLayerItemListener(this);
+            }
+            this.painter = painter;
+            fireLayerItemChanged();
+        }
     }
 
     protected boolean isPainterValid() {
-        return painter != null;
+        return getDelegatePainter() != null;
     }
 
     protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
-        painter.paint(g2, l);
+        getDelegatePainter().paint(g2, l);
+    }
+    
+    public void update() {
+        Painter<V> painter = getDelegatePainter();
+        if (painter != null) {
+            painter.update();
+        }
+        super.update();
     }
 }

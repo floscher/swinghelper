@@ -26,7 +26,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ComponentPainter <V extends JComponent>
-        extends AbstractBufferedPainter<V> {
+        extends ImagePainter<V> {
 
     private JComponent component;
 
@@ -52,30 +52,24 @@ public class ComponentPainter <V extends JComponent>
         fireLayerItemChanged();
     }
 
-    public void repaint() {
+    public void update() {
         if (isPainterValid()) {
-            if (getBuffer() == null ||
-                    getBuffer().getWidth() != component.getWidth() ||
-                    getBuffer().getHeight() != component.getHeight()) {
-                setBuffer(createBuffer(component.getWidth(), component.getHeight()));
+            BufferedImage componentImage = getImage();
+            if (componentImage == null ||
+                   componentImage.getWidth() != component.getWidth() ||
+                    componentImage.getHeight() != component.getHeight()) {
+                componentImage = createBuffer(component.getWidth(), component.getHeight());
+                setImage(componentImage);
             }
-            Graphics g = getBuffer().getGraphics();
+            Graphics g = componentImage.getGraphics();
             component.paint(g);
-            g.dispose();            
-            processEffects(null);
+            g.dispose();
         }
+        super.update();
     }
 
     protected boolean isPainterValid() {
         return component != null &&
                 component.getWidth() != 0 && component.getHeight() != 0;
-    }
-
-    protected boolean isImageValid(Graphics2D g2, JXLayer<V> l) {
-        return true;
-    }
-    
-    protected BufferedImage createBuffer(int width, int height) {
-        return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
 }
