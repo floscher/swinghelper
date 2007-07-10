@@ -1,19 +1,20 @@
 package org.jdesktop.swinghelper.layer.demo;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
+import org.jdesktop.swinghelper.layer.demo.util.ImageOpFactory;
+import org.jdesktop.swinghelper.layer.demo.util.LafMenu;
 import org.jdesktop.swinghelper.layer.effect.Effect;
 import org.jdesktop.swinghelper.layer.effect.ImageOpEffect;
-import org.jdesktop.swinghelper.layer.effect.NullEffect;
-import org.jdesktop.swinghelper.layer.demo.util.LafMenu;
-import org.jdesktop.swinghelper.layer.demo.util.ImageOpFactory;
-import org.jdesktop.swinghelper.layer.painter.*;
+import org.jdesktop.swinghelper.layer.painter.AbstractPainter;
+import org.jdesktop.swinghelper.layer.painter.BufferedPainter;
+import org.jdesktop.swinghelper.layer.painter.Painter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.InputEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.Properties;
 
 /**
@@ -122,7 +123,7 @@ public class InternalFrameDemo extends JPanel {
         defaultItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (defaultItem.isSelected()) {
-                    p.setEffect(new NullEffect());
+                    p.setEffects((Effect[]) null);
                 }
             }
         });
@@ -135,7 +136,7 @@ public class InternalFrameDemo extends JPanel {
         invertItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (invertItem.isSelected()) {
-                    p.setEffect(new ImageOpEffect(ImageOpFactory.getInvertColorOp()));
+                    p.setEffects(new ImageOpEffect(ImageOpFactory.getInvertColorOp()));
                 }
             }
         });
@@ -147,7 +148,7 @@ public class InternalFrameDemo extends JPanel {
         posterItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (posterItem.isSelected()) {
-                    p.setEffect(new ImageOpEffect(ImageOpFactory.getGrayScaleOp()));
+                    p.setEffects(new ImageOpEffect(ImageOpFactory.getGrayScaleOp()));
                 }
             }
         });
@@ -166,11 +167,9 @@ public class InternalFrameDemo extends JPanel {
         frame.setVisible(true);
     }
 
-    static class CoverPainter extends AbstractPainter<JComponent> {
+    static class CoverPainter extends BufferedPainter<JComponent> {
         private boolean showPainters;
         private Painter<JComponent> backgroundPainter;
-        private Effect effect;
-        private BufferedPainter<JComponent> mainPainter;
         private Painter<JComponent> foregroundPainter;
 
         public CoverPainter() {
@@ -183,8 +182,6 @@ public class InternalFrameDemo extends JPanel {
                 }
             };
 
-            mainPainter = new BufferedPainter<JComponent>();
-
             foregroundPainter = new AbstractPainter() {
                 public void paint(Graphics2D g2, JXLayer l) {
                     g2.setColor(Color.GREEN.darker());
@@ -196,16 +193,6 @@ public class InternalFrameDemo extends JPanel {
             };
         }
 
-        public Effect getEffect() {
-            return effect;
-        }
-
-        public void setEffect(Effect effect) {
-            this.effect = effect;
-            mainPainter.setEffects(effect);
-            fireLayerItemChanged();
-        }
-
         public boolean isShowPainters() {
             return showPainters;
         }
@@ -213,18 +200,17 @@ public class InternalFrameDemo extends JPanel {
         public void setShowPainters(boolean showPainters) {
             this.showPainters = showPainters;
             if (showPainters) {
-                mainPainter.getModel().setAlpha(.7f);
+                getModel().setAlpha(.7f);
             } else {
-                mainPainter.getModel().setAlpha(1);
+                getModel().setAlpha(1);
             }
-            fireLayerItemChanged();
         }
 
         public void paint(Graphics2D g2, JXLayer<JComponent> l) {
             if (showPainters) {
                 backgroundPainter.paint(g2, l);
             }
-            mainPainter.paint(g2, l);
+            super.paint(g2, l);
             if (showPainters) {
                 foregroundPainter.paint(g2, l);
             }

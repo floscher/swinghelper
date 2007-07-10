@@ -199,14 +199,10 @@ public class JXLayer<V extends JComponent> extends JComponent {
     private LayerItemListener createLayerItemListener() {
         return new LayerItemListener() {
             public void layerItemChanged(LayerItemEvent e) {
-                Rectangle clipBounds = e.getClip() == null ?
-                        new Rectangle(getSize()) : e.getClip().getBounds();
                 if (view != null) {
-                    view.repaint(clipBounds.x, clipBounds.y,
-                            clipBounds.width, clipBounds.height);
+                    view.repaint();
                 } else {
-                    repaint(clipBounds.x, clipBounds.y,
-                            clipBounds.width, clipBounds.height);
+                    repaint();
                 }
             }
         };

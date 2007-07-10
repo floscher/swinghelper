@@ -44,6 +44,7 @@ public class BufferedPainter<V extends JComponent>
     public BufferedPainter(Painter<V> painter, Effect... effects) {
         setDelegatePainter(painter);
         setEffects(effects);
+        getModel().setIncrementalUpdate(true);
     }
 
     public Painter<V> getDelegatePainter() {
@@ -53,13 +54,14 @@ public class BufferedPainter<V extends JComponent>
     public void setDelegatePainter(Painter<V> painter) {
         if (this.painter != painter) {
             if (this.painter != null) {
-                this.painter.removeLayerItemListener(this);
+                removeItem(painter);
             }
             if (painter != null) {
-                painter.addLayerItemListener(this);
+                addItem(painter);
             }
             this.painter = painter;
-            fireLayerItemChanged();
+            revalidate();
+            repaint();
         }
     }
 
@@ -69,13 +71,5 @@ public class BufferedPainter<V extends JComponent>
 
     protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
         getDelegatePainter().paint(g2, l);
-    }
-    
-    public void update() {
-        Painter<V> painter = getDelegatePainter();
-        if (painter != null) {
-            painter.update();
-        }
-        super.update();
     }
 }

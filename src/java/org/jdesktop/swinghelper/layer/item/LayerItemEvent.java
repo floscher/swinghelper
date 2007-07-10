@@ -22,22 +22,12 @@ import java.awt.*;
 import java.util.EventObject;
 
 public class LayerItemEvent extends EventObject {
-    private final Shape clip;
     
     public LayerItemEvent(LayerItem source) {
-        this(source, null);
-    }
-
-    public LayerItemEvent(LayerItem source, Shape clip) {
         super(source);
-        this.clip = clip;
     }
 
     public LayerItem getSource() {
         return (LayerItem) super.getSource();
-    }
-
-    public Shape getClip() {
-        return clip;
     }
 }

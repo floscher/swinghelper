@@ -3,7 +3,6 @@ package org.jdesktop.swinghelper.layer.demo;
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.demo.util.LafMenu;
 import org.jdesktop.swinghelper.layer.painter.ComponentPainter;
-import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 import org.jdesktop.swinghelper.layer.painter.model.PainterModel;
 
 import javax.swing.*;

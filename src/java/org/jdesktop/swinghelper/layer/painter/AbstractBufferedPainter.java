@@ -19,10 +19,10 @@
 package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
+import org.jdesktop.swinghelper.layer.item.LayerItemEvent;
 import org.jdesktop.swinghelper.layer.effect.Effect;
 import org.jdesktop.swinghelper.layer.painter.model.BufferedPainterModel;
 import org.jdesktop.swinghelper.layer.painter.model.DefaultBufferedPainterModel;
-import org.jdesktop.swinghelper.layer.painter.model.DefaultPainterModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,11 +37,11 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     protected AbstractBufferedPainter() {
         this(new DefaultBufferedPainterModel());
     }
-    
+
     protected AbstractBufferedPainter(BufferedPainterModel model) {
         super(model);
     }
-    
+
     public BufferedPainterModel getModel() {
         return (BufferedPainterModel) super.getModel();
     }
@@ -50,7 +50,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
      * If set to true the buffer is repainted incrementally,
      * respecting the current clip area
      * otherwise the whole buffer is repainted each time
-     * and only if all visible area of the JXLayer is repainted  
+     * and only if all visible area of the JXLayer is repainted
      */
     public boolean isIncrementalUpdate(JXLayer<V> l) {
         return getModel().isIncrementalUpdate();
@@ -61,9 +61,6 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     }
 
     protected void setBuffer(BufferedImage buffer) {
-        if (buffer == null) {
-            throw new IllegalArgumentException("BufferedImage is null");
-        }
         this.buffer = buffer;
     }
 
@@ -79,7 +76,8 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         for (Effect effect : effects) {
             effect.addLayerItemListener(this);
         }
-        fireLayerItemChanged();
+        revalidate();
+        repaint();
     }
 
     public Effect[] getEffects() {
@@ -101,10 +99,10 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
 
     public void paint(Graphics2D g2, JXLayer<V> l) {
         if (isLayerValid(l) && isPainterValid()) {
-            // if image is not valid it should be repainted
-            if (!isImageValid(g2, l)) {
-                // if buffer is not valid it should be recreated
-                if (!isBufferValid(g2, l)) {
+            // if buffer is not valid it should be repainted
+            if (!isBufferValid(g2, l)) {
+                // if buffer format is not valid it should be recreated
+                if (!isBufferFormatValid(g2, l)) {
                     setBuffer(createBuffer(g2, l.getWidth(), l.getHeight()));
                 }
                 Graphics2D bufg = (Graphics2D) getBuffer().getGraphics();
@@ -120,17 +118,21 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         }
     }
 
+    protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
+    }
+
     protected boolean isPainterValid() {
         return true;
     }
 
-    protected boolean isBufferValid(Graphics2D g2, JXLayer<V> l) {
-        return getBuffer() != null &&
-                getBuffer().getWidth() == l.getWidth() &&
-                getBuffer().getHeight() == l.getHeight();
+    protected boolean isBufferFormatValid(Graphics2D g2, JXLayer<V> l) {
+        BufferedImage buffer = getBuffer();
+        return buffer != null &&
+                buffer.getWidth() == l.getWidth() &&
+                buffer.getHeight() == l.getHeight();
     }
 
-    protected boolean isImageValid(Graphics2D g2, JXLayer<V> l) {
+    protected boolean isBufferValid(Graphics2D g2, JXLayer<V> l) {
         return !isIncrementalUpdate(l) &&
                 !l.getVisibleRect().equals(g2.getClipBounds());
     }
@@ -139,16 +141,16 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         return l.getWidth() != 0 && l.getHeight() != 0;
     }
 
-    protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
-
-    }
-
     protected BufferedImage createBuffer(Graphics2D g2, int width, int height) {
         return g2.getDeviceConfiguration().
                 createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
     
-    protected BufferedImage createBuffer(int width, int height) {
-        return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    public void layerItemChanged(LayerItemEvent e) {
+        revalidate();
+        repaint();
+    }
+    
+    protected void revalidate() {
     }
 }

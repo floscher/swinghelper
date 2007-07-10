@@ -47,14 +47,14 @@ public class CompoundPainter <V extends JComponent>
             painters = new Painter[0];
         }
         for (Painter<V> painter : getPainters()) {
-            painter.removeLayerItemListener(this);
+            removeItem(painter);
         }
         this.painters = new Painter[painters.length];
         System.arraycopy(painters, 0, this.painters, 0, painters.length);
         for (Painter<V> painter : painters) {
-            painter.addLayerItemListener(this);
+            addItem(painter);
         }
-        fireLayerItemChanged();
+        repaint();
     }
 
     public void paint(Graphics2D g2, JXLayer<V> l) {
@@ -66,12 +66,5 @@ public class CompoundPainter <V extends JComponent>
             }
             temp.dispose();
         }
-    }
-
-    public void update() {
-        for (Painter<V> painter : painters) {
-            painter.update();
-        }
-        super.update();
     }
 }

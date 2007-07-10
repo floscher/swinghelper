@@ -48,7 +48,7 @@ public class FlashButtonDemo {
                     } else {
                         scale += .2;
                     }
-                    fireLayerItemChanged();
+                    repaint();
                 }
             });
         }

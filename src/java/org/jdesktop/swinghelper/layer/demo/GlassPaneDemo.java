@@ -6,6 +6,7 @@ import org.jdesktop.swinghelper.layer.effect.ImageOpEffect;
 import org.jdesktop.swinghelper.layer.painter.BufferedPainter;
 import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 import org.jdesktop.swinghelper.layer.painter.ComponentPainter;
+import org.jdesktop.swinghelper.layer.painter.CompoundPainter;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -35,14 +36,14 @@ public class GlassPaneDemo extends JFrame {
                         new ImageOpEffect(ImageOpFactory.getConvolveOp(5)));
 
         setGlassPane(new JXLayer<JComponent>(glassPanePainter));
-
+        
         glassPaneButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // use invokeLater to return the button to not pressed state
                 SwingUtilities.invokeLater(new Runnable() {
 
                     public void run() {
-                        // it is important to not call repaint during painting process 
+                        // it is important to not call update during painting process 
                         glassPanePainter.update();
                         getGlassPane().setVisible(true);
                         JOptionPane.showConfirmDialog(GlassPaneDemo.this,

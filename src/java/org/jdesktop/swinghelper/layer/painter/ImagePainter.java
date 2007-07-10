@@ -25,39 +25,58 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ImagePainter <V extends JComponent>
+public class ImagePainter<V extends JComponent>
         extends AbstractBufferedPainter<V> {
-    private BufferedImage image;
+    private Image image;
 
     protected ImagePainter() {
     }
-    
-    public ImagePainter(BufferedImage image) {
+
+    public ImagePainter(Image image) {
         this(image, (Effect[]) null);
     }
-    
-    public ImagePainter(BufferedImage image, Effect... effects) {
+
+    public ImagePainter(Image image, Effect... effects) {
         setImage(image);
         setEffects(effects);
     }
 
-    public BufferedImage getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(BufferedImage image) {
+    public void setImage(Image image) {
         this.image = image;
-        fireLayerItemChanged();
+        revalidate();
+        repaint();
     }
 
-    public boolean isIncrementalUpdate(JXLayer<V> l) {
-        return false;
+    protected BufferedImage createBuffer(int width, int height) {
+        return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
-    
-    protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
-        BufferedImage image = getImage();
+
+    protected boolean isPainterValid() {
+        return getBuffer() != null;
+    }
+
+    protected boolean isBufferValid(Graphics2D g2, JXLayer<V> l) {
+        return true;
+    }
+
+    protected void revalidate() {
+        Image image = getImage();
         if (image != null) {
-            g2.drawImage(image, 0, 0, null);
-        }
+            BufferedImage buffer = getBuffer();
+            if (buffer == null ||
+                    buffer.getWidth() != image.getWidth(null) ||
+                    buffer.getHeight() != image.getHeight(null)) {
+                buffer = createBuffer(image.getWidth(null), image.getHeight(null));
+                setBuffer(buffer);
+            }
+            Graphics bufg = buffer.getGraphics();
+            bufg.drawImage(image, 0, 0, null);
+            bufg.dispose();
+            processEffects(null);
+        } 
     }
 }

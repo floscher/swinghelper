@@ -44,7 +44,7 @@ public class DefaultPainterModel
 
     public void setClip(Shape shape) {
         this.shape = shape;
-        fireLayerItemChanged();
+        repaint();
     }
 
     // Composite
@@ -54,7 +54,7 @@ public class DefaultPainterModel
 
     public void setComposite(Composite composite) {
         this.composite = composite;
-        fireLayerItemChanged();
+        repaint();
     }
 
     public float getAlpha() {
@@ -77,7 +77,7 @@ public class DefaultPainterModel
     public void setRenderingHints(Map<Key, Object> renderingHints) {
         this.renderingHints = renderingHints == null ?
                 new HashMap<Key, Object>() : new HashMap<Key, Object>(renderingHints);
-        fireLayerItemChanged();
+        repaint();
     }
 
     // AffineTransform
@@ -87,6 +87,6 @@ public class DefaultPainterModel
 
     public void setTransform(AffineTransform transform) {
         this.transform = transform == null ? null : new AffineTransform(transform);
-        fireLayerItemChanged();
+        repaint();
     }
 }

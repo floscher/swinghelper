@@ -2,7 +2,6 @@ package org.jdesktop.swinghelper.layer.demo;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.painter.BufferedPainter;
-import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -145,7 +144,7 @@ public class ShapingAnimationDemo {
         public void next() {
             x += 2;
             y += 1;
-            fireLayerItemChanged();
+            repaint();
         }
     }
 

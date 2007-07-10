@@ -27,7 +27,7 @@ public class DefaultPainter <V extends JComponent>
         extends AbstractPainter<V> {
 
     public void paint(Graphics2D g2, JXLayer<V> l) {
-        configure(g2, l);
+        super.paint(g2, l);
         l.paint(g2);
     }
 }

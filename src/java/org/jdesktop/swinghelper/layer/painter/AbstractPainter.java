@@ -22,6 +22,7 @@ import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.item.AbstractLayerItem;
 import org.jdesktop.swinghelper.layer.item.LayerItemEvent;
 import org.jdesktop.swinghelper.layer.item.LayerItemListener;
+import org.jdesktop.swinghelper.layer.item.LayerItem;
 import org.jdesktop.swinghelper.layer.painter.model.DefaultPainterModel;
 import org.jdesktop.swinghelper.layer.painter.model.PainterModel;
 
@@ -30,27 +31,31 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
-abstract public class AbstractPainter <V extends JComponent> 
+abstract public class AbstractPainter <V extends JComponent>
         extends AbstractLayerItem implements Painter<V>, LayerItemListener {
     private PainterModel model;
+    private List<LayerItem> children;
 
     protected AbstractPainter() {
         this(new DefaultPainterModel());
     }
-    
+
     protected AbstractPainter(PainterModel model) {
         if (model == null) {
             throw new IllegalArgumentException("PainterModel is null");
         }
         this.model = model;
         model.addLayerItemListener(this);
+        children = new ArrayList<LayerItem>();
     }
 
     public PainterModel getModel() {
         return model;
     }
-    
+
     // Painting
     protected void configure(Graphics2D g2, JXLayer<V> l) {
         if (getModel().isEnabled()) {
@@ -60,25 +65,27 @@ abstract public class AbstractPainter <V extends JComponent>
             applyRenderingHints(g2, getRenderingHints(l));
         }
     }
-    
-    abstract public void paint(Graphics2D g2, JXLayer<V> l);
-    
+
+    public void paint(Graphics2D g2, JXLayer<V> l) {
+        configure(g2, l);
+    }
+
     public Composite getComposite(JXLayer<V> l) {
         return getModel().getComposite();
     }
-    
+
     public AffineTransform getTransform(JXLayer<V> l) {
         return getModel().getTransform();
     }
-    
+
     public Shape getClip(JXLayer<V> l) {
         return getModel().getClip();
     }
-    
+
     public Map<RenderingHints.Key, Object> getRenderingHints(JXLayer<V> l) {
         return getModel().getRenderingHints();
     }
-    
+
     protected void applyComposite(Graphics2D g2, Composite composite) {
         if (composite != null) {
             g2.setComposite(composite);
@@ -114,16 +121,33 @@ abstract public class AbstractPainter <V extends JComponent>
         }
     }
 
-    public void layerItemChanged(LayerItemEvent e) {
-        fireLayerItemChanged(e.getClip());
-    }
-
     public boolean contains(int x, int y, JXLayer<V> l) {
         Shape clip = getClip(l);
         return clip == null || clip.contains(x, y);
     }
 
-    public void update() {
-        fireLayerItemChanged();
+    public void layerItemChanged(LayerItemEvent e) {
+        repaint();
+    }
+
+    public final void update() {
+        updatePainter();
+        for (LayerItem item : children) {
+            item.update();
+        }
+        repaint();
+    }
+
+    protected void updatePainter() {
+    }
+    
+    protected void addItem(LayerItem item) {
+        item.addLayerItemListener(this);
+        children.add(item);
+    }
+    
+    protected void removeItem(LayerItem item) {
+        item.removeLayerItemListener(this);
+        children.remove(item);
     }
 }

@@ -18,12 +18,11 @@
 
 package org.jdesktop.swinghelper.layer.painter;
 
-import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.effect.Effect;
+import org.jdesktop.swinghelper.layer.JXLayer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class ComponentPainter <V extends JComponent>
         extends ImagePainter<V> {
@@ -49,27 +48,27 @@ public class ComponentPainter <V extends JComponent>
 
     public void setComponent(JComponent component) {
         this.component = component;
-        fireLayerItemChanged();
-    }
-
-    public void update() {
-        if (isPainterValid()) {
-            BufferedImage componentImage = getImage();
-            if (componentImage == null ||
-                   componentImage.getWidth() != component.getWidth() ||
-                    componentImage.getHeight() != component.getHeight()) {
-                componentImage = createBuffer(component.getWidth(), component.getHeight());
-                setImage(componentImage);
-            }
-            Graphics g = componentImage.getGraphics();
-            component.paint(g);
-            g.dispose();
-        }
-        super.update();
+        repaint();
     }
 
     protected boolean isPainterValid() {
         return component != null &&
                 component.getWidth() != 0 && component.getHeight() != 0;
+    }
+
+    protected void updatePainter() {
+        if (isPainterValid()) {
+            Image image = getImage();
+            if (image == null ||
+                    image.getWidth(null) != component.getWidth() ||
+                    image.getHeight(null) != component.getHeight()) {
+                image = createBuffer(component.getWidth(), component.getHeight());
+                setImage(image);
+            }
+            Graphics g = image.getGraphics();
+            component.paint(g);
+            g.dispose();
+            revalidate();
+        } 
     }
 }

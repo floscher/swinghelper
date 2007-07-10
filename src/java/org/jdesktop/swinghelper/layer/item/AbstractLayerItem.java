@@ -19,7 +19,6 @@
 package org.jdesktop.swinghelper.layer.item;
 
 import javax.swing.event.EventListenerList;
-import java.awt.*;
 
 abstract public class AbstractLayerItem implements LayerItem {
     private EventListenerList listenerList;
@@ -36,7 +35,7 @@ abstract public class AbstractLayerItem implements LayerItem {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
-        fireLayerItemChanged();
+        repaint();
     }
 
     public void addLayerItemListener(LayerItemListener l) {
@@ -51,12 +50,15 @@ abstract public class AbstractLayerItem implements LayerItem {
         return listenerList.getListeners(LayerItemListener.class);
     }
 
-    protected void fireLayerItemChanged() {
-        fireLayerItemChanged((Shape) null);
+    public void repaint() {
+        fireLayerItemChanged();
     }
 
-    protected void fireLayerItemChanged(Shape clip) {
-        fireLayerItemChanged(new LayerItemEvent(this, clip));
+    public void update() {
+    }
+
+    protected void fireLayerItemChanged() {
+        fireLayerItemChanged(new LayerItemEvent(this));
     }
 
     private void fireLayerItemChanged(LayerItemEvent event) {
