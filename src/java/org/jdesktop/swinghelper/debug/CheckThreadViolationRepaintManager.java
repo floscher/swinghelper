@@ -18,6 +18,7 @@ package org.jdesktop.swinghelper.debug;
 
 import javax.swing.*;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * <p>This class is used to detect Event Dispatch Thread rule violations<br>
@@ -30,8 +31,7 @@ import java.lang.ref.WeakReference;
  * </p>
  *
  * @author Scott Delap
- *         <p/>
- *         some improvements from Alexander Potochkin
+ * @author Alexander Potochkin
  * 
  * https://swinghelper.dev.java.net/
  */
@@ -81,6 +81,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
                 }
                 if ("repaint".equals(st.getMethodName())) {
                     repaint = true;
+                    fromSwing = false;
                 }
             }
             if (imageUpdate) {
@@ -112,10 +113,12 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         //Valid code  
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
-                test();                
+                test();
             }
         });
         System.out.println("Valid code passed...");
+        repaintTest();
+        System.out.println("Repaint test - correct code");
         //Invalide code (stack trace expected) 
         test();
     }
@@ -140,5 +143,23 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         editor.setText("<html><img src=\"file:\\lala.png\"></html>");
         frame.setSize(300, 200);
         frame.setVisible(true);
+    }
+
+    private static JButton test;
+    static void repaintTest() {
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    test = new JButton();
+                    test.setSize(100, 100);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
+        // repaint(Rectangle) should be ok
+        test.repaint(test.getBounds());
+        test.repaint(0, 0, 100, 100);
+        test.repaint();
     }
 }
