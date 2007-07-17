@@ -25,7 +25,4 @@ public interface LayerItem {
     public void addLayerItemListener(LayerItemListener l);
     public void removeLayerItemListener(LayerItemListener l);
     public LayerItemListener[] getLayerItemListeners();
-    
-    public void repaint();
-    public void update();
 }

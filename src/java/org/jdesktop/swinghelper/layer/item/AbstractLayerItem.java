@@ -35,7 +35,7 @@ abstract public class AbstractLayerItem implements LayerItem {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
-        repaint();
+        fireLayerItemChanged();
     }
 
     public void addLayerItemListener(LayerItemListener l) {
@@ -48,13 +48,6 @@ abstract public class AbstractLayerItem implements LayerItem {
 
     public LayerItemListener[] getLayerItemListeners() {
         return listenerList.getListeners(LayerItemListener.class);
-    }
-
-    public void repaint() {
-        fireLayerItemChanged();
-    }
-
-    public void update() {
     }
 
     protected void fireLayerItemChanged() {

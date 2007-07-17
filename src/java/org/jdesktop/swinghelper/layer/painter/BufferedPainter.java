@@ -54,10 +54,10 @@ public class BufferedPainter<V extends JComponent>
     public void setDelegatePainter(Painter<V> painter) {
         if (this.painter != painter) {
             if (this.painter != null) {
-                removeItem(painter);
+                unregisterChildPainter(painter);
             }
             if (painter != null) {
-                addItem(painter);
+                registerChildPainter(painter);
             }
             this.painter = painter;
             revalidate();

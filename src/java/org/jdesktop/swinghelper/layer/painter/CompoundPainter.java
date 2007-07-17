@@ -47,12 +47,12 @@ public class CompoundPainter <V extends JComponent>
             painters = new Painter[0];
         }
         for (Painter<V> painter : getPainters()) {
-            removeItem(painter);
+            unregisterChildPainter(painter);
         }
         this.painters = new Painter[painters.length];
         System.arraycopy(painters, 0, this.painters, 0, painters.length);
         for (Painter<V> painter : painters) {
-            addItem(painter);
+            registerChildPainter(painter);
         }
         repaint();
     }

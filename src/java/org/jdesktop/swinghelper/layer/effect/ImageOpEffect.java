@@ -41,7 +41,7 @@ public class ImageOpEffect extends AbstractLayerItem implements Effect {
 
     public void setBufferedImageOp(BufferedImageOp bufferedImageOp) {
         this.bufferedImageOp = bufferedImageOp;
-        repaint();
+        fireLayerItemChanged();
     }
 
     public void apply(BufferedImage buffer, Shape clip) {

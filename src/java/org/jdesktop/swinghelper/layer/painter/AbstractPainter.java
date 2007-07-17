@@ -37,7 +37,7 @@ import java.util.ArrayList;
 abstract public class AbstractPainter <V extends JComponent>
         extends AbstractLayerItem implements Painter<V>, LayerItemListener {
     private PainterModel model;
-    private List<LayerItem> children;
+    private List<Painter> children;
 
     protected AbstractPainter() {
         this(new DefaultPainterModel());
@@ -49,7 +49,7 @@ abstract public class AbstractPainter <V extends JComponent>
         }
         this.model = model;
         model.addLayerItemListener(this);
-        children = new ArrayList<LayerItem>();
+        children = new ArrayList<Painter>();
     }
 
     public PainterModel getModel() {
@@ -130,9 +130,13 @@ abstract public class AbstractPainter <V extends JComponent>
         repaint();
     }
 
+    public void repaint() {
+        fireLayerItemChanged();
+    }
+    
     public final void update() {
         updatePainter();
-        for (LayerItem item : children) {
+        for (Painter item : children) {
             item.update();
         }
         repaint();
@@ -141,13 +145,13 @@ abstract public class AbstractPainter <V extends JComponent>
     protected void updatePainter() {
     }
     
-    protected void addItem(LayerItem item) {
-        item.addLayerItemListener(this);
-        children.add(item);
+    protected void registerChildPainter(Painter painter) {
+        painter.addLayerItemListener(this);
+        children.add(painter);
     }
     
-    protected void removeItem(LayerItem item) {
-        item.removeLayerItemListener(this);
-        children.remove(item);
+    protected void unregisterChildPainter(Painter painter) {
+        painter.removeLayerItemListener(this);
+        children.remove(painter);
     }
 }

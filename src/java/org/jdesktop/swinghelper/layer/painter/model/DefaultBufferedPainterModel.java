@@ -27,6 +27,6 @@ public class DefaultBufferedPainterModel extends DefaultPainterModel implements 
 
     public void setIncrementalUpdate(boolean isIncrementalUpdate) {
         this.isIncrementalUpdate = isIncrementalUpdate;
-        repaint();
+        fireLayerItemChanged();
     }
 }
