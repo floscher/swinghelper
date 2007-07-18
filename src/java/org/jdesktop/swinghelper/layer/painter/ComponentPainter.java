@@ -56,7 +56,7 @@ public class ComponentPainter <V extends JComponent>
                 component.getWidth() != 0 && component.getHeight() != 0;
     }
 
-    protected void updatePainter() {
+    public void update() {
         if (isPainterValid()) {
             Image image = getImage();
             if (image == null ||
@@ -69,6 +69,7 @@ public class ComponentPainter <V extends JComponent>
             component.paint(g);
             g.dispose();
             revalidate();
+            repaint();
         } 
     }
 }

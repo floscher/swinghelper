@@ -54,10 +54,10 @@ public class BufferedPainter<V extends JComponent>
     public void setDelegatePainter(Painter<V> painter) {
         if (this.painter != painter) {
             if (this.painter != null) {
-                unregisterChildPainter(painter);
+                this.painter.removeLayerItemListener(this);
             }
             if (painter != null) {
-                registerChildPainter(painter);
+                painter.addLayerItemListener(this);
             }
             this.painter = painter;
             revalidate();
@@ -71,5 +71,11 @@ public class BufferedPainter<V extends JComponent>
 
     protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
         getDelegatePainter().paint(g2, l);
+    }
+
+    public void update() {
+        if (getDelegatePainter() != null) {
+            getDelegatePainter().update();
+        }
     }
 }

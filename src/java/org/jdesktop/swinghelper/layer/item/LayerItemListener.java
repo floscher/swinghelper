@@ -20,6 +20,17 @@ package org.jdesktop.swinghelper.layer.item;
 
 import java.util.EventListener;
 
+/**
+ * <code>LayerItemListener</code>s are notified of changes
+ * to a <code>LayerItem</code>
+ * 
+ * @see LayerItem
+ */
 public interface LayerItemListener extends EventListener {
+    /**
+     * Notification that <code>LayerItem</code> has changed.
+     *
+     * @param e a LayerItemEvent object
+     */
     public void layerItemChanged(LayerItemEvent e);
 }

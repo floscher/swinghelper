@@ -22,7 +22,6 @@ import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.item.AbstractLayerItem;
 import org.jdesktop.swinghelper.layer.item.LayerItemEvent;
 import org.jdesktop.swinghelper.layer.item.LayerItemListener;
-import org.jdesktop.swinghelper.layer.item.LayerItem;
 import org.jdesktop.swinghelper.layer.painter.model.DefaultPainterModel;
 import org.jdesktop.swinghelper.layer.painter.model.PainterModel;
 
@@ -31,13 +30,10 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
 
 abstract public class AbstractPainter <V extends JComponent>
         extends AbstractLayerItem implements Painter<V>, LayerItemListener {
     private PainterModel model;
-    private List<Painter> children;
 
     protected AbstractPainter() {
         this(new DefaultPainterModel());
@@ -49,7 +45,6 @@ abstract public class AbstractPainter <V extends JComponent>
         }
         this.model = model;
         model.addLayerItemListener(this);
-        children = new ArrayList<Painter>();
     }
 
     public PainterModel getModel() {
@@ -134,24 +129,6 @@ abstract public class AbstractPainter <V extends JComponent>
         fireLayerItemChanged();
     }
     
-    public final void update() {
-        updatePainter();
-        for (Painter item : children) {
-            item.update();
-        }
-        repaint();
-    }
-
-    protected void updatePainter() {
-    }
-    
-    protected void registerChildPainter(Painter painter) {
-        painter.addLayerItemListener(this);
-        children.add(painter);
-    }
-    
-    protected void unregisterChildPainter(Painter painter) {
-        painter.removeLayerItemListener(this);
-        children.remove(painter);
+    public void update() {
     }
 }

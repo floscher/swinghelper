@@ -20,6 +20,14 @@ package org.jdesktop.swinghelper.layer.item;
 
 import javax.swing.event.EventListenerList;
 
+/**
+ * The default implementation of the <code>LayerItem</code> interface
+ * which <code>JXLayer</code> painting delegates can be subclassed from
+ * 
+ * @see AbstractPainter
+ * @see DefaultPainterModel
+ * @see ImageOpEffect
+ */
 abstract public class AbstractLayerItem implements LayerItem {
     private EventListenerList listenerList;
     private boolean isEnabled;
@@ -29,27 +37,45 @@ abstract public class AbstractLayerItem implements LayerItem {
         setEnabled(true);
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public boolean isEnabled() {
         return isEnabled;
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
         fireLayerItemChanged();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public void addLayerItemListener(LayerItemListener l) {
         listenerList.add(LayerItemListener.class, l);
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public void removeLayerItemListener(LayerItemListener l) {
         listenerList.remove(LayerItemListener.class, l);
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public LayerItemListener[] getLayerItemListeners() {
         return listenerList.getListeners(LayerItemListener.class);
     }
 
+    /**
+     * Notifies all listeners that the LayerItem has changed.
+     */
     protected void fireLayerItemChanged() {
         fireLayerItemChanged(new LayerItemEvent(this));
     }

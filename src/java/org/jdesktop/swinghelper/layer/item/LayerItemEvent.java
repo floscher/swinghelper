@@ -21,12 +21,30 @@ package org.jdesktop.swinghelper.layer.item;
 import java.awt.*;
 import java.util.EventObject;
 
+/**
+ * <code>LayerItemEvent</code> provides notification of changes
+ * to a <code>LayerItem</code>
+ * 
+ * @see LayerItemListener
+ * @see LayerItem
+ */
 public class LayerItemEvent extends EventObject {
-    
+
+    /**
+     * Creates a <code>LayerItemEvent</code> object.
+     *
+     * @param source the object on which the event initially occurred.
+     * @throws IllegalArgumentException if source is null.
+     */
     public LayerItemEvent(LayerItem source) {
         super(source);
     }
 
+    /**
+     * Returns the object on which the event initially occurred.
+     *
+     * @return the object on which the event initially occurred.
+     */
     public LayerItem getSource() {
         return (LayerItem) super.getSource();
     }

@@ -18,11 +18,57 @@
 
 package org.jdesktop.swinghelper.layer.item;
 
+/**
+ * <p> A convenience interface to be implemented
+ * by any <code>JXLayer</code> painting delegate
+ *
+ * @see AbstractLayerItem
+ * @see Painter
+ * @see PainterModel
+ * @see Effect 
+ */
 public interface LayerItem {
+    /**
+     * Determines whether this component is enabled.
+     * An enabled item takes part in painting process
+     * when disabled ones are not taken into account
+     *
+     * @return <code>true</code> if the item is enabled,
+     *         <code>false</code> otherwise
+     */
     public boolean isEnabled();
+
+    /**
+     * Enables or disables this item,
+     * depending on the value of the parameter <code>b</code>.
+     * An enabled item takes part in painting process
+     * when disabled ones are not taken into account
+     *
+     * @param b If <code>true</code>, this item is enabled;
+     *          otherwise this item is disabled
+     */
     public void setEnabled(boolean b);
 
+    /**
+     * Adds a <code>LayerItemListener</code> to the LayerItem
+     *
+     * @param l the listener to be added
+     */
     public void addLayerItemListener(LayerItemListener l);
+
+    /**
+     * Removes a <code>LayerItemListener</code> from the LayerItem
+     *
+     * @param l the listener to be removed
+     */
     public void removeLayerItemListener(LayerItemListener l);
+
+    /**
+     * Returnes an array of all the <code>LayerItemListener</code>s added
+     * to this LayerItem with <code>addLayerItemListener</code>
+     *
+     * @return all of the <code>LayerItemListener</code>s added or
+     *         an empty array if no listeners have been added
+     */
     public LayerItemListener[] getLayerItemListeners();
 }
