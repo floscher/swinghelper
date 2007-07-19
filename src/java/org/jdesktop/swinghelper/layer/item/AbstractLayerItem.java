@@ -24,9 +24,9 @@ import javax.swing.event.EventListenerList;
  * The default implementation of the <code>LayerItem</code> interface
  * which <code>JXLayer</code> painting delegates can be subclassed from
  * 
- * @see AbstractPainter
- * @see DefaultPainterModel
- * @see ImageOpEffect
+ * @see org.jdesktop.swinghelper.layer.painter.AbstractPainter
+ * @see org.jdesktop.swinghelper.layer.painter.model.DefaultPainterModel
+ * @see org.jdesktop.swinghelper.layer.effect.ImageOpEffect
  */
 abstract public class AbstractLayerItem implements LayerItem {
     private EventListenerList listenerList;

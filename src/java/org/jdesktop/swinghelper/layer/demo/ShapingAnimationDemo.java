@@ -144,7 +144,7 @@ public class ShapingAnimationDemo {
         public void next() {
             x += 2;
             y += 1;
-            repaint();
+            fireLayerItemChanged();
         }
     }
 

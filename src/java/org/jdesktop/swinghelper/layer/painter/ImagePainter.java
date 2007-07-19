@@ -47,8 +47,8 @@ public class ImagePainter<V extends JComponent>
 
     public void setImage(Image image) {
         this.image = image;
-        revalidate();
-        repaint();
+        validate();
+        fireLayerItemChanged();
     }
 
     protected BufferedImage createBuffer(int width, int height) {
@@ -63,7 +63,7 @@ public class ImagePainter<V extends JComponent>
         return true;
     }
 
-    protected void revalidate() {
+    protected void validate() {
         Image image = getImage();
         if (image != null) {
             BufferedImage buffer = getBuffer();

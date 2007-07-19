@@ -23,9 +23,9 @@ package org.jdesktop.swinghelper.layer.item;
  * by any <code>JXLayer</code> painting delegate
  *
  * @see AbstractLayerItem
- * @see Painter
- * @see PainterModel
- * @see Effect 
+ * @see org.jdesktop.swinghelper.layer.painter.Painter
+ * @see org.jdesktop.swinghelper.layer.painter.model.PainterModel
+ * @see org.jdesktop.swinghelper.layer.effect.Effect
  */
 public interface LayerItem {
     /**

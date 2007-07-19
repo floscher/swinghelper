@@ -122,13 +122,9 @@ abstract public class AbstractPainter <V extends JComponent>
     }
 
     public void layerItemChanged(LayerItemEvent e) {
-        repaint();
-    }
-
-    public void repaint() {
         fireLayerItemChanged();
     }
-    
+
     public void update() {
     }
 }

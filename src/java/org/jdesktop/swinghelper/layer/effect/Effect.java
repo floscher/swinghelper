@@ -23,6 +23,21 @@ import org.jdesktop.swinghelper.layer.item.LayerItem;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * This interface describes an abstract operation 
+ * performed on <code>BufferedImage</code>
+ * 
+ * @see ImageOpEffect
+ */
 public interface Effect extends LayerItem {
+    /**
+     * Applies the effect to the <code>BufferedImage</code>.
+     * <p>The effect can take into account the passed <code>clip</code> shape
+     * to speed the processing up
+     *  
+     * @param buf the <code>BufferedImage</code> to be processed 
+     * @param clip the clip shape or <code>null</code> 
+     * if the whole <code>BufferedImage</code> must be processed  
+     */
     public void apply(BufferedImage buf, Shape clip);
 }

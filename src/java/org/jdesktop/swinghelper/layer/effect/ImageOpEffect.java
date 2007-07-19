@@ -24,26 +24,66 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 
+/**
+ * This implementation of the <code>Effect</code> interface
+ * delegates the processing of the <code>BufferedImage</code>
+ * to the <code>BufferedImageOp</code> object.
+ * If <code>BufferedImageOp</code> is set to <code>null</code>
+ * for this <code>ImageOpEffect</code>, 
+ * <code>apply</code> method takes no action 
+ * 
+ * @see BufferedImageOp
+ * @see java.awt.image.AffineTransformOp
+ * @see java.awt.image.BandCombineOp
+ * @see java.awt.image.ColorConvertOp
+ * @see java.awt.image.ConvolveOp
+ * @see java.awt.image.LookupOp
+ * @see java.awt.image.RescaleOp
+ */
 public class ImageOpEffect extends AbstractLayerItem implements Effect {
     private BufferedImageOp bufferedImageOp;
     private BufferedImage srcBuffer;
 
+    /**
+     * Creates an <code>ImageOpEffect</code> with <code>BufferedImageOp</code>
+     * property set to <code>null</code> 
+     */
     public ImageOpEffect() {
     }
 
+    /**
+     * Creates an <code>ImageOpEffect</code> with provided <code>bufferedImageOp</code>
+     *  
+     * @param bufferedImageOp the <code>BufferedImageOp</code> 
+     */
     public ImageOpEffect(BufferedImageOp bufferedImageOp) {
         this.bufferedImageOp = bufferedImageOp;
     }
 
+    /**
+     * Returnes the <code>BufferedImageOp</code> which was set to this <code>ImageOpEffect</code>
+     * or <code>null</code> if no <code>BufferedImageOp</code> was set
+     *  
+     * @return <code>BufferedImageOp</code> which was set to this <code>ImageOpEffect</code>
+     */
     public BufferedImageOp getBufferedImageOp() {
         return bufferedImageOp;
     }
 
+    /**
+     * Sets the <code>BufferedImageOp</code> for this <code>ImageOpEffect</code>
+     * which can be <code>null</code>  
+     * 
+     * @param bufferedImageOp <code>BufferedImageOp</code> for this <code>ImageOpEffect</code>
+     */
     public void setBufferedImageOp(BufferedImageOp bufferedImageOp) {
         this.bufferedImageOp = bufferedImageOp;
         fireLayerItemChanged();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void apply(BufferedImage buffer, Shape clip) {
         if (bufferedImageOp == null) {
             return;

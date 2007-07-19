@@ -25,18 +25,51 @@ import java.awt.RenderingHints.Key;
 import java.awt.geom.AffineTransform;
 import java.util.Map;
 
+/**
+ * State model for {@link org.jdesktop.swinghelper.layer.painter.Painter}
+ * which can use data from its <code>PainterModel</code> during painting routine
+ * and <code>MouseEvent</code>s filtering.
+ *
+ * @see org.jdesktop.swinghelper.layer.painter.Painter
+ * @see org.jdesktop.swinghelper.layer.JXLayer
+ * @see DefaultPainterModel
+ */
 public interface PainterModel extends LayerItem {
+    /**
+     * Gets the current clipping shape.
+     *
+     * @return  <code>Shape</code> object representing the
+     *         current clipping area, or <code>null</code> if
+     *         no clip is set.
+     */
     public Shape getClip();
-    public void setClip(Shape clip);    
-    
+
+    /**
+     * Sets the clipping shape
+     * which can be <code>null</code>
+     *
+     * @param clip the <code>Shape</code> to use to set the clip
+     */
+    public void setClip(Shape clip);
+
+    /**
+     * Gets the current <code>Composite</code>  
+     * 
+     * @return the current <code>Composite</code>
+     */
     public Composite getComposite();
+
     public void setComposite(Composite composite);
+
     public float getAlpha();
+
     public void setAlpha(float alpha);
 
     public Map<Key, Object> getRenderingHints();
+
     public void setRenderingHints(Map<Key, Object> renderingHints);
 
     public AffineTransform getTransform();
+
     public void setTransform(AffineTransform transform);
 }

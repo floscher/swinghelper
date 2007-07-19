@@ -76,8 +76,8 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         for (Effect effect : effects) {
             effect.addLayerItemListener(this);
         }
-        revalidate();
-        repaint();
+        validate();
+        fireLayerItemChanged();
     }
 
     public Effect[] getEffects() {
@@ -145,12 +145,12 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         return g2.getDeviceConfiguration().
                 createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
-    
+
     public void layerItemChanged(LayerItemEvent e) {
-        revalidate();
-        repaint();
+        validate();
+        fireLayerItemChanged();
     }
-    
-    protected void revalidate() {
+
+    protected void validate() {
     }
 }

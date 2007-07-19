@@ -60,8 +60,8 @@ public class BufferedPainter<V extends JComponent>
                 painter.addLayerItemListener(this);
             }
             this.painter = painter;
-            revalidate();
-            repaint();
+            validate();
+            fireLayerItemChanged();
         }
     }
 

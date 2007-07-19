@@ -19,7 +19,6 @@
 package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.effect.Effect;
-import org.jdesktop.swinghelper.layer.JXLayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public class ComponentPainter <V extends JComponent>
 
     public void setComponent(JComponent component) {
         this.component = component;
-        repaint();
+        fireLayerItemChanged();
     }
 
     protected boolean isPainterValid() {
@@ -68,8 +67,8 @@ public class ComponentPainter <V extends JComponent>
             Graphics g = image.getGraphics();
             component.paint(g);
             g.dispose();
-            revalidate();
-            repaint();
+            validate();
+            fireLayerItemChanged();
         } 
     }
 }

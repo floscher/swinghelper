@@ -26,7 +26,7 @@ import java.awt.*;
 public class CompoundPainter <V extends JComponent>
         extends AbstractPainter<V> {
 
-    private Painter[] painters = new Painter[0];
+    private Painter<V>[] painters = new Painter[0];
 
     public CompoundPainter() {
         this((Painter<V>[]) null);
@@ -54,7 +54,7 @@ public class CompoundPainter <V extends JComponent>
         for (Painter<V> painter : painters) {
             painter.addLayerItemListener(this);
         }
-        repaint();
+        fireLayerItemChanged();
     }
 
     public void paint(Graphics2D g2, JXLayer<V> l) {
