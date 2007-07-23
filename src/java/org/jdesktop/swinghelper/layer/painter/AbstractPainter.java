@@ -95,13 +95,7 @@ abstract public class AbstractPainter <V extends JComponent>
 
     protected void applyClip(Graphics2D g2, Shape clip) {
         if (clip != null) {
-            if (g2.getClip() == null) {
-                g2.setClip(clip);
-            } else {
-                Area clipArea = new Area(g2.getClip());
-                clipArea.intersect(new Area(clip));
-                g2.setClip(clipArea);
-            }
+            g2.clip(clip);
         }
     }
 
@@ -122,9 +116,9 @@ abstract public class AbstractPainter <V extends JComponent>
     }
 
     public void layerItemChanged(LayerItemEvent e) {
+        if (isEnabled() != getModel().isEnabled()) {
+            setEnabled(getModel().isEnabled());
+        }
         fireLayerItemChanged();
-    }
-
-    public void update() {
     }
 }

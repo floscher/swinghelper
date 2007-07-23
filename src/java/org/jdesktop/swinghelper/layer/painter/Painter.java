@@ -40,14 +40,22 @@ import java.awt.*;
  *      l.setPainter(new MyPainter<JButton>());
  * </code></pre>
  * <p/>
- * Note: <code>Painter</code> is designed to be shared 
+ * Note: <code>Painter</code> is designed to be shared
  * among multiple <code>JXLayer</code>s
  *
- * @see JXLayer 
+ * @see JXLayer
  * @see PainterModel
  * @see AbstractPainter
  */
 public interface Painter<V extends JComponent> extends LayerItem {
+
+    /**
+     * Returns the {@link PainterModel} for this painter
+     *
+     * @return the {@link PainterModel} for this painter
+     */
+    public PainterModel getModel();
+
     /**
      * <p>Renders the visual appearance of the given <code>JXLayer</code>
      * to the given {@link java.awt.Graphics2D} object.
@@ -57,13 +65,6 @@ public interface Painter<V extends JComponent> extends LayerItem {
      * @param l  The {@link JXLayer} to render for
      */
     public void paint(Graphics2D g2, JXLayer<V> l);
-
-    /**
-     * Returns the {@link PainterModel} for this painter
-     *
-     * @return the {@link PainterModel} for this painter
-     */
-    public PainterModel getModel();
 
     /**
      * Checks whether the given <code>JXLayer</code> accepts <code>MouseEvent</code>s
@@ -77,11 +78,5 @@ public interface Painter<V extends JComponent> extends LayerItem {
      *         <code>false</code> otherwise
      */
     public boolean contains(int x, int y, JXLayer<V> l);
-
-    /**
-     * May be used to read data to be used during painting from external sources 
-     * or perform a lengthy task to set up this <code>Painter</code> 
-     */
-    public void update();
 }
  

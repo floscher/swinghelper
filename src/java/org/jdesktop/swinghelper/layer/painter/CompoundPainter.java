@@ -67,10 +67,4 @@ public class CompoundPainter <V extends JComponent>
             temp.dispose();
         }
     }
-
-    public void update() {
-        for (Painter<V> painter : painters) {
-            painter.update();
-        }
-    }
 }

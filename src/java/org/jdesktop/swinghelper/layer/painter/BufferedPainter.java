@@ -72,10 +72,4 @@ public class BufferedPainter<V extends JComponent>
     protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
         getDelegatePainter().paint(g2, l);
     }
-
-    public void update() {
-        if (getDelegatePainter() != null) {
-            getDelegatePainter().update();
-        }
-    }
 }

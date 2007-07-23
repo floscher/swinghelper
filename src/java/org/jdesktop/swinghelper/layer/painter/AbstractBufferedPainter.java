@@ -148,7 +148,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
 
     public void layerItemChanged(LayerItemEvent e) {
         validate();
-        fireLayerItemChanged();
+        super.layerItemChanged(e);
     }
 
     protected void validate() {
