@@ -50,13 +50,6 @@ import java.awt.*;
 public interface Painter<V extends JComponent> extends LayerItem {
 
     /**
-     * Returns the {@link PainterModel} for this painter
-     *
-     * @return the {@link PainterModel} for this painter
-     */
-    public PainterModel getModel();
-
-    /**
      * <p>Renders the visual appearance of the given <code>JXLayer</code>
      * to the given {@link java.awt.Graphics2D} object.
      * The <code>g2</code> and <code>l</code>must never be null.</p>

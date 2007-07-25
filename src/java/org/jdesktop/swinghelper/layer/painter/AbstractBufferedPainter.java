@@ -113,7 +113,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
                 processEffects(bufg.getClip());
                 bufg.dispose();
             }
-            configure(g2, l);
+            super.paint(g2, l);
             g2.drawImage(getBuffer(), 0, 0, null);
         }
     }

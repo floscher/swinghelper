@@ -116,9 +116,6 @@ abstract public class AbstractPainter <V extends JComponent>
     }
 
     public void layerItemChanged(LayerItemEvent e) {
-        if (isEnabled() != getModel().isEnabled()) {
-            setEnabled(getModel().isEnabled());
-        }
         fireLayerItemChanged();
     }
 }
