@@ -21,13 +21,30 @@ package org.jdesktop.swinghelper.layer;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The default layout manager for the {@link JXLayer}.
+ * It makes the view component and glassPane of {@link JXLayer} 
+ * the same size as {@link JXLayer}.
+ * It also places the glassPane on top of the view component.
+ *  
+ * @see JXLayer#getView()
+ * @see JXLayer#getGlassPane()  
+ */
 public class LayerLayout implements LayoutManager {
     private static final LayerLayout sharedInstance = new LayerLayout();
 
+    /**
+     * The shared instance of {@link LayerLayout}
+     * 
+     * @return the shared instance of {@link LayerLayout}
+     */
     public static LayerLayout getSharedInstance() {
         return sharedInstance;
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public void layoutContainer(Container parent) {
         JXLayer layer = (JXLayer) parent;
         JComponent view = layer.getView();
@@ -42,6 +59,9 @@ public class LayerLayout implements LayoutManager {
         }
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public Dimension minimumLayoutSize(Container parent) {
         JXLayer layer = (JXLayer) parent;
         JComponent view = layer.getView();
@@ -51,6 +71,9 @@ public class LayerLayout implements LayoutManager {
         return new Dimension(4, 4);
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public Dimension preferredLayoutSize(Container parent) {
         JXLayer layer = (JXLayer) parent;
         JComponent view = layer.getView();
@@ -60,9 +83,15 @@ public class LayerLayout implements LayoutManager {
         return new Dimension(0, 0);
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public void addLayoutComponent(String name, Component comp) {
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public void removeLayoutComponent(Component comp) {
     }
 }

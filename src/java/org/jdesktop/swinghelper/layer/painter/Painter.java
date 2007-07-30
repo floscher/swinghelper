@@ -54,8 +54,8 @@ public interface Painter<V extends JComponent> extends LayerItem {
      * to the given {@link java.awt.Graphics2D} object.
      * The <code>g2</code> and <code>l</code>must never be null.</p>
      *
-     * @param g2 The {@link java.awt.Graphics2D} to render to
-     * @param l  The {@link JXLayer} to render for
+     * @param g2 the {@link java.awt.Graphics2D} to render to
+     * @param l  the {@link JXLayer} to render for
      */
     public void paint(Graphics2D g2, JXLayer<V> l);
 

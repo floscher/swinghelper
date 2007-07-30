@@ -10,6 +10,12 @@ import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * @author Alexander Potochkin
+ *         
+ * https://swinghelper.dev.java.net/
+ * http://weblogs.java.net/blog/alexfromsun/
+ */
 public class TextComponentPainterDemo extends JFrame {
     private JXLayer<JTextComponent> l1;
     private JXLayer<JTextComponent> l2;

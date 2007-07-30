@@ -18,10 +18,8 @@
 
 package org.jdesktop.swinghelper.layer;
 
-import org.jdesktop.swinghelper.layer.item.LayerItemEvent;
-import org.jdesktop.swinghelper.layer.item.LayerItemListener;
-import org.jdesktop.swinghelper.layer.painter.DefaultPainter;
-import org.jdesktop.swinghelper.layer.painter.Painter;
+import org.jdesktop.swinghelper.layer.item.*;
+import org.jdesktop.swinghelper.layer.painter.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -31,6 +29,62 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseAdapter;
 
+/**
+ * The universal decorator for Swing components.
+ * <p/>
+ * {@link JXLayer} is a component wrapper, like a {@link JScrollPane},
+ * which provides some useful functionality.
+ * You can set a {@link Painter} to the layer and modify its visual appearance
+ * and filter mouse events depending on the state of the wrapped component,
+ * see http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_2.html
+ * and all JXLayer demos from https://swinghelper.dev.java.net/
+ * <p/>
+ * With {@link JXLayer} it is also very easy to disable a container with
+ * all its child components see: 
+ * <p/>
+ * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2007/06/_enablingdisabl_1.html">
+ * Enabling/Disabling Swing Containers</a>
+ * <p/>
+ * Here is a simple example how to decorate a button
+ * and change its visual appearance for the rollover state
+ * <p/>
+ * <pre>
+ *       JButton button = new JButton("Decorate me !");
+ *       Painter<AbstractButton> customPainter = new DefaultPainter<AbstractButton>() {
+ *           public void paint(Graphics2D g2, JXLayer<AbstractButton> l) {
+ *               // paints the layer as is
+ *               super.paint(g2, l);
+ *               // check the button's state
+ *               if (l.getView().getModel().isRollover()) {
+ *                   // fill the button with translucent green when rollovered
+ *                   g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
+ *                   g2.setColor(Color.GREEN);
+ *                   g2.fillRect(0, 0, l.getWidth(), l.getHeight());
+ *               }
+ *           }
+ *       };
+ *       // create a JXLayer with button and custom painter
+ *       JXLayer<AbstractButton> l = new JXLayer<AbstractButton>(button, customPainter);
+ *       // add it to a frame or any other container as usual
+ *       frame.add(l);
+ * </pre>
+ * <p/>
+ * Note: JXLayer doesn't use glassPane from the top level frame,
+ * it has its own transparent panel on the top
+ * <p/>
+ * Note: JXLayer doesn't install any custom {@link RepaintManager}
+ * nor change any state of its child components
+ * <p/>
+ * Note: If you want to have a translucent or transparent JXLayer,
+ * you need to wrap any of its parent with another JXLayer
+ * for more details, please see
+ * <p/>
+ * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_3.html">
+ * Advanced painting IV - translucency and non rectangular components</a>
+ *
+ * @see Painter
+ * @see AbstractPainter
+ */
 public class JXLayer<V extends JComponent> extends JComponent {
     public V view;
     private JComponent glassPane;
@@ -56,26 +110,48 @@ public class JXLayer<V extends JComponent> extends JComponent {
         }
     };
 
-    private final static MouseListener 
+    private final static MouseListener
             emptyMouseListener = new MouseAdapter() {
     };
 
     private Component recentFocusOwner;
     private boolean enabled = true;
 
-    // Constructors
+    /**
+     * Creates a new {@link JXLayer} 
+     * with <code>null</code> view
+     */
     public JXLayer() {
         this((V) null);
     }
 
+    /**
+     * Creates a new {@link JXLayer}
+     * with the given <code>view</code> component
+     *  
+     * @param view the component to be wrapped 
+     */
     public JXLayer(V view) {
         this(view, new DefaultPainter<V>());
     }
 
+    /**
+     * Creates a new {@link JXLayer}
+     * with the given <code>painter</code> and <code>null</code> view
+     *  
+     * @param painter the painter to be used for rendering 
+     */
     public JXLayer(Painter<V> painter) {
         this(null, painter);
     }
 
+    /**
+     * Creates a new {@link JXLayer}
+     * with the given <code>view</code> and <code>painter</code> 
+     *  
+     * @param view the component to be wrapped
+     * @param painter the painter to be used for rendering
+     */
     public JXLayer(V view, Painter<V> painter) {
         itemListener = createLayerItemListener();
         setView(view);
@@ -88,11 +164,21 @@ public class JXLayer<V extends JComponent> extends JComponent {
         setFocusTraversalPolicy(disabledPolicy);
     }
 
-    // Main setters and getters
+    /**
+     * Gets the view (wrapped component) for this layer
+     * 
+     * @return the view (wrapped component) for this layer 
+     */
     public V getView() {
         return view;
     }
 
+
+    /**
+     * Sets the view (wrapped component) for this layer
+     *  
+     * @param view the view (wrapped component) for this layer
+     */
     public void setView(V view) {
         JComponent oldView = getView();
         if (oldView != null) {
@@ -104,10 +190,20 @@ public class JXLayer<V extends JComponent> extends JComponent {
         this.view = view;
     }
 
+    /**
+     * Gets the glassPane of this layer
+     * 
+     * @return the glassPane of this layer
+     */
     public JComponent getGlassPane() {
         return glassPane;
     }
 
+    /**
+     * Sets the glassPane of this layer
+     * 
+     * @param glassPane the glassPane of this layer
+     */
     public void setGlassPane(JComponent glassPane) {
         if (glassPane == null) {
             throw new IllegalArgumentException("GlassPane can't be set to null");
@@ -122,10 +218,23 @@ public class JXLayer<V extends JComponent> extends JComponent {
         this.glassPane = glassPane;
     }
 
+    /**
+     * Gets the {@link Painter} of this layer
+     * 
+     * @return the {@link Painter} of this layer
+     */
     public Painter<V> getPainter() {
         return painter;
     }
 
+    /**
+     * Sets the {@link Painter} for this layer
+     *  
+     * @param painter the {@link Painter} for this layer
+     * 
+     * @see Painter
+     * @see AbstractPainter
+     */
     public void setPainter(Painter<V> painter) {
         if (painter == null) {
             throw new IllegalArgumentException("Null painter is not supported; set DefaultPainter");
@@ -141,7 +250,6 @@ public class JXLayer<V extends JComponent> extends JComponent {
         repaint();
     }
 
-    // add/remove
     protected void addImpl(Component comp, Object constraints, int index) {
         throw new UnsupportedOperationException("JXLayer.add() is not supported; use setView() instead");
     }
@@ -187,6 +295,13 @@ public class JXLayer<V extends JComponent> extends JComponent {
         throw new UnsupportedOperationException("JXLayer.setBorder() is not supported");
     }
 
+    /**
+     * Checks whether the {@link Painter} of this <code>JXLayer</code> accepts <code>MouseEvent</code>s
+     * at the specified point or not, where <code>x</code> and <code>y</code> are defined to be
+     * relative to the coordinate system of this component.
+     * 
+     * @see Painter#contains(int, int, JXLayer) 
+     */
     public boolean contains(int x, int y) {
         Painter<V> painter = getPainter();
         if (painter != null && painter.isEnabled()) {
@@ -208,6 +323,9 @@ public class JXLayer<V extends JComponent> extends JComponent {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setEnabled(boolean enabled) {
         boolean oldEnabled = isEnabled();
         if (enabled != oldEnabled) {
@@ -235,6 +353,9 @@ public class JXLayer<V extends JComponent> extends JComponent {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isEnabled() {
         return enabled;
     }

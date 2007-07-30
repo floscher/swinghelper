@@ -18,7 +18,31 @@
 
 package org.jdesktop.swinghelper.layer.painter.model;
 
+/**
+ * State model for the {@link org.jdesktop.swinghelper.layer.painter.AbstractBufferedPainter}
+ * which can use data from its model to set up
+ * the {@link java.awt.Graphics2D} instance during painting routine
+ */
 public interface BufferedPainterModel extends PainterModel {
+
+    /**
+     * Sets whether or not this painter supports incremental updates.
+     * If <code>incrementalUpdate</code> is <code>false</code>,
+     * a {@link org.jdesktop.swinghelper.layer.painter.AbstractBufferedPainter}
+     * which this model attached to, will skip all repaints with {@link java.awt.Graphics2D#getClip()}
+     * is not equals to the {@link org.jdesktop.swinghelper.layer.JXLayer#getVisibleRect()}.
+     * This is useful when you don't need incremental updates and want to speed the painting up
+     *
+     * @param incrementalUpdate <code>true</code> if this model supports incremental updates,
+     *                          <code>false</code> otherwise
+     */
     public void setIncrementalUpdate(boolean incrementalUpdate);
+
+    /**
+     * Gets whether or not this painter supports incremental updates. 
+     * 
+     * @return <code>true</code> if this model supports incremental updates,
+     *                          <code>false</code> otherwise
+     */
     public boolean isIncrementalUpdate();
 }

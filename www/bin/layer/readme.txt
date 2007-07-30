@@ -40,3 +40,10 @@ java -cp layer-demo.jar;filters.jar org.jdesktop.swinghelper.layer.demo.Disabled
 on *nix
 
 java -cp layer-demo.jar:filters.jar org.jdesktop.swinghelper.layer.demo.DisabledLayerDemo
+
+===
+
+Playing with JTextField
+
+java -cp layer-demo.jar org.jdesktop.swinghelper.layer.demo.TextComponentPainterDemo
+

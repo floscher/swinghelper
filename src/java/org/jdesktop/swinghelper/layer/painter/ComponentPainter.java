@@ -23,38 +23,87 @@ import org.jdesktop.swinghelper.layer.effect.Effect;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The implementation of the {@link ImagePainter}
+ * which is designed to paint screenshots of Swing components;
+ * this painter can be used to create animation effects
+ * like fade in and fade out of a component
+ * <p/> 
+ * Note: call {@link #update()} to take the actual screenshot of the component
+ * 
+ * @see #getComponent() 
+ * @see #setComponent(JComponent)
+ * @see #update() 
+ */
 public class ComponentPainter <V extends JComponent>
         extends ImagePainter<V> {
 
     private JComponent component;
 
+    /**
+     * Creates a new {@link ComponentPainter}
+     */
     public ComponentPainter() {
         this(null, (Effect[]) null);
     }
 
+    /**
+     * Creates a new {@link ComponentPainter}
+     * with the given <code>component</code>
+     * 
+     * @param component the component to be rendered by this painter
+     */
     public ComponentPainter(JComponent component) {
         this(component, (Effect[]) null);
     }
 
+    /**
+     * Creates a new {@link ComponentPainter}
+     * with the given <code>component</code>
+     * and collection of the {@link Effect}s
+     * 
+     * @param component the component to be rendered by this painter
+     * @param effects the collection of the {@link Effect}s 
+     * to be applied to the buffer of this painter
+     */
     public ComponentPainter(JComponent component, Effect... effects) {
         setComponent(component);
         setEffects(effects);
     }
 
+    /**
+     * Gets the component to be rendered by this painter
+     *  
+     * @return the component to be rendered by this painter
+     */
     public JComponent getComponent() {
         return component;
     }
 
+    /**
+     * Sets the component to be rendered by this painter;
+     * <p/>
+     * Note: call {@link #update()} to take the actual screenshot of the component
+     *  
+     * @param component the component to be rendered by this painter
+     */
     public void setComponent(JComponent component) {
         this.component = component;
         fireLayerItemChanged();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected boolean isPainterValid() {
         return component != null &&
                 component.getWidth() != 0 && component.getHeight() != 0;
     }
 
+    /**
+     * Takes a screenshot of the component 
+     * returned by the {@link #getComponent()} method
+     */
     public void update() {
         if (isPainterValid()) {
             Image image = getImage();

@@ -23,9 +23,19 @@ import org.jdesktop.swinghelper.layer.JXLayer;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The default implementation of the {@link AbstractPainter}
+ * which paints the given {@link JXLayer} as is 
+ */
 public class DefaultPainter <V extends JComponent>
         extends AbstractPainter<V> {
 
+    /**
+     * Paints the given {@link JXLayer} as is  
+     * 
+     * @param g2 the {@link Graphics2D} instance to paint on
+     * @param l  the {@link JXLayer} to paint for
+     */
     public void paint(Graphics2D g2, JXLayer<V> l) {
         super.paint(g2, l);
         l.paint(g2);

@@ -18,13 +18,26 @@
 
 package org.jdesktop.swinghelper.layer.painter.model;
 
+/**
+ * The default implementation of the {@link BufferedPainterModel} interface,
+ * which implements all methods and calls {@link DefaultBufferedPainterModel#fireLayerItemChanged()}
+ * when any of its state is changed  
+ * 
+ * @see org.jdesktop.swinghelper.layer.painter.AbstractBufferedPainter
+ */
 public class DefaultBufferedPainterModel extends DefaultPainterModel implements BufferedPainterModel {
     private boolean isIncrementalUpdate;
 
+    /**
+     * {@inheritDoc} 
+     */
     public boolean isIncrementalUpdate() {
         return isIncrementalUpdate;
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     public void setIncrementalUpdate(boolean isIncrementalUpdate) {
         this.isIncrementalUpdate = isIncrementalUpdate;
         fireLayerItemChanged();
