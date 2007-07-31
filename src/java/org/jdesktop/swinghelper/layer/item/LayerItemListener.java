@@ -22,7 +22,7 @@ import java.util.EventListener;
 
 /**
  * <code>LayerItemListener</code>s are notified of changes
- * to a <code>LayerItem</code>
+ * to a {@link LayerItem}
  * 
  * @see LayerItem
  */

@@ -27,8 +27,8 @@ import java.awt.*;
  * The compound painter which delegates painting
  * to the collection of the delegate painters
  * <p/>
- * Note: When a delegate painter changes its state
- * and calls its {@link AbstractPainter#fireLayerItemChanged()}
+ * <strong>Note:</strong> When a delegate painter changes its state
+ * and calls its {@link AbstractPainter#fireLayerItemChanged()}<br/>
  * the {@link CompoundPainter} will fire change event as well
  * and its {@link JXLayer}s will eventually be repainted
  */

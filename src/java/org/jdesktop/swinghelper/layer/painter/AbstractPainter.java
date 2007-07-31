@@ -32,18 +32,18 @@ import java.awt.geom.AffineTransform;
 import java.util.Map;
 
 /**
- * The default implementation of the {@link Painter} interface,
+ * The default implementation of the {@link Painter} interface,<br/>
  * in the most usual case the only {@link #paint(Graphics2D,JXLayer)} is to be overriden.
  * <p/>
- * The {@link Painter} interface is designed to support a single painter for multiple {@link JXLayer} objects,
- * so it is a rare situation when a painter really needs to have a link to its layer.
- * If you want an {@link AbstractPainter} to repaint all {@link JXLayer}s it is used for,
- * call {@link AbstractPainter#fireLayerItemChanged()} after a painter's state has been changed
+ * The {@link Painter} interface is designed to support a single painter for multiple {@link JXLayer} objects,<br/>
+ * so it is a rare situation when a painter really needs to have a link to its layer.<br/>
+ * If you want an {@link AbstractPainter} to repaint all {@link JXLayer}s it is used for,<br/>
+ * call {@link #fireLayerItemChanged()} after a painter's state has been changed
  * <p/>
  * For a new public state of the painter the following pattern should be used:
  * <p/>
- * <pre>
- * public class ColorPainter<V extends JComponent> extends AbstractPainter<V> {
+ * <pre>                                                                          
+ * public class ColorPainter&lt;V extends JComponent&gt; extends AbstractPainter&lt;V&gt; {
  *   // The color we want to fill the layer with
  *   private Color color;<br>
  *   // A public method which affects the painting
@@ -52,7 +52,7 @@ import java.util.Map;
  *       // This will repaint the layer
  *       fireLayerItemChanged();
  *   }<br>
- *   public void paint(Graphics2D g2, JXLayer<V> l) {
+ *   public void paint(Graphics2D g2, JXLayer&lt;V&gt; l) {
  *       // This will configure g2 with current settings
  *       super.paint(g2, l);
  *       // The custom painting is performed here
@@ -61,23 +61,29 @@ import java.util.Map;
  *   }
  *  }
  * </pre>
- * This class stores all its states in its {@link PainterModel},
+ * This class stores all its states in its {@link PainterModel},<br/>
  * it also has a hook method which corresponds to the each state from the model
  * <p/>
  * For example:
  * if you need to set a fixed clipping shape you should update the painter's model:
  * <pre>
- * painter.getModel().setClip(new Ellipse2D.Float(0, 0, 100, 100));
- * </pre>
- * but if you'd like the clip to be updated according to the {@link JXLayer},
+ * painter.getModel().setClip(new Ellipse2D.Float(0, 0, 100, 100));</pre>
+ * but if you'd like the clip to be updated according to the {@link JXLayer},<br/>
  * you should override the corresponding {@link #getClip(JXLayer)} method:
  * <pre>
- * public class OvalPainter<V extends JComponent> extends AbstractPainter<V> {
+ * public class OvalPainter&lt;V extends JComponent&gt; extends AbstractPainter&lt;V&gt; {
  *   // Ellipsoid clip shape which respects the current layers' size
- *   public Shape getClip(JXLayer<V> l) {
+ *   public Shape getClip(JXLayer&lt;V&gt; l) {
  *       return new Ellipse2D.Float(0, 0, l.getWidth(), l.getHeight());
  *   }
  * </pre>
+ * 
+ * <strong>Note:</strong>If you want to have a translucent or transparent JXLayer,
+ * you need to wrap any of its parent with another JXLayer,<br/>
+ * for more details, please see
+ * <p/>
+ * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_3.html">
+ * Advanced painting IV - translucency and non rectangular components</a>
  */
 abstract public class AbstractPainter<V extends JComponent>
         extends AbstractLayerItem implements Painter<V>, LayerItemListener {
@@ -171,7 +177,7 @@ abstract public class AbstractPainter<V extends JComponent>
      * @see #getModel()
      * @see #paint(Graphics2D,JXLayer)
      */
-    protected Composite getComposite(JXLayer<V> l) {
+    public Composite getComposite(JXLayer<V> l) {
         return getModel().getComposite();
     }
 
@@ -184,7 +190,7 @@ abstract public class AbstractPainter<V extends JComponent>
      * @see #getModel()
      * @see #paint(Graphics2D,JXLayer)
      */
-    protected AffineTransform getTransform(JXLayer<V> l) {
+    public AffineTransform getTransform(JXLayer<V> l) {
         return getModel().getTransform();
     }
 
@@ -197,7 +203,7 @@ abstract public class AbstractPainter<V extends JComponent>
      * @see #getModel()
      * @see #paint(Graphics2D,JXLayer)
      */
-    protected Shape getClip(JXLayer<V> l) {
+    public Shape getClip(JXLayer<V> l) {
         return getModel().getClip();
     }
 
@@ -210,7 +216,7 @@ abstract public class AbstractPainter<V extends JComponent>
      * @see #getModel()
      * @see #paint(Graphics2D,JXLayer)
      */
-    protected Map<RenderingHints.Key, Object> getRenderingHints(JXLayer<V> l) {
+    public Map<RenderingHints.Key, Object> getRenderingHints(JXLayer<V> l) {
         return getModel().getRenderingHints();
     }
 

@@ -22,9 +22,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * The default layout manager for the {@link JXLayer}.
+ * The default layout manager for the {@link JXLayer}.<br/>
  * It makes the view component and glassPane of {@link JXLayer} 
- * the same size as {@link JXLayer}.
+ * the same size as {@link JXLayer}.<br/>
  * It also places the glassPane on top of the view component.
  *  
  * @see JXLayer#getView()

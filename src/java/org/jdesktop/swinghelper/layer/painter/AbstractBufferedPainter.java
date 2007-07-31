@@ -34,11 +34,11 @@ import java.awt.image.*;
  * and then draws it to the {@link Graphics2D}
  * <p>
  * The main feature provided by {@link AbstractBufferedPainter} 
- * is ability to apply various {@link Effect}s to its content,
+ * is ability to apply various {@link Effect}s to its content,<br/>
  * the most popular effect is {@link ImageOpEffect} 
  * which uses {@link BufferedImageOp} to filter the buffer
  * <p>
- * Note: to paint on the buffer override 
+ * <strong>Note:</strong> to paint on the buffer override 
  * {@link #paintToBuffer(Graphics2D, JXLayer)} method
  * 
  * @see BufferedPainter
@@ -87,7 +87,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
      * <p>
      * If this method returns <code>false</code>,
      * this painter will skip all repaints with {@link java.awt.Graphics2D#getClip()}
-     * is not equals to the {@link org.jdesktop.swinghelper.layer.JXLayer#getVisibleRect()}.
+     * is not equals to the {@link org.jdesktop.swinghelper.layer.JXLayer#getVisibleRect()}.<br/>
      * This is useful when you don't need incremental updates and want to speed the painting up,
      * moreover there are some {@link BufferedImageOp}s 
      * which don't work correctly with incremental updates
@@ -101,7 +101,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
      * @see BufferedPainterModel#setIncrementalUpdate(boolean) 
      * @see #getModel() 
      */
-    protected boolean isIncrementalUpdate(JXLayer<V> l) {
+    public boolean isIncrementalUpdate(JXLayer<V> l) {
         return getModel().isIncrementalUpdate();
     }
 
@@ -189,7 +189,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
      * to the back buffer, applies all {@link Effect}s 
      * and then draws it to the given <code>Graphics2D</code>
      * <p>
-     * Note: to paint on the back buffer, override {@link #paintToBuffer(Graphics2D, JXLayer)}
+     * <strong>Note:</strong> to paint on the back buffer, override {@link #paintToBuffer(Graphics2D, JXLayer)}
      *  
      * @param g2 the {@link java.awt.Graphics2D} to render to
      * @param l the {@link JXLayer} to render for
@@ -305,7 +305,7 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
 
     /**
      * This method is called each time when this painter
-     * or ony of its child items are changed;
+     * or ony of its child items are changed;<br/>
      * override this method if any additional actions
      * should be taken when painter is updated
      * 

@@ -28,9 +28,11 @@ import java.awt.image.BufferedImage;
 /**
  * The implementation of the {@link AbstractBufferedPainter}
  * which is designed for static images;
- * in contrast to another {@link AbstractBufferedPainter}'s subclasses,
- * the <code>ImagePainter</code> doesn't update its buffer during each painting,
- * the {@link #isBufferValid(Graphics2D, JXLayer)} always returns <code>true</code>
+ * <p/>
+ * In contrast to another {@link AbstractBufferedPainter}'s subclasses,
+ * the <code>ImagePainter</code> doesn't update its buffer during each painting,<br/>
+ * the {@link #isBufferValid(Graphics2D, JXLayer)} always returns <code>true</code>,
+ * which allows to not process the buffer during each painting and make the painting faster 
  * <p/>
  * The buffer is updated only when internal state of any of the child layer item
  * or painter itself is changed

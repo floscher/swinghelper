@@ -30,17 +30,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseAdapter;
 
 /**
- * The universal decorator for Swing components.
- * <p/>
- * {@link JXLayer} is a component wrapper, like a {@link JScrollPane},
- * which provides some useful functionality.
+ * The universal decorator for Swing components.<p/>
+ * JXLayer is a component wrapper, like a {@link JScrollPane},which provides some useful functionality.<br/>
  * You can set a {@link Painter} to the layer and modify its visual appearance
- * and filter mouse events depending on the state of the wrapped component,
- * see http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_2.html
- * and all JXLayer demos from https://swinghelper.dev.java.net/
+ * and filter mouse events depending on the state of the wrapped component,<br>
+ * for more details, please see JXLayer demos from <a href="https://swinghelper.dev.java.net/">SwingHelper project</a>, and
  * <p/>
- * With {@link JXLayer} it is also very easy to disable a container with
- * all its child components see: 
+ * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_2.html">Advanced painting III - playing with painters</a>
+ * <p/>
+ * With JXLayer it is also very easy to disable a container withall its child components: 
  * <p/>
  * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2007/06/_enablingdisabl_1.html">
  * Enabling/Disabling Swing Containers</a>
@@ -50,8 +48,8 @@ import java.awt.event.MouseAdapter;
  * <p/>
  * <pre>
  *       JButton button = new JButton("Decorate me !");
- *       Painter<AbstractButton> customPainter = new DefaultPainter<AbstractButton>() {
- *           public void paint(Graphics2D g2, JXLayer<AbstractButton> l) {
+ *       Painter&lt;AbstractButton&gt; customPainter = new DefaultPainter&lt;AbstractButton&gt;() {
+ *           public void paint(Graphics2D g2, JXLayer&lt;AbstractButton&gt; l) {
  *               // paints the layer as is
  *               super.paint(g2, l);
  *               // check the button's state
@@ -64,19 +62,17 @@ import java.awt.event.MouseAdapter;
  *           }
  *       };
  *       // create a JXLayer with button and custom painter
- *       JXLayer<AbstractButton> l = new JXLayer<AbstractButton>(button, customPainter);
+ *       JXLayer&lt;AbstractButton&gt; l = new JXLayer&lt;AbstractButton&gt;(button, customPainter);
  *       // add it to a frame or any other container as usual
  *       frame.add(l);
  * </pre>
  * <p/>
- * Note: JXLayer doesn't use glassPane from the top level frame,
- * it has its own transparent panel on the top
+ * <strong>Note:</strong> JXLayer is very friendly to your application<br/>
+ * it doesn't exploit the glassPane from the top level frame, because it has its own one<br/>
+ * it also doesn't install any custom {@link RepaintManager} nor change any state of its child components
  * <p/>
- * Note: JXLayer doesn't install any custom {@link RepaintManager}
- * nor change any state of its child components
- * <p/>
- * Note: If you want to have a translucent or transparent JXLayer,
- * you need to wrap any of its parent with another JXLayer
+ * If you want to have a translucent or transparent JXLayer,
+ * you need to wrap any of its parent with another JXLayer,<br/>
  * for more details, please see
  * <p/>
  * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_3.html">
@@ -86,9 +82,9 @@ import java.awt.event.MouseAdapter;
  * @see AbstractPainter
  */
 public class JXLayer<V extends JComponent> extends JComponent {
-    public V view;
+    private V view;
     private JComponent glassPane;
-    public Painter<V> painter;
+    private Painter<V> painter;
     private boolean isPainting;
     private LayerItemListener itemListener;
 

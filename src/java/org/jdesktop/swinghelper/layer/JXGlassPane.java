@@ -21,9 +21,9 @@ package org.jdesktop.swinghelper.layer;
 import javax.swing.*;
 
 /**
- * The default glassPane for the {@link JXLayer}.
+ * The default glassPane for the {@link JXLayer}.<br/>
  * It is the non-opaque panel with overridden {@link #contains(int, int)}
- * to enable custom cursors for inner components, 
+ * to enable custom cursors for inner components,<br/> 
  * for more details, see:
  * <p/>
  * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2006/09/a_wellbehaved_g.html">A well-behaved GlassPane</a>

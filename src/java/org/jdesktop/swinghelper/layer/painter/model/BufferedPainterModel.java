@@ -26,9 +26,9 @@ package org.jdesktop.swinghelper.layer.painter.model;
 public interface BufferedPainterModel extends PainterModel {
 
     /**
-     * Sets whether or not this painter supports incremental updates.
+     * Sets whether or not this painter supports incremental updates.<br/>
      * If <code>incrementalUpdate</code> is <code>false</code>,
-     * a {@link org.jdesktop.swinghelper.layer.painter.AbstractBufferedPainter}
+     * an {@link org.jdesktop.swinghelper.layer.painter.AbstractBufferedPainter}
      * which this model attached to, will skip all repaints with {@link java.awt.Graphics2D#getClip()}
      * is not equals to the {@link org.jdesktop.swinghelper.layer.JXLayer#getVisibleRect()}.
      * This is useful when you don't need incremental updates and want to speed the painting up

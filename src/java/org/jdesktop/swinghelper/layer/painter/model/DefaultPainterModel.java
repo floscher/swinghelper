@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The default implementation of the {@link PainterModel} interface,
- * which implements all methods and calls {@link DefaultPainterModel#fireLayerItemChanged()}
+ * The default implementation of the {@link PainterModel} interface.<br/>
+ * It implements all methods and calls {@link DefaultPainterModel#fireLayerItemChanged()}
  * when any of its state is changed  
  * 
  * @see org.jdesktop.swinghelper.layer.painter.AbstractPainter

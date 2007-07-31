@@ -27,7 +27,7 @@ import java.awt.image.BufferedImageOp;
 /**
  * This implementation of the <code>Effect</code> interface
  * delegates the processing of the <code>BufferedImage</code>
- * to the <code>BufferedImageOp</code> object.
+ * to the <code>BufferedImageOp</code> object.<br/>
  * If <code>BufferedImageOp</code> is set to <code>null</code>
  * for this <code>ImageOpEffect</code>, 
  * <code>apply</code> method takes no action 

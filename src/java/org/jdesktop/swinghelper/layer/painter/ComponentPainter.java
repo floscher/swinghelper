@@ -25,11 +25,11 @@ import java.awt.*;
 
 /**
  * The implementation of the {@link ImagePainter}
- * which is designed to paint screenshots of Swing components;
+ * which is designed to paint screenshots of Swing components;<br/>
  * this painter can be used to create animation effects
  * like fade in and fade out of a component
  * <p/> 
- * Note: call {@link #update()} to take the actual screenshot of the component
+ * <strong>Note:</strong> call {@link #update()} to take the up-to-date screenshot of the component
  * 
  * @see #getComponent() 
  * @see #setComponent(JComponent)

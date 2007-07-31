@@ -20,7 +20,7 @@ package org.jdesktop.swinghelper.layer.item;
 
 /**
  * <p> A convenience interface to be implemented
- * by any <code>JXLayer</code> painting delegate
+ * by any {@link org.jdesktop.swinghelper.layer.JXLayer} painting delegate
  *
  * @see AbstractLayerItem
  * @see org.jdesktop.swinghelper.layer.painter.Painter

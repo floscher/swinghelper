@@ -25,15 +25,15 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * The implementation of the {@link AbstractBufferedPainter}
- * which takes a delegate painter and renders it to the back buffer,
- * which allows to apply any {@link Effect}s after that
+ * The implementation of the {@link AbstractBufferedPainter}<br/>
+ * which takes a delegate painter and renders it to the back buffer
+ * and allows to apply any {@link Effect}s after that
  * <p/>
  * If no painter is provided, the {@link DefaultPainter} will be used
  * as the delegate painter
  * <p/>
- * Note: When a delegate painter changes its state
- * and calls its {@link AbstractPainter#fireLayerItemChanged()}
+ * <strong>Note:</strong> When a delegate painter changes its state
+ * and calls its {@link AbstractPainter#fireLayerItemChanged()}<br/>
  * the {@link BufferedPainter} will fire change event as well
  * and its {@link JXLayer}s will eventually be repainted
  *
