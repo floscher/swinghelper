@@ -61,7 +61,7 @@ public class ShapedButtonDemo {
             }
 
             // Ellipse shape for the painter
-            protected Shape getClip(JXLayer<AbstractButton> l) {
+            public Shape getClip(JXLayer<AbstractButton> l) {
                 return new Ellipse2D.Float(0, 0, l.getWidth(), l.getHeight());
             }
         };
