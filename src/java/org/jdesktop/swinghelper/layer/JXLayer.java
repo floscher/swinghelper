@@ -381,20 +381,21 @@ public class JXLayer<V extends JComponent> extends JComponent {
     public void setEnabled(boolean enabled) {
         boolean oldEnabled = isEnabled();
         if (enabled != oldEnabled) {
+            Component focusOwner = 
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+            boolean isFocusInsideLayer = 
+                    focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this); 
             if (enabled) {
                 getGlassPane().removeMouseListener(emptyMouseListener);
                 setFocusTraversalPolicyProvider(false);
-                boolean isGlassPaneFocused = getGlassPane().isFocusOwner();
-                if (isGlassPaneFocused && recentFocusOwner != null) {
+                if (isFocusInsideLayer && recentFocusOwner != null) {
                     recentFocusOwner.requestFocusInWindow();
                 }
                 recentFocusOwner = null;
             } else {
                 getGlassPane().addMouseListener(emptyMouseListener);
                 setFocusTraversalPolicyProvider(true);
-                KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-                Component focusOwner = kfm.getFocusOwner();
-                if (focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this)) {
+                if (isFocusInsideLayer) {
                     recentFocusOwner = focusOwner;
                     getGlassPane().requestFocusInWindow();
                 }
