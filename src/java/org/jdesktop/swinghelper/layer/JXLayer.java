@@ -50,7 +50,7 @@ import java.awt.event.MouseAdapter;
  *       JButton button = new JButton("Decorate me !");
  *       Painter&lt;AbstractButton&gt; customPainter = new DefaultPainter&lt;AbstractButton&gt;() {
  *           public void paint(Graphics2D g2, JXLayer&lt;AbstractButton&gt; l) {
- *               // paints the layer as is
+ *               // DefaultPainter.paint(g2, l) includes painting the layer as is
  *               super.paint(g2, l);
  *               // check the button's state
  *               if (l.getView().getModel().isRollover()) {
@@ -161,14 +161,14 @@ public class JXLayer<V extends JComponent> extends JComponent {
     }
 
     /**
-     * Gets the view (wrapped component) for this layer
+     * Gets the view (wrapped component) for this layer<br/>
+     * <strong>Note:</strong> this method <strong>may return</strong> <code>null</code>
      * 
      * @return the view (wrapped component) for this layer 
      */
     public V getView() {
         return view;
     }
-
 
     /**
      * Sets the view (wrapped component) for this layer
@@ -187,7 +187,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
     }
 
     /**
-     * Gets the glassPane of this layer
+     * Gets the glassPane of this layer<br/>
+     * <strong>Note:</strong> this method never returns <code>null</code> 
      * 
      * @return the glassPane of this layer
      */
@@ -215,7 +216,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
     }
 
     /**
-     * Gets the {@link Painter} of this layer
+     * Gets the {@link Painter} of this layer<br/>
+     * <strong>Note:</strong> this method never returns <code>null</code>
      * 
      * @return the {@link Painter} of this layer
      */
@@ -228,6 +230,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
      *  
      * @param painter the {@link Painter} for this layer
      * 
+     * @throws IllegalArgumentException if <code>painter</code> is <code>null</code> 
      * @see Painter
      * @see AbstractPainter
      */
@@ -246,10 +249,30 @@ public class JXLayer<V extends JComponent> extends JComponent {
         repaint();
     }
 
+    /**
+     * {@link JXLayer} supports only two child components:
+     * the view and the glassPane, which can be set with help of the
+     * corresponding methods 
+     * 
+     * @throws UnsupportedOperationException this method is not supported
+     * @see #setView(JComponent)
+     * @see #setGlassPane(JComponent) 
+     */
     protected void addImpl(Component comp, Object constraints, int index) {
         throw new UnsupportedOperationException("JXLayer.add() is not supported; use setView() instead");
     }
 
+    /**
+     * Removes the view from the JXLayer,
+     * the glassPane can't be removed 
+     * 
+     * @param comp component to be removed
+     * @throws IllegalArgumentException if <code>comp</code> is equal to layer's glassPane
+     * @see #getView()
+     * @see #setView(JComponent) 
+     * @see #getGlassPane() 
+     * @see #setGlassPane(JComponent) 
+     */
     public void remove(Component comp) {
         if (comp == getView()) {
             view = null;
@@ -259,11 +282,25 @@ public class JXLayer<V extends JComponent> extends JComponent {
         super.remove(comp);
     }
 
+    /**
+     * Removes the view from this JXLayer.
+     * 
+     * @see #getView()
+     * @see #setView(JComponent) 
+     */
     public void removeAll() {
         setView(null);
     }
 
-    // Painting
+    /**
+     * Delegates all painting to the {@link Painter}, 
+     * which was set with {@link #setPainter(Painter)} method.<br>
+     * It happens only if {@link Painter#isEnabled()} returns <code>true</code>
+     * and <code>g</code> is instance of <code>Graphics2D</code><br> 
+     * otherwise the super implementation is called.  
+     * 
+     * @param g the {@link Graphics} to render to 
+     */
     public void paint(Graphics g) {
         if (!isPainting && painter.isEnabled() && g instanceof Graphics2D) {
             Graphics2D g2 = (Graphics2D) g.create();
@@ -276,6 +313,13 @@ public class JXLayer<V extends JComponent> extends JComponent {
         }
     }
 
+    /**
+     * If layer is opaque, fills it with the background color 
+     * 
+     * @param g the {@link Graphics} to render to
+     * @see #isOpaque() 
+     * @see #getBackground() 
+     */
     protected void paintComponent(Graphics g) {
         if (isOpaque()) {
             g.setColor(getBackground());
@@ -283,10 +327,22 @@ public class JXLayer<V extends JComponent> extends JComponent {
         }
     }
 
+    /**
+     * This method always returns <code>false</code>
+     * to support the view and the glassPane overlap
+     *  
+     * @return <code>false</code>
+     */
     public boolean isOptimizedDrawingEnabled() {
         return false;
     }
 
+    /**
+     * JXLayer always has the same size as its view, 
+     * so this method is not supported 
+     *  
+     * @throws UnsupportedOperationException this method is not supported
+     */
     public void setBorder(Border border) {
         throw new UnsupportedOperationException("JXLayer.setBorder() is not supported");
     }

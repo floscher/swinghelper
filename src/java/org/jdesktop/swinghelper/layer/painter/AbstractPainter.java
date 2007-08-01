@@ -55,9 +55,11 @@ import java.util.Map;
  *   public void paint(Graphics2D g2, JXLayer&lt;V&gt; l) {
  *       // This will configure g2 with current settings
  *       super.paint(g2, l);
+ *       // This will paint the given layer as is
+ *       l.paint(g2);
  *       // The custom painting is performed here
  *       g2.setColor(this.color);
- *       g2.fillRect(0, 0, l.getWidth(), l.getHeight());
+ *       g2.fillRect(0, 0, l.getWidth()/2, l.getHeight()/2);
  *   }
  *  }
  * </pre>
@@ -162,7 +164,7 @@ abstract public class AbstractPainter<V extends JComponent>
      *
      * @param g2 the {@link Graphics2D} instance to paint on
      * @param l  the {@link JXLayer} to paint for
-     * @see #configure(Graphics2D,JXLayer<V>)
+     * @see #configure(Graphics2D, JXLayer))
      */
     public void paint(Graphics2D g2, JXLayer<V> l) {
         configure(g2, l);
@@ -175,7 +177,7 @@ abstract public class AbstractPainter<V extends JComponent>
      * @param l the {@link JXLayer} to paint for
      * @return the {@link Composite} to be used during painting
      * @see #getModel()
-     * @see #paint(Graphics2D,JXLayer)
+     * @see #paint(Graphics2D, JXLayer)
      */
     public Composite getComposite(JXLayer<V> l) {
         return getModel().getComposite();

@@ -78,19 +78,19 @@ public class DisabledLayerDemo extends JFrame {
     private JMenuBar createMenuBar() {
         JMenu menu = new JMenu("Menu");
 
-        disablingItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
+        disablingItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.ALT_MASK));
 
         menu.add(disablingItem);
         menu.addSeparator();
 
         translucentItem.setSelected(true);
-        translucentItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_MASK));
+        translucentItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_MASK));
         menu.add(translucentItem);
 
-        blurItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_MASK));
+        blurItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_MASK));
         menu.add(blurItem);
 
-        embossItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.CTRL_MASK));
+        embossItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_MASK));
         menu.add(embossItem);
 
         ButtonGroup group = new ButtonGroup();
@@ -120,7 +120,7 @@ public class DisabledLayerDemo extends JFrame {
         
         menu.addSeparator();
         menu.add(waitCursorItem);
-        waitCursorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
+        waitCursorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
         
         waitCursorItem.setEnabled(false);
 
