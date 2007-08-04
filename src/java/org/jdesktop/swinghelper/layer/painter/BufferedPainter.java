@@ -20,6 +20,7 @@ package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.effect.*;
+import org.jdesktop.swinghelper.layer.painter.model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,10 +37,14 @@ import java.awt.*;
  * and calls its {@link AbstractPainter#fireLayerItemChanged()}<br/>
  * the {@link BufferedPainter} will fire change event as well
  * and its {@link JXLayer}s will eventually be repainted
+ * <p/>
+ * <strong>Note:</strong> Incremental updates are on for this painter by default
  *
  * @see Effect
  * @see ImageOpEffect
  * @see #setEffects(Effect...)
+ * @see BufferedPainterModel#setIncrementalUpdate(boolean)
+ * @see #isIncrementalUpdate(JXLayer)
  */
 public class BufferedPainter<V extends JComponent>
         extends AbstractBufferedPainter<V> {

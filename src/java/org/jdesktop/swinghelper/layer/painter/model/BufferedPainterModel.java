@@ -32,6 +32,10 @@ public interface BufferedPainterModel extends PainterModel {
      * which this model attached to, will skip all repaints with {@link java.awt.Graphics2D#getClip()}
      * is not equals to the {@link org.jdesktop.swinghelper.layer.JXLayer#getVisibleRect()}.
      * This is useful when you don't need incremental updates and want to speed the painting up
+     * <p/>
+     * <strong>Note:</strong>
+     * If incremental updates are switched off and the layer's view has child components,
+     * they might not be painted properly
      *
      * @param incrementalUpdate <code>true</code> if this model supports incremental updates,
      *                          <code>false</code> otherwise

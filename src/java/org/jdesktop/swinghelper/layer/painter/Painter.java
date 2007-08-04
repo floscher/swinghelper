@@ -53,6 +53,10 @@ public interface Painter<V extends JComponent> extends LayerItem {
      * <p>Renders the visual appearance of the given <code>JXLayer</code>
      * to the given {@link java.awt.Graphics2D} object.
      * The <code>g2</code> and <code>l</code>must never be null.</p>
+     * <p/>
+     *  <strong>Note:</strong>You are free to change any state of <code>g2</code> during painting,
+     * there is no need to reset them at the end or create a defensive copy of <code>g2</code>;
+     * {@link JXLayer} creates a defensive copy itself and passes it to its painters
      *
      * @param g2 the {@link java.awt.Graphics2D} to render to
      * @param l  the {@link JXLayer} to render for

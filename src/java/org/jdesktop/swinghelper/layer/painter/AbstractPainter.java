@@ -116,7 +116,7 @@ abstract public class AbstractPainter<V extends JComponent>
     /**
      * Gets the {@link PainterModel} of this painter
      * <p/>
-     * Note: this method never returns <code>null</code>
+     * <strong>Note:</strong> this method never returns <code>null</code>
      *
      * @return the {@link PainterModel} of this painter
      */
@@ -161,6 +161,10 @@ abstract public class AbstractPainter<V extends JComponent>
     /**
      * The default implementation of the {@link Painter#paint(Graphics2D,JXLayer)} method,
      * it only set up the {@link Graphics2D} instance
+     * <p/>
+     * <strong>Note:</strong>You are free to change any state of the <code>g2</code> during painting,
+     * there is no need to reset them at the end or create a defensive copy of <code>g2</code>;
+     * {@link JXLayer} creates a defensive copy itself and passes it to its painters
      *
      * @param g2 the {@link Graphics2D} instance to paint on
      * @param l  the {@link JXLayer} to paint for

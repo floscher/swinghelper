@@ -32,7 +32,11 @@ public class DefaultPainter <V extends JComponent>
 
     /**
      * Paints the given {@link JXLayer} as is  
-     * 
+     * <p/>
+     * <strong>Note:</strong>You are free to change any state of the <code>g2</code> during painting,
+     * there is no need to reset them at the end or create a defensive copy of <code>g2</code>;
+     * {@link JXLayer} creates a defensive copy itself and passes it to its painters
+
      * @param g2 the {@link Graphics2D} instance to paint on
      * @param l  the {@link JXLayer} to paint for
      */

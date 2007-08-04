@@ -338,16 +338,6 @@ public class JXLayer<V extends JComponent> extends JComponent {
     }
 
     /**
-     * JXLayer always has the same size as its view, 
-     * so this method is not supported 
-     *  
-     * @throws UnsupportedOperationException this method is not supported
-     */
-    public void setBorder(Border border) {
-        throw new UnsupportedOperationException("JXLayer.setBorder() is not supported");
-    }
-
-    /**
      * Checks whether the {@link Painter} of this <code>JXLayer</code> accepts <code>MouseEvent</code>s
      * at the specified point or not, where <code>x</code> and <code>y</code> are defined to be
      * relative to the coordinate system of this component.
@@ -366,11 +356,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
     private LayerItemListener createLayerItemListener() {
         return new LayerItemListener() {
             public void layerItemChanged(LayerItemEvent e) {
-                if (view != null) {
-                    view.repaint();
-                } else {
-                    repaint();
-                }
+                repaint();
             }
         };
     }

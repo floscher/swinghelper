@@ -23,19 +23,18 @@ import java.awt.*;
 
 /**
  * The default layout manager for the {@link JXLayer}.<br/>
- * It makes the view component and glassPane of {@link JXLayer} 
- * the same size as {@link JXLayer}.<br/>
- * It also places the glassPane on top of the view component.
- *  
+ * It places the glassPane on top of the view component and makes it the same size as {@link JXLayer},
+ * it also makes the view component the same size but minus layer's insets<br/>
+ *
  * @see JXLayer#getView()
- * @see JXLayer#getGlassPane()  
+ * @see JXLayer#getGlassPane()
  */
 public class LayerLayout implements LayoutManager {
     private static final LayerLayout sharedInstance = new LayerLayout();
 
     /**
      * The shared instance of {@link LayerLayout}
-     * 
+     *
      * @return the shared instance of {@link LayerLayout}
      */
     public static LayerLayout getSharedInstance() {
@@ -43,15 +42,17 @@ public class LayerLayout implements LayoutManager {
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public void layoutContainer(Container parent) {
         JXLayer layer = (JXLayer) parent;
         JComponent view = layer.getView();
         JComponent glassPane = layer.getGlassPane();
         if (view != null) {
-            view.setLocation(0, 0);
-            view.setSize(layer.getWidth(), layer.getHeight());
+            Insets insets = layer.getInsets();
+            view.setLocation(insets.left, insets.top);
+            view.setSize(layer.getWidth() - insets.left - insets.right,
+                    layer.getHeight() - insets.top - insets.bottom);
         }
         if (glassPane != null) {
             glassPane.setLocation(0, 0);
@@ -60,37 +61,50 @@ public class LayerLayout implements LayoutManager {
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public Dimension minimumLayoutSize(Container parent) {
         JXLayer layer = (JXLayer) parent;
+        Insets insets = layer.getInsets();
+        Dimension ret = new Dimension(insets.left + insets.right,
+                insets.top + insets.bottom);
         JComponent view = layer.getView();
         if (view != null) {
-            return view.getMinimumSize();
+            Dimension size = view.getMinimumSize();
+            ret.width += size.width;
+            ret.height += size.height;
         }
-        return new Dimension(4, 4);
+        if (ret.width == 0 || ret.height == 0) {
+            ret.width = ret.height = 4;
+        }
+        return ret;
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public Dimension preferredLayoutSize(Container parent) {
         JXLayer layer = (JXLayer) parent;
+        Insets insets = layer.getInsets();
+        Dimension ret = new Dimension(insets.left + insets.right,
+                insets.top + insets.bottom);
         JComponent view = layer.getView();
         if (view != null) {
-            return view.getPreferredSize();
+            Dimension size = view.getPreferredSize();
+            ret.width += size.width;
+            ret.height += size.height;
         }
-        return new Dimension(0, 0);
+        return ret;
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public void addLayoutComponent(String name, Component comp) {
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public void removeLayoutComponent(Component comp) {
     }

@@ -37,12 +37,17 @@ import java.awt.image.*;
  * is ability to apply various {@link Effect}s to its content,<br/>
  * the most popular effect is {@link ImageOpEffect} 
  * which uses {@link BufferedImageOp} to filter the buffer
- * <p>
+ * <p/>
  * <strong>Note:</strong> to paint on the buffer override 
  * {@link #paintToBuffer(Graphics2D, JXLayer)} method
- * 
- * @see BufferedPainter
+ * <p/>
+ * <strong>Note:</strong>
+ * If incremental updates are switched off and the layer's view has child components,
+ * they might not be painted properly,<br>
+ * use {@link BufferedPainterModel#setIncrementalUpdate(boolean)} or override {@link #isIncrementalUpdate(JXLayer)} 
+ *
  * @see BufferedPainterModel
+ * @see BufferedPainter
  * @see Effect
  * @see ImageOpEffect 
  */
@@ -253,16 +258,36 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
 
     /**
      * Returns <code>true</code> if painter's buffer is up-to-date
-     * and shouldn't be repainted, if buffer is expired returns <code>false </code>
-     *  
+     * and shouldn't be repainted, if buffer is expired returns <code>false </code>.
+     * <p/>
+     * If incremental updates are switched on for this painter,
+     * that means that we should always update the buffer,
+     * so the default implementation returns <code>false</code>;<br/>
+     * if incremental updates are switched off, it returns <code>false</code>
+     * only if the view component is repainted completely,
+     * all partial updates are skipped in this case
+     * <p/>
+     * <strong>Note:</strong>
+     * If incremental updates are switched off and the layer's view has child components,
+     * they might not be painted properly
+     *
      * @param g2 the {@link java.awt.Graphics2D} which will be used for painting
      * @param l the {@link JXLayer} to render for
      * @return <code>true</code> if painter's buffer is up-to-date
      * and shouldn't be repainted, if buffer is expired returns <code>false </code>
+     *
+     * @see #isIncrementalUpdate(JXLayer)
+     * @see BufferedPainterModel#setIncrementalUpdate(boolean)
      */
     protected boolean isBufferValid(Graphics2D g2, JXLayer<V> l) {
-        return !isIncrementalUpdate(l) &&
-                !l.getVisibleRect().equals(g2.getClipBounds());
+        V view = l.getView();
+        Rectangle clipBounds = g2.getClipBounds();
+        if (!isIncrementalUpdate(l) && clipBounds != null && view != null) {
+            Rectangle convertedClip =
+                    SwingUtilities.convertRectangle(view, view.getVisibleRect(), l);
+            return !clipBounds.contains(convertedClip);
+        }
+        return false;
     }
 
     /**

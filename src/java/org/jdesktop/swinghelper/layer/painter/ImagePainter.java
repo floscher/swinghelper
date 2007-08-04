@@ -71,7 +71,7 @@ public class ImagePainter<V extends JComponent>
      * to be applied to the buffer of this painter
      */
     public ImagePainter(Image image, Effect... effects) {
-        setImage(image);
+        this.image = image;
         setEffects(effects);
     }
 
@@ -122,6 +122,8 @@ public class ImagePainter<V extends JComponent>
      * @param l the {@link JXLayer} to render for
      * @return <code>true</code> if painter's buffer is up-to-date
      * and shouldn't be repainted, if buffer is expired returns <code>false </code>
+     *
+     * @see #validate();
      */
     protected boolean isBufferValid(Graphics2D g2, JXLayer<V> l) {
         return true;
