@@ -20,37 +20,44 @@ import java.awt.image.BufferedImage;
  */
 public class ValidationLayerFactory {
     // shared painters
-    private static final TranslucentPainter<JTextComponent> TRANSLUCENT_PAINTER
-            = new TranslucentPainter<JTextComponent>();
     private static final IconPainter<JTextComponent> ICON_PAINTER
             = new IconPainter<JTextComponent>();
 
-    public static JXLayer<JTextComponent> createValidationLayer(JTextComponent c) {
-        return new JXLayer<JTextComponent>(c, TRANSLUCENT_PAINTER);
-    }
-    
-    static class TranslucentPainter<V extends JTextComponent> extends DefaultPainter<V> {
-        public void paint(Graphics2D g2, JXLayer<V> l) {
-            super.paint(g2, l);
 
-            // to be in sync with the view if the layer has a border
-            Insets layerInsets = l.getInsets();
-            g2.translate(layerInsets.left, layerInsets.top);
-            
-            JTextComponent view = l.getView();
-            // To prevent painting on view's border
-            Insets insets = view.getInsets();
-            g2.clip(new Rectangle(insets.left, insets.top,
-                    view.getWidth() - insets.left - insets.right,
-                    view.getHeight() - insets.top - insets.bottom));
+// shared translucent painter
+private static final TranslucentPainter<JTextComponent> 
+        TRANSLUCENT_PAINTER = new TranslucentPainter<JTextComponent>();
 
-            g2.setColor(view.getText().toLowerCase().equals("jxlayer") ? 
-                    Color.GREEN : Color.RED);
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
-            g2.fillRect(0, 0, l.getWidth(), l.getHeight());
-        }
-    }
+public static JXLayer<JTextComponent> createValidationLayer(JTextComponent c) {
+    return new JXLayer<JTextComponent>(c, TRANSLUCENT_PAINTER);
+}
+
+static class TranslucentPainter<V extends JTextComponent> 
+        extends DefaultPainter<V> {
     
+    public void paint(Graphics2D g2, JXLayer<V> l) {
+        // paints the layer as is
+        super.paint(g2, l);
+
+        // to be in sync with the view if the layer has a border
+        Insets layerInsets = l.getInsets();
+        g2.translate(layerInsets.left, layerInsets.top);
+        
+        JTextComponent view = l.getView();
+        // To prevent painting on view's border
+        Insets insets = view.getInsets();
+        g2.clip(new Rectangle(insets.left, insets.top,
+                view.getWidth() - insets.left - insets.right,
+                view.getHeight() - insets.top - insets.bottom));
+
+        g2.setColor(view.getText().toLowerCase().equals("jxlayer") ? 
+                Color.GREEN : Color.RED);
+        g2.setComposite(AlphaComposite.
+                getInstance(AlphaComposite.SRC_OVER, .2f));
+        g2.fillRect(0, 0, l.getWidth(), l.getHeight());
+    }
+}
+
     public static JXLayer<JTextComponent> createIconLayer(JTextComponent c) {
 
         final JXLayer<JTextComponent> layer = new JXLayer<JTextComponent>(c, ICON_PAINTER);
