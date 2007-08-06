@@ -45,5 +45,5 @@ java -cp layer-demo.jar:filters.jar org.jdesktop.swinghelper.layer.demo.Disabled
 
 Playing with JTextField
 
-java -cp layer-demo.jar org.jdesktop.swinghelper.layer.demo.TextComponentPainterDemo
+java -cp layer-demo.jar org.jdesktop.swinghelper.layer.demo.TextValidationDemo
 
