@@ -20,6 +20,7 @@ package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.effect.Effect;
+import org.jdesktop.swinghelper.layer.item.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +35,11 @@ import java.awt.image.BufferedImage;
  * the {@link #isBufferValid(Graphics2D, JXLayer)} always returns <code>true</code>,
  * which allows to not process the buffer during each painting and make the painting faster 
  * <p/>
- * The buffer is updated only when internal state of any of the child layer item
- * or painter itself is changed
+ * The painter's buffer is updated only when {@link #validate()} is called
+ * so you should call this method when the painter is ready 
  * 
+ * @see #setImage(Image)
  * @see #getImage()
- * @see #setImage(java.awt.Image) 
  * @see #validate() 
  */
 public class ImagePainter<V extends JComponent>
@@ -71,7 +72,7 @@ public class ImagePainter<V extends JComponent>
      * to be applied to the buffer of this painter
      */
     public ImagePainter(Image image, Effect... effects) {
-        this.image = image;
+        setImage(image);
         setEffects(effects);
     }
 
@@ -86,12 +87,12 @@ public class ImagePainter<V extends JComponent>
 
     /**
      * Sets the image to be rendered by this painter
+     * and calls {@link #validate}
      * 
      * @param image the image to be rendered by this painter
      */
     public void setImage(Image image) {
         this.image = image;
-        validate();
         fireLayerItemChanged();
     }
 
@@ -130,9 +131,14 @@ public class ImagePainter<V extends JComponent>
     }
 
     /**
-     * {@inheritDoc} 
+     * Reads the current image and update the painter's buffer,
+     * taking into account all current {@link Effect}s
+     * and notifies all painter's {@link LayerItemListener}s
+     *
+     * @see #setImage(Image)
+     * @see #setEffects(Effect[])  
      */
-    protected void validate() {
+    public void validate() {
         Image image = getImage();
         if (image != null) {
             BufferedImage buffer = getBuffer();
@@ -146,6 +152,7 @@ public class ImagePainter<V extends JComponent>
             bufg.drawImage(image, 0, 0, null);
             bufg.dispose();
             applyEffects(null);
-        } 
+        }
+        fireLayerItemChanged();
     }
 }

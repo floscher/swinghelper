@@ -150,7 +150,6 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         for (Effect effect : effects) {
             effect.addLayerItemListener(this);
         }
-        validate();
         fireLayerItemChanged();
     }
 
@@ -318,24 +317,5 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     protected BufferedImage createBuffer(Graphics2D g2, int width, int height) {
         return g2.getDeviceConfiguration().
                 createCompatibleImage(width, height, Transparency.TRANSLUCENT);
-    }
-
-    /**
-     * {@inheritDoc} 
-     */
-    public void layerItemChanged(LayerItemEvent e) {
-        validate();
-        super.layerItemChanged(e);
-    }
-
-    /**
-     * This method is called each time when this painter
-     * or ony of its child items are changed;<br/>
-     * override this method if any additional actions
-     * should be taken when painter is updated
-     * 
-     * @see ImagePainter 
-     */
-    protected void validate() {
     }
 }

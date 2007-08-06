@@ -129,7 +129,6 @@ public class BufferedPainter<V extends JComponent>
                 painter.addLayerItemListener(this);
             }
             this.painter = painter;
-            validate();
             fireLayerItemChanged();
         }
     }

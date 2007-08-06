@@ -19,6 +19,7 @@
 package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.effect.Effect;
+import org.jdesktop.swinghelper.layer.item.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -101,8 +102,13 @@ public class ComponentPainter <V extends JComponent>
     }
 
     /**
-     * Takes a screenshot of the component 
-     * returned by the {@link #getComponent()} method
+     * Takes a screenshot of the component returned by the
+     * {@link #getComponent()} method and set it with {@link #setImage(Image)}
+     * and calls {@link #validate()} which notifies all painter's {@link LayerItemListener}s
+     *
+     * @see #getComponent()
+     * @see #validate()
+     * @see #fireLayerItemChanged() 
      */
     public void update() {
         if (isPainterValid()) {
@@ -116,8 +122,7 @@ public class ComponentPainter <V extends JComponent>
             Graphics g = image.getGraphics();
             component.paint(g);
             g.dispose();
-            validate();
-            fireLayerItemChanged();
-        } 
+        }
+        validate();
     }
 }
