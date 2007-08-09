@@ -22,23 +22,20 @@ import org.jdesktop.swinghelper.layer.item.*;
 import org.jdesktop.swinghelper.layer.painter.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.FocusListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseAdapter;
+import java.awt.event.*;
 
 /**
- * The universal decorator for Swing components.<p/>
- * JXLayer is a component wrapper, like a {@link JScrollPane},which provides some useful functionality.<br/>
+ * The universal decorator for Swing components<br/>
+ * which supports various advanced painting effects<p/>
+ * JXLayer is a component wrapper, like a {@link JScrollPane}.<br/>
  * You can set a {@link Painter} to the layer and modify its visual appearance
- * and filter mouse events depending on the state of the wrapped component,<br>
- * for more details, please see JXLayer demos from <a href="https://swinghelper.dev.java.net/">SwingHelper project</a>, and
+ * and filter mouse events depending on the state of the wrapped component<p/>
+ * for more details, please see JXLayer demos from {@link org.jdesktop.swinghelper.layer.demo}<br/>
+ * and <a href="http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_2.html">Advanced painting III - playing with painters</a>
  * <p/>
- * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_2.html">Advanced painting III - playing with painters</a>
- * <p/>
- * With JXLayer it is also very easy to disable a container withall its child components: 
+ * With JXLayer it is also very easy to disable a container with all its child components:<br>
+ * please see {@link org.jdesktop.swinghelper.layer.demo.LockedLayerDemo} and 
  * <p/>
  * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2007/06/_enablingdisabl_1.html">
  * Enabling/Disabling Swing Containers</a>
@@ -66,6 +63,7 @@ import java.awt.event.MouseAdapter;
  *       // add it to a frame or any other container as usual
  *       frame.add(l);
  * </pre>
+ * please see also {@link org.jdesktop.swinghelper.layer.demo.DelegateDemo}
  * <p/>
  * <strong>Note:</strong> JXLayer is very friendly to your application<br/>
  * it doesn't exploit the glassPane from the top level frame, because it has its own one<br/>
@@ -74,12 +72,20 @@ import java.awt.event.MouseAdapter;
  * If you want to have a translucent or transparent JXLayer,
  * you need to wrap any of its parent with another JXLayer,<br/>
  * for more details, please see
- * <p/>
+ * <br/>
  * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_3.html">
  * Advanced painting IV - translucency and non rectangular components</a>
- *
+ * <p/>
+ * Here you can find about some useful details about using {@link javax.swing.border.Border} with JXLayer
+ * <br/>
+ * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2007/08/validation_over.html">
+ * Validation overlays with JXLayer - the followup</a>
+ *  
  * @see Painter
  * @see AbstractPainter
+ * @see AbstractBufferedPainter
+ * @see BufferedPainter
+ * @see org.jdesktop.swinghelper.layer.demo
  */
 public class JXLayer<V extends JComponent> extends JComponent {
     private V view;
@@ -111,10 +117,11 @@ public class JXLayer<V extends JComponent> extends JComponent {
     };
 
     private Component recentFocusOwner;
-    private boolean enabled = true;
+    private boolean locked;
+    private Cursor lockedCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
 
     /**
-     * Creates a new {@link JXLayer} 
+     * Creates a new {@link JXLayer}
      * with <code>null</code> view
      */
     public JXLayer() {
@@ -124,8 +131,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
     /**
      * Creates a new {@link JXLayer}
      * with the given <code>view</code> component
-     *  
-     * @param view the component to be wrapped 
+     *
+     * @param view the component to be wrapped
      */
     public JXLayer(V view) {
         this(view, new DefaultPainter<V>());
@@ -134,8 +141,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
     /**
      * Creates a new {@link JXLayer}
      * with the given <code>painter</code> and <code>null</code> view
-     *  
-     * @param painter the painter to be used for rendering 
+     *
+     * @param painter the painter to be used for rendering
      */
     public JXLayer(Painter<V> painter) {
         this(null, painter);
@@ -143,9 +150,9 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     /**
      * Creates a new {@link JXLayer}
-     * with the given <code>view</code> and <code>painter</code> 
-     *  
-     * @param view the component to be wrapped
+     * with the given <code>view</code> and <code>painter</code>
+     *
+     * @param view    the component to be wrapped
      * @param painter the painter to be used for rendering
      */
     public JXLayer(V view, Painter<V> painter) {
@@ -163,8 +170,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
     /**
      * Gets the view (wrapped component) for this layer<br/>
      * <strong>Note:</strong> this method <strong>may return</strong> <code>null</code>
-     * 
-     * @return the view (wrapped component) for this layer 
+     *
+     * @return the view (wrapped component) for this layer
      */
     public V getView() {
         return view;
@@ -172,7 +179,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     /**
      * Sets the view (wrapped component) for this layer
-     *  
+     *
      * @param view the view (wrapped component) for this layer
      */
     public void setView(V view) {
@@ -188,8 +195,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     /**
      * Gets the glassPane of this layer<br/>
-     * <strong>Note:</strong> this method never returns <code>null</code> 
-     * 
+     * <strong>Note:</strong> this method never returns <code>null</code>
+     *
      * @return the glassPane of this layer
      */
     public JComponent getGlassPane() {
@@ -198,7 +205,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     /**
      * Sets the glassPane of this layer
-     * 
+     *
      * @param glassPane the glassPane of this layer
      */
     public void setGlassPane(JComponent glassPane) {
@@ -218,7 +225,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
     /**
      * Gets the {@link Painter} of this layer<br/>
      * <strong>Note:</strong> this method never returns <code>null</code>
-     * 
+     *
      * @return the {@link Painter} of this layer
      */
     public Painter<V> getPainter() {
@@ -227,10 +234,9 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     /**
      * Sets the {@link Painter} for this layer
-     *  
+     *
      * @param painter the {@link Painter} for this layer
-     * 
-     * @throws IllegalArgumentException if <code>painter</code> is <code>null</code> 
+     * @throws IllegalArgumentException if <code>painter</code> is <code>null</code>
      * @see Painter
      * @see AbstractPainter
      */
@@ -252,11 +258,11 @@ public class JXLayer<V extends JComponent> extends JComponent {
     /**
      * {@link JXLayer} supports only two child components:
      * the view and the glassPane, which can be set with help of the
-     * corresponding methods 
-     * 
+     * corresponding methods
+     *
      * @throws UnsupportedOperationException this method is not supported
      * @see #setView(JComponent)
-     * @see #setGlassPane(JComponent) 
+     * @see #setGlassPane(JComponent)
      */
     protected void addImpl(Component comp, Object constraints, int index) {
         throw new UnsupportedOperationException("JXLayer.add() is not supported; use setView() instead");
@@ -264,14 +270,14 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     /**
      * Removes the view from the JXLayer,
-     * the glassPane can't be removed 
-     * 
+     * the glassPane can't be removed
+     *
      * @param comp component to be removed
      * @throws IllegalArgumentException if <code>comp</code> is equal to layer's glassPane
      * @see #getView()
-     * @see #setView(JComponent) 
-     * @see #getGlassPane() 
-     * @see #setGlassPane(JComponent) 
+     * @see #setView(JComponent)
+     * @see #getGlassPane()
+     * @see #setGlassPane(JComponent)
      */
     public void remove(Component comp) {
         if (comp == getView()) {
@@ -284,22 +290,22 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
     /**
      * Removes the view from this JXLayer.
-     * 
+     *
      * @see #getView()
-     * @see #setView(JComponent) 
+     * @see #setView(JComponent)
      */
     public void removeAll() {
         setView(null);
     }
 
     /**
-     * Delegates all painting to the {@link Painter}, 
+     * Delegates all painting to the {@link Painter},
      * which was set with {@link #setPainter(Painter)} method.<br>
      * It happens only if {@link Painter#isEnabled()} returns <code>true</code>
-     * and <code>g</code> is instance of <code>Graphics2D</code><br> 
-     * otherwise the super implementation is called.  
-     * 
-     * @param g the {@link Graphics} to render to 
+     * and <code>g</code> is instance of <code>Graphics2D</code><br>
+     * otherwise the super implementation is called.
+     *
+     * @param g the {@link Graphics} to render to
      */
     public void paint(Graphics g) {
         if (!isPainting && painter.isEnabled() && g instanceof Graphics2D) {
@@ -314,11 +320,11 @@ public class JXLayer<V extends JComponent> extends JComponent {
     }
 
     /**
-     * If layer is opaque, fills it with the background color 
-     * 
+     * If layer is opaque, fills it with the background color
+     *
      * @param g the {@link Graphics} to render to
-     * @see #isOpaque() 
-     * @see #getBackground() 
+     * @see #isOpaque()
+     * @see #getBackground()
      */
     protected void paintComponent(Graphics g) {
         if (isOpaque()) {
@@ -330,7 +336,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
     /**
      * This method always returns <code>false</code>
      * to support the view and the glassPane overlap
-     *  
+     *
      * @return <code>false</code>
      */
     public boolean isOptimizedDrawingEnabled() {
@@ -341,8 +347,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
      * Checks whether the {@link Painter} of this <code>JXLayer</code> accepts <code>MouseEvent</code>s
      * at the specified point or not, where <code>x</code> and <code>y</code> are defined to be
      * relative to the coordinate system of this component.
-     * 
-     * @see Painter#contains(int, int, JXLayer) 
+     *
+     * @see Painter#contains(int,int,JXLayer)
      */
     public boolean contains(int x, int y) {
         Painter<V> painter = getPainter();
@@ -362,41 +368,90 @@ public class JXLayer<V extends JComponent> extends JComponent {
     }
 
     /**
-     * {@inheritDoc}
+     * Sets if this layer is locked or not.
+     * The locked layer doesn't pass any mouseEvents to its view component
+     * and exclude the view component and all its subcomponents
+     * from the layer's {@link java.awt.FocusTraversalPolicy}
+     * which makes it impossible to traverse focus to those components
+     * with the Tab key
+     * <p/>
+     * With this method you have an efficient way
+     * to temporary disable the layer's content.
+     * For more info please see
+     * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2007/06/_enablingdisabl_1.html">
+     * Enabling/Disabling Swing Container<a/>
+     *
+     * @param locked <code>true</code> if this layer should be locked
+     *               <code>false</code> otherwise
+     * 
+     * @see #setLockedCursor(java.awt.Cursor) 
      */
-    public void setEnabled(boolean enabled) {
-        boolean oldEnabled = isEnabled();
-        if (enabled != oldEnabled) {
-            Component focusOwner = 
-                    KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-            boolean isFocusInsideLayer = 
-                    focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this); 
-            if (enabled) {
-                getGlassPane().removeMouseListener(emptyMouseListener);
-                setFocusTraversalPolicyProvider(false);
-                if (isFocusInsideLayer && recentFocusOwner != null) {
-                    recentFocusOwner.requestFocusInWindow();
-                }
-                recentFocusOwner = null;
-            } else {
+    public void setLocked(boolean locked) {
+        if (locked != isLocked()) {
+            Component focusOwner =
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
+            boolean isFocusInsideLayer =
+                    focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this);
+            if (locked) {
                 getGlassPane().addMouseListener(emptyMouseListener);
                 setFocusTraversalPolicyProvider(true);
                 if (isFocusInsideLayer) {
                     recentFocusOwner = focusOwner;
                     getGlassPane().requestFocusInWindow();
                 }
+                getGlassPane().setCursor(getLockedCursor());
+            } else {
+                getGlassPane().removeMouseListener(emptyMouseListener);
+                setFocusTraversalPolicyProvider(false);
+                if (isFocusInsideLayer && recentFocusOwner != null) {
+                    recentFocusOwner.requestFocusInWindow();
+                }
+                recentFocusOwner = null;
+                getGlassPane().setCursor(null);
             }
-            this.enabled = enabled;
-            firePropertyChange("enabled", oldEnabled, enabled);
+            this.locked = locked;
             repaint();
         }
     }
 
     /**
-     * {@inheritDoc}
+     * Returns <code>true</code> is this layer is locked,
+     * <code>false</code> otherwise
+     * 
+     * @return <code>true</code> is this layer is locked,
+     * <code>false</code> otherwise
+     * 
+     * @see #setLocked(boolean) 
+     * @see #setLockedCursor(java.awt.Cursor) 
      */
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isLocked() {
+        return locked;
+    }
+
+    /**
+     * Returns the mouse cursor to be used for the locked layer,
+     * it is a <code>Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)</code> by default
+     * 
+     * @return the cursor to be used for the locked layer
+     * 
+     * @see #setLocked(boolean) 
+     */
+    public Cursor getLockedCursor() {
+        return lockedCursor;
+    }
+
+    /**
+     * Sets the mouse cursor to be used for tor the locked layer
+     * 
+     * @param lockedCursor the mouse cursor to be used for tor the locked layer
+     * 
+     * @see #setLocked(boolean)  
+     */
+    public void setLockedCursor(Cursor lockedCursor) {
+        this.lockedCursor = lockedCursor;
+        if (isLocked()) {
+            getGlassPane().setCursor(lockedCursor);
+        }
     }
 }
 

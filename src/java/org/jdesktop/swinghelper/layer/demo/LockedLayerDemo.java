@@ -21,28 +21,21 @@ import java.awt.image.BufferedImageOp;
  *         https://swinghelper.dev.java.net/
  *         http://weblogs.java.net/blog/alexfromsun/
  */
-public class DisabledLayerDemo extends JFrame {
+public class LockedLayerDemo extends JFrame {
     private JXLayer<JComponent> layer;
     private Painter<JComponent> translucentPainter = new TranslucentPainter<JComponent>();
     private Painter<JComponent> blurPainter = new ImageOpPainter<JComponent>(new BlurFilter());
     private Painter<JComponent> embossPainter = new ImageOpPainter<JComponent>(new EmbossFilter());
 
-    private JCheckBoxMenuItem disablingItem = new JCheckBoxMenuItem(new AbstractAction("Disable the layer") {
-        public void actionPerformed(ActionEvent e) {
+    private JCheckBoxMenuItem disablingItem = 
+            new JCheckBoxMenuItem(new AbstractAction("Lock the layer") {
+                
+        public void actionPerformed(ActionEvent e) {            
+            layer.setLocked(!layer.isLocked());
             
-            layer.setEnabled(!layer.isEnabled());
-            
-            if (layer.isEnabled()) {
-                // Reset cursor for enabled layer
-                layer.getGlassPane().setCursor(null);
-            } else if (waitCursorItem.isSelected()) {
-                layer.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            }
-            
-            translucentItem.setEnabled(!layer.isEnabled());
-            blurItem.setEnabled(!layer.isEnabled());
-            embossItem.setEnabled(!layer.isEnabled());
-            waitCursorItem.setEnabled(!layer.isEnabled());
+            translucentItem.setEnabled(layer.isLocked());
+            blurItem.setEnabled(layer.isLocked());
+            embossItem.setEnabled(layer.isLocked());
         }
     });
 
@@ -50,17 +43,8 @@ public class DisabledLayerDemo extends JFrame {
     private JRadioButtonMenuItem blurItem = new JRadioButtonMenuItem("Blur effect");
     private JRadioButtonMenuItem embossItem = new JRadioButtonMenuItem("Emboss effect");
 
-    private JCheckBoxMenuItem waitCursorItem = new JCheckBoxMenuItem(new AbstractAction("Set the wait cursor") {
-        public void actionPerformed(ActionEvent e) {
-            Cursor cursor = waitCursorItem.isSelected() ? 
-                    Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR): null;
-            // Note: we need to set cursor to the layer's GlassPane
-            // because it covers the whole layer
-            layer.getGlassPane().setCursor(cursor);
-        }
-    });
-    public DisabledLayerDemo() {
-        super("Disabled/enabled layer demo");
+    public LockedLayerDemo() {
+        super("Locked/unlocked layer demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         layer = new JXLayer<JComponent>(createLayerPanel());
         layer.setPainter(translucentPainter);
@@ -72,7 +56,7 @@ public class DisabledLayerDemo extends JFrame {
     }
 
     public static void main(String[] args) throws Exception {
-        new DisabledLayerDemo().setVisible(true);
+        new LockedLayerDemo().setVisible(true);
     }
 
     private JMenuBar createMenuBar() {
@@ -118,12 +102,6 @@ public class DisabledLayerDemo extends JFrame {
         blurItem.addItemListener(menuListener);
         embossItem.addItemListener(menuListener);
         
-        menu.addSeparator();
-        menu.add(waitCursorItem);
-        waitCursorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
-        
-        waitCursorItem.setEnabled(false);
-
         JMenuBar bar = new JMenuBar();
         bar.add(menu);
 
@@ -164,18 +142,13 @@ public class DisabledLayerDemo extends JFrame {
         emboss.setModel(embossItem.getModel());
         box.add(emboss);
         box.add(Box.createGlue());
-        JCheckBox cursor = new JCheckBox("Set wait cursor");
-        cursor.setToolTipText("Set cursor for the disabled layer");
-        cursor.setModel(waitCursorItem.getModel());
-        box.add(cursor);        
-        box.add(Box.createGlue());
         return box;
     }
 
     static class TranslucentPainter<V extends JComponent> extends AbstractPainter<V> {
         public void paint(Graphics2D g2, JXLayer<V> l) {
             l.paint(g2);
-            if (!l.isEnabled()) {
+            if (l.isLocked()) {
                 g2.setColor(new Color(0, 128, 128, 128));
                 g2.fillRect(0, 0, l.getWidth(), l.getHeight());
             }
@@ -191,16 +164,16 @@ public class DisabledLayerDemo extends JFrame {
 
         protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
             super.paintToBuffer(g2, l);
-            if (!l.isEnabled()) {
+            if (l.isLocked()) {
                 disablingEffect.apply(getBuffer(), g2.getClip());
             }
         }
 
-        // Child components of a disabled layer are disalbed as well, 
+        // Child components of a locked layer are locked as well, 
         // so we can speed the painting up; 
         // moreover EmbossFilter doesn't like incremental updates           
         public boolean isIncrementalUpdate(JXLayer<V> l) {
-            return l.isEnabled();
+            return !l.isLocked();
         }
     }
 }

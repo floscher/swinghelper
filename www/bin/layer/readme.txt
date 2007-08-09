@@ -30,16 +30,16 @@ java -cp layer-demo.jar org.jdesktop.swinghelper.layer.demo.DelegateDemo
 
 ===
 
-Disabling/enabling demo
+Locking/unlocking demo
 (Ability to disable child components)
 
 on Windows:
 
-java -cp layer-demo.jar;filters.jar org.jdesktop.swinghelper.layer.demo.DisabledLayerDemo
+java -cp layer-demo.jar;filters.jar org.jdesktop.swinghelper.layer.demo.LockedLayerDemo
 
 on *nix
 
-java -cp layer-demo.jar:filters.jar org.jdesktop.swinghelper.layer.demo.DisabledLayerDemo
+java -cp layer-demo.jar:filters.jar org.jdesktop.swinghelper.layer.demo.LockedLayerDemo
 
 ===
 
