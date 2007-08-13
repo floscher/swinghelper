@@ -34,7 +34,7 @@ abstract public class AbstractLayerItem implements LayerItem {
 
     protected AbstractLayerItem() {
         listenerList = new EventListenerList();
-        setEnabled(true);
+        isEnabled = true;
     }
 
     /**
