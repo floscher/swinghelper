@@ -94,16 +94,16 @@ public class JXLayer<V extends JComponent> extends JComponent {
     private boolean isPainting;
     private LayerItemListener itemListener;
 
-    // Enabled/disabled support
+    // Locking/unlocking support
     private final FocusTraversalPolicy
             disabledPolicy = new LayoutFocusTraversalPolicy() {
         protected boolean accept(Component component) {
-            return component == getGlassPane();
+            return component == JXLayer.this;
         }
     };
 
     private final static FocusListener
-            glassPaneFocusListener = new FocusListener() {
+            layerFocusListener = new FocusListener() {
         public void focusGained(FocusEvent e) {
             e.getComponent().repaint();
         }
@@ -165,6 +165,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
         setOpaque(true);
         // it doesn't effect until we setFocusTraversalPolicyProvider(true);  
         setFocusTraversalPolicy(disabledPolicy);
+        addFocusListener(layerFocusListener);
     }
 
     /**
@@ -215,10 +216,8 @@ public class JXLayer<V extends JComponent> extends JComponent {
         JComponent oldGlassPane = getGlassPane();
         if (oldGlassPane != null) {
             super.remove(oldGlassPane);
-            oldGlassPane.removeFocusListener(glassPaneFocusListener);
         }
         super.addImpl(glassPane, null, 0);
-        glassPane.addFocusListener(glassPaneFocusListener);
         this.glassPane = glassPane;
     }
 
@@ -397,7 +396,7 @@ public class JXLayer<V extends JComponent> extends JComponent {
                 setFocusTraversalPolicyProvider(true);
                 if (isFocusInsideLayer) {
                     recentFocusOwner = focusOwner;
-                    getGlassPane().requestFocusInWindow();
+                    requestFocusInWindow();
                 }
                 getGlassPane().setCursor(getLockedCursor());
             } else {
