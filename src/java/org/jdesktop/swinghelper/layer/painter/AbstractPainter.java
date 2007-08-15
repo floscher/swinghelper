@@ -250,6 +250,19 @@ abstract public class AbstractPainter<V extends JComponent>
      * @param e a LayerItemEvent object
      */
     public void layerItemChanged(LayerItemEvent e) {
+        if (isEnabled() != getModel().isEnabled()) {
+            setEnabled(getModel().isEnabled());
+        }
         fireLayerItemChanged();
+    }
+
+    /**
+     * {@inheritDoc} 
+     */
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (enabled != getModel().isEnabled()) {
+            getModel().setEnabled(enabled);
+        }
     }
 }

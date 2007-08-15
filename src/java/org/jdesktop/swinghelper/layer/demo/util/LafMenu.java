@@ -30,7 +30,6 @@ public class LafMenu extends JMenu {
         }
     }
 
-
     public static JMenuBar createMenuBar() {
         JMenuBar bar = new JMenuBar();
         bar.add(new LafMenu());
