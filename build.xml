@@ -43,8 +43,10 @@
 
     <target name="layer.compile">
         <mkdir dir="${layer.class.dir}"/>
-        <javac destdir="${layer.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
+        <javac destdir="${layer.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true" 
+               classpath="${layer.demo.dir}/org/jdesktop/swinghelper/layer/demo/lib/filters.jar">
             <src location="${layer.src.dir}"/>
+            <src location="${layer.demo.dir}"/>
         </javac>
     </target>
 
@@ -55,7 +57,7 @@
         </jar>
         <jar destfile="${layer.bin.dir}/${layer.bin.demo.jar}">
             <fileset dir="${layer.class.dir}" includes="org/jdesktop/swinghelper/layer/demo/**"/>
-            <!--<fileset dir="${layer.src.dir}" includes="org/jdesktop/swinghelper/layer/demo/resources/**"/>-->
+            <fileset dir="${layer.demo.dir}" includes="org/jdesktop/swinghelper/layer/demo/resources/**"/>
             <manifest>
                 <attribute name="Class-Path" value="${layer.bin.jar}"/>
                 <attribute name="Main-Class" value="org/jdesktop/swinghelper/layer/demo/InternalFrameDemo"/>
@@ -81,7 +83,7 @@
         <zip destfile="${layer.bin.dir}/${layer.bin.zip}">
             <fileset dir="${layer.bin.dir}" includes="${layer.bin.jar}"/>
             <fileset dir="${layer.bin.dir}" includes="${layer.bin.demo.jar}"/>
-            <fileset dir="${layer.src.dir}/org/jdesktop/swinghelper/layer/demo/lib"/>
+            <fileset dir="${layer.demo.dir}/org/jdesktop/swinghelper/layer/demo/lib"/>
             <fileset dir="${layer.bin.dir}" includes="readme.txt"/>
         </zip>
     </target>
