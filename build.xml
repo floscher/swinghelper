@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project default="build.all">
+
+    <property name="debug" value="off"/>
+    <property name="nowarn" value="on"/>
+
+    <!-- Modules -->
+
+    <dirname property="base.dir" file="${ant.file}"/>
+    <property name="bin.dir" value="${base.dir}/www/swinghelper/www/bin"/>
+    
+    <target name="build.all"
+            depends="layer.build, buttonpanel.build, debug.build, transformer.build"/>
+    <target name="clean.all" 
+            depends="layer.clean, buttonpanel.clean, debug.clean, transformer.clean"/>
+
+    <!-- Module "JXLayer" -->
+
+    <property name="layer.bin.zip" value="layer-bin.zip"/>
+    <property name="layer.bin.jar" value="layer.jar"/>
+    <property name="layer.bin.demo.jar" value="layer-demo.jar"/>
+
+    <property name="layer.src.zip" value="layer-src.zip"/>
+
+    <property name="layer.dir" value="${base.dir}/layer"/>
+    <property name="layer.bin.dir" value="${bin.dir}/layer"/>
+    <property name="layer.class.dir" value="${layer.dir}/classes"/>
+    <property name="layer.src.dir" value="${layer.dir}/swinghelper/src/java"/>    
+    <property name="layer.demo.dir" value="${layer.dir}/swinghelper/src/demo"/>    
+    <property name="layer.javadoc.dir" value="${layer.dir}/api"/>
+
+    <target name="layer.javadoc">
+        <mkdir dir="${layer.javadoc.dir}"/>
+        <javadoc destdir="${layer.javadoc.dir}" 
+        author="true"
+        version="true"
+        windowtitle="JXLayer API">
+        <packageset dir="${layer.src.dir}">
+        <exclude name= "org/jdesktop/swinghelper/layer/demo/**"/>
+        </packageset>
+        </javadoc>
+    </target>
+
+    <target name="layer.compile">
+        <mkdir dir="${layer.class.dir}"/>
+        <javac destdir="${layer.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
+            <src location="${layer.src.dir}"/>
+        </javac>
+    </target>
+
+    <target name="layer.jar" depends="layer.compile">
+        <mkdir dir="${layer.bin.dir}"/>
+        <jar destfile="${layer.bin.dir}/${layer.bin.jar}">
+            <fileset dir="${layer.class.dir}" excludes="org/jdesktop/swinghelper/layer/demo/**"/>
+        </jar>
+        <jar destfile="${layer.bin.dir}/${layer.bin.demo.jar}">
+            <fileset dir="${layer.class.dir}" includes="org/jdesktop/swinghelper/layer/demo/**"/>
+            <!--<fileset dir="${layer.src.dir}" includes="org/jdesktop/swinghelper/layer/demo/resources/**"/>-->
+            <manifest>
+                <attribute name="Class-Path" value="${layer.bin.jar}"/>
+                <attribute name="Main-Class" value="org/jdesktop/swinghelper/layer/demo/InternalFrameDemo"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="layer.build" depends="layer.jar">
+        <mkdir dir="${layer.bin.dir}"/>
+
+        <!--Zipping src files-->
+        <zip destfile="${layer.bin.dir}/${layer.src.zip}">
+            <fileset dir="${layer.src.dir}">
+                <exclude name="org/jdesktop/swinghelper/layer/effectlist"/>
+                <exclude name="org/jdesktop/swinghelper/layer/painter/configurator"/>   
+                <exclude name="org/jdesktop/swinghelper/layer/shaper"/>
+                <exclude name="org/jdesktop/swinghelper/blog"/>
+            </fileset>
+            <fileset dir="${layer.demo.dir}"/>
+        </zip>
+
+        <!--Zipping src and jar files-->
+        <zip destfile="${layer.bin.dir}/${layer.bin.zip}">
+            <fileset dir="${layer.bin.dir}" includes="${layer.bin.jar}"/>
+            <fileset dir="${layer.bin.dir}" includes="${layer.bin.demo.jar}"/>
+            <fileset dir="${layer.src.dir}/org/jdesktop/swinghelper/layer/demo/lib"/>
+            <fileset dir="${layer.bin.dir}" includes="readme.txt"/>
+        </zip>
+    </target>
+
+    <target name="layer.clean">
+        <!--<delete dir="${layer.bin.dir}"/>-->
+        <delete dir="${layer.javadoc.dir}"/>
+    </target>
+
+    <!-- Module "JXButtonPanel" -->
+    <property name="buttonpanel.bin.jar" value="buttonpanel.jar"/>
+
+    <property name="buttonpanel.src.zip" value="buttonpanel-src.zip"/>
+
+    <property name="buttonpanel.dir" value="${base.dir}/buttonpanel"/>
+    <property name="buttonpanel.bin.dir" value="${bin.dir}/buttonpanel"/>
+    <property name="buttonpanel.class.dir" value="${buttonpanel.dir}/classes"/>
+    <property name="buttonpanel.src.dir" value="${buttonpanel.dir}/swinghelper/src/java"/>
+
+    <target name="buttonpanel.compile">
+        <mkdir dir="${buttonpanel.class.dir}"/>
+        <javac destdir="${buttonpanel.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
+            <src location="${buttonpanel.src.dir}"/>
+        </javac>
+    </target>
+
+    <target name="buttonpanel.jar" depends="buttonpanel.compile">
+        <mkdir dir="${buttonpanel.bin.dir}"/>
+        <jar destfile="${buttonpanel.bin.dir}/${buttonpanel.bin.jar}">
+            <fileset dir="${buttonpanel.class.dir}"/>
+            <manifest>
+                <attribute name="Main-Class" 
+                           value="org.jdesktop.swinghelper.buttonpanel.JXButtonPanelDemo"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="buttonpanel.build" depends="buttonpanel.jar">
+        <zip destfile="${buttonpanel.bin.dir}/${buttonpanel.src.zip}">
+            <fileset dir="${buttonpanel.src.dir}"/>
+        </zip>
+    </target>
+
+    <target name="buttonpanel.clean">
+        <delete dir="${buttonpanel.bin.dir}"/>
+    </target>
+
+    <!-- Module "Debug" -->
+    <property name="debug.bin.jar" value="debug.jar"/>
+
+    <property name="debug.src.zip" value="debug-src.zip"/>
+
+    <property name="debug.dir" value="${base.dir}/debug"/>
+    <property name="debug.bin.dir" value="${bin.dir}/debug"/>
+    <property name="debug.class.dir" value="${debug.dir}/classes"/>
+    <property name="debug.src.dir" value="${debug.dir}/swinghelper/src/java"/>
+
+    <target name="debug.compile">
+        <mkdir dir="${debug.class.dir}"/>
+        <javac destdir="${debug.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
+            <src location="${debug.src.dir}"/>
+        </javac>
+    </target>
+
+    <target name="debug.jar" depends="debug.compile">
+        <mkdir dir="${debug.bin.dir}"/>
+        <jar destfile="${debug.bin.dir}/${debug.bin.jar}">
+            <fileset dir="${debug.class.dir}" includes="org/jdesktop/swinghelper/debug/**"/>
+        </jar>
+    </target>
+
+    <target name="debug.build" depends="debug.jar">
+        <zip destfile="${debug.bin.dir}/${debug.src.zip}">
+            <fileset dir="${debug.src.dir}"/>
+        </zip>
+    </target>
+
+    <target name="debug.clean">
+        <delete dir="${debug.bin.dir}"/>
+    </target>
+
+    <!-- Module "Transformer" -->
+    <property name="transformer.bin.jar" value="transformer.jar"/>
+
+    <property name="transformer.src.zip" value="transformer-src.zip"/>
+
+    <property name="transformer.dir" value="${base.dir}/transformer"/>
+    <property name="transformer.bin.dir" value="${bin.dir}/transformer"/>
+    <property name="transformer.class.dir" value="${transformer.dir}/classes"/>
+    <property name="transformer.src.dir" value="${transformer.dir}/swinghelper/src/java"/>
+
+    <target name="transformer.compile">
+        <mkdir dir="${transformer.class.dir}"/>
+        <javac destdir="${transformer.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
+            <src location="${transformer.src.dir}"/>
+        </javac>
+    </target>
+
+    <target name="transformer.jar" depends="transformer.compile">
+        <mkdir dir="${transformer.bin.dir}"/>
+        <jar destfile="${transformer.bin.dir}/${transformer.bin.jar}">
+            <fileset dir="${transformer.class.dir}"/>
+            <manifest>
+                <attribute name="Main-Class" 
+                           value="org.jdesktop.swinghelper.transformer.TransformerDemo"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="transformer.build" depends="transformer.jar">
+        <zip destfile="${transformer.bin.dir}/${transformer.src.zip}">
+            <fileset dir="${transformer.src.dir}"/>
+        </zip>
+    </target>
+
+    <target name="transformer.clean">
+        <delete dir="${transformer.bin.dir}"/>
+    </target>
+
+</project>
