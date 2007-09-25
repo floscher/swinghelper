@@ -7,7 +7,10 @@
     <!-- Modules -->
 
     <dirname property="base.dir" file="${ant.file}"/>
-    <property name="bin.dir" value="${base.dir}/www/swinghelper/www/bin"/>
+    <property name="bin.dir" value="${base.dir}/www/bin"/>
+    <property name="class.dir" value="${base.dir}/classes"/>
+    <property name="src.dir" value="${base.dir}/src/java"/>
+    <property name="demo.dir" value="${base.dir}/src/demo"/>
     
     <target name="build.all"
             depends="layer.build, buttonpanel.build, debug.build, transformer.build"/>
@@ -22,12 +25,9 @@
 
     <property name="layer.src.zip" value="layer-src.zip"/>
 
-    <property name="layer.dir" value="${base.dir}/layer"/>
-    <property name="layer.bin.dir" value="${bin.dir}/layer"/>
-    <property name="layer.class.dir" value="${layer.dir}/classes"/>
-    <property name="layer.src.dir" value="${layer.dir}/swinghelper/src/java"/>    
-    <property name="layer.demo.dir" value="${layer.dir}/swinghelper/src/demo"/>    
-    <property name="layer.javadoc.dir" value="${layer.dir}/api"/>
+    <property name="layer.path" value="org/jdesktop/swinghelper/layer"/>    
+    <property name="layer.bin.dir" value="${bin.dir}/layer"/>    
+    <property name="layer.javadoc.dir" value="${base.dir}/api"/>
 
     <target name="layer.javadoc">
         <mkdir dir="${layer.javadoc.dir}"/>
@@ -35,85 +35,82 @@
         author="true"
         version="true"
         windowtitle="JXLayer API">
-        <packageset dir="${layer.src.dir}">
-        <exclude name= "org/jdesktop/swinghelper/layer/demo/**"/>
+        <packageset dir="${src.dir}">
+        <exclude name="${layer.path}/demo/**"/>
         </packageset>
         </javadoc>
     </target>
 
     <target name="layer.compile">
-        <mkdir dir="${layer.class.dir}"/>
-        <javac destdir="${layer.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true" 
-               classpath="${layer.demo.dir}/org/jdesktop/swinghelper/layer/demo/lib/filters.jar">
-            <src location="${layer.src.dir}"/>
-            <src location="${layer.demo.dir}"/>
+        <mkdir dir="${class.dir}"/>
+        <javac destdir="${class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true" 
+               classpath="${demo.dir}/${layer.path}/demo/lib/filters.jar">
+            <src location="${src.dir}/${layer.path}"/>
+            <src location="${demo.dir}/${layer.path}"/>
         </javac>
     </target>
 
     <target name="layer.jar" depends="layer.compile">
         <mkdir dir="${layer.bin.dir}"/>
         <jar destfile="${layer.bin.dir}/${layer.bin.jar}">
-            <fileset dir="${layer.class.dir}" excludes="org/jdesktop/swinghelper/layer/demo/**"/>
+            <fileset dir="${class.dir}" 
+                     includes="${layer.path}/**" excludes="${layer.path}/demo/**"/>
         </jar>
         <jar destfile="${layer.bin.dir}/${layer.bin.demo.jar}">
-            <fileset dir="${layer.class.dir}" includes="org/jdesktop/swinghelper/layer/demo/**"/>
-            <fileset dir="${layer.demo.dir}" includes="org/jdesktop/swinghelper/layer/demo/resources/**"/>
+            <fileset dir="${class.dir}" includes="${layer.path}/demo/**"/>
+            <fileset dir="${demo.dir}" includes="${layer.path}/demo/resources/**"/>
             <manifest>
                 <attribute name="Class-Path" value="${layer.bin.jar}"/>
-                <attribute name="Main-Class" value="org/jdesktop/swinghelper/layer/demo/InternalFrameDemo"/>
+                <attribute name="Main-Class" value="${layer.path}/demo/InternalFrameDemo"/>
             </manifest>
         </jar>
     </target>
 
     <target name="layer.build" depends="layer.jar">
-        <mkdir dir="${layer.bin.dir}"/>
+        <mkdir dir="${bin.dir}"/>
 
         <!--Zipping src files-->
         <zip destfile="${layer.bin.dir}/${layer.src.zip}">
-            <fileset dir="${layer.src.dir}">
-                <exclude name="org/jdesktop/swinghelper/layer/effectlist"/>
-                <exclude name="org/jdesktop/swinghelper/layer/painter/configurator"/>   
-                <exclude name="org/jdesktop/swinghelper/layer/shaper"/>
-                <exclude name="org/jdesktop/swinghelper/blog"/>
+            <fileset dir="${src.dir}">
+                <include name="${layer.path}/**"/>
+                <exclude name="${layer.path}/effectlist"/>
+                <exclude name="${layer.path}/painter/configurator"/>   
+                <exclude name="${layer.path}/shaper"/>
             </fileset>
-            <fileset dir="${layer.demo.dir}"/>
+            <fileset dir="${demo.dir}"/>
         </zip>
 
         <!--Zipping src and jar files-->
         <zip destfile="${layer.bin.dir}/${layer.bin.zip}">
             <fileset dir="${layer.bin.dir}" includes="${layer.bin.jar}"/>
             <fileset dir="${layer.bin.dir}" includes="${layer.bin.demo.jar}"/>
-            <fileset dir="${layer.demo.dir}/org/jdesktop/swinghelper/layer/demo/lib"/>
+            <fileset dir="${demo.dir}/${layer.path}/demo/lib"/>
             <fileset dir="${layer.bin.dir}" includes="readme.txt"/>
         </zip>
     </target>
 
     <target name="layer.clean">
-        <!--<delete dir="${layer.bin.dir}"/>-->
+        <delete dir="${layer.bin.dir}"/>
         <delete dir="${layer.javadoc.dir}"/>
     </target>
 
     <!-- Module "JXButtonPanel" -->
     <property name="buttonpanel.bin.jar" value="buttonpanel.jar"/>
-
     <property name="buttonpanel.src.zip" value="buttonpanel-src.zip"/>
-
-    <property name="buttonpanel.dir" value="${base.dir}/buttonpanel"/>
     <property name="buttonpanel.bin.dir" value="${bin.dir}/buttonpanel"/>
-    <property name="buttonpanel.class.dir" value="${buttonpanel.dir}/classes"/>
-    <property name="buttonpanel.src.dir" value="${buttonpanel.dir}/swinghelper/src/java"/>
+    <property name="buttonpanel.path" value="org/jdesktop/swinghelper/buttonpanel"/>
 
     <target name="buttonpanel.compile">
-        <mkdir dir="${buttonpanel.class.dir}"/>
-        <javac destdir="${buttonpanel.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
-            <src location="${buttonpanel.src.dir}"/>
+        <mkdir dir="${class.dir}"/>
+        <javac destdir="${class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
+            <src location="${src.dir}/${buttonpanel.path}"/>
         </javac>
     </target>
 
     <target name="buttonpanel.jar" depends="buttonpanel.compile">
         <mkdir dir="${buttonpanel.bin.dir}"/>
         <jar destfile="${buttonpanel.bin.dir}/${buttonpanel.bin.jar}">
-            <fileset dir="${buttonpanel.class.dir}"/>
+            <fileset dir="${class.dir}" includes="${buttonpanel.path}/**"/>
             <manifest>
                 <attribute name="Main-Class" 
                            value="org.jdesktop.swinghelper.buttonpanel.JXButtonPanelDemo"/>
@@ -123,7 +120,7 @@
 
     <target name="buttonpanel.build" depends="buttonpanel.jar">
         <zip destfile="${buttonpanel.bin.dir}/${buttonpanel.src.zip}">
-            <fileset dir="${buttonpanel.src.dir}"/>
+            <fileset dir="${src.dir}" includes="${buttonpanel.path}/**"/>
         </zip>
     </target>
 
@@ -138,26 +135,25 @@
 
     <property name="debug.dir" value="${base.dir}/debug"/>
     <property name="debug.bin.dir" value="${bin.dir}/debug"/>
-    <property name="debug.class.dir" value="${debug.dir}/classes"/>
-    <property name="debug.src.dir" value="${debug.dir}/swinghelper/src/java"/>
+    <property name="debug.path" value="org/jdesktop/swinghelper/debug"/>
 
     <target name="debug.compile">
-        <mkdir dir="${debug.class.dir}"/>
-        <javac destdir="${debug.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
-            <src location="${debug.src.dir}"/>
+        <mkdir dir="${class.dir}"/>
+        <javac destdir="${class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
+            <src location="${src.dir}/${debug.path}"/>
         </javac>
     </target>
 
     <target name="debug.jar" depends="debug.compile">
         <mkdir dir="${debug.bin.dir}"/>
         <jar destfile="${debug.bin.dir}/${debug.bin.jar}">
-            <fileset dir="${debug.class.dir}" includes="org/jdesktop/swinghelper/debug/**"/>
+            <fileset dir="${class.dir}" includes="${debug.path}/**"/>
         </jar>
     </target>
 
     <target name="debug.build" depends="debug.jar">
         <zip destfile="${debug.bin.dir}/${debug.src.zip}">
-            <fileset dir="${debug.src.dir}"/>
+            <fileset dir="${src.dir}" includes="${debug.path}/**"/>
         </zip>
     </target>
 
@@ -167,25 +163,22 @@
 
     <!-- Module "Transformer" -->
     <property name="transformer.bin.jar" value="transformer.jar"/>
-
     <property name="transformer.src.zip" value="transformer-src.zip"/>
 
-    <property name="transformer.dir" value="${base.dir}/transformer"/>
     <property name="transformer.bin.dir" value="${bin.dir}/transformer"/>
-    <property name="transformer.class.dir" value="${transformer.dir}/classes"/>
-    <property name="transformer.src.dir" value="${transformer.dir}/swinghelper/src/java"/>
+    <property name="transformer.path" value="org/jdesktop/swinghelper/transformer"/>
 
     <target name="transformer.compile">
-        <mkdir dir="${transformer.class.dir}"/>
-        <javac destdir="${transformer.class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
-            <src location="${transformer.src.dir}"/>
+        <mkdir dir="${class.dir}"/>
+        <javac destdir="${class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
+            <src location="${src.dir}/${transformer.path}"/>
         </javac>
     </target>
 
     <target name="transformer.jar" depends="transformer.compile">
         <mkdir dir="${transformer.bin.dir}"/>
         <jar destfile="${transformer.bin.dir}/${transformer.bin.jar}">
-            <fileset dir="${transformer.class.dir}"/>
+            <fileset dir="${class.dir}" includes="${transformer.path}/**"/>
             <manifest>
                 <attribute name="Main-Class" 
                            value="org.jdesktop.swinghelper.transformer.TransformerDemo"/>
@@ -195,7 +188,7 @@
 
     <target name="transformer.build" depends="transformer.jar">
         <zip destfile="${transformer.bin.dir}/${transformer.src.zip}">
-            <fileset dir="${transformer.src.dir}"/>
+            <fileset dir="${src.dir}" includes="${transformer.path}/**"/>
         </zip>
     </target>
 
