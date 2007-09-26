@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="bin/blog/Test1.jnlp">
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="bin/blog/nohacks/Test1.jnlp">
   <information>
     <title>Nohacks blog. Test1</title>    
     <vendor>Alexander Potochkin</vendor>    
@@ -9,7 +9,7 @@
   </information>
   <resources>     
 <j2se version="1.5+"/>
-     <jar href="bin/blog/nohacks.jar"/>
+     <jar href="bin/blog/nohacks/nohacks.jar"/>
      <jar href="bin/layer/layer.jar"/>
   </resources>  
 <application-desc main-class="nohacks.Test1"/>
