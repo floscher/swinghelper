@@ -55,7 +55,7 @@ public class Test1 extends JFrame {
 
         add(panel);
 
-        setSize(250, 270);
+        setSize(250, 290);
         setLocationRelativeTo(null);
     }
 
