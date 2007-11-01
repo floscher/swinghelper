@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project default="build.all">
 
+    <import file="swinglabs-build-impl.xml"/>
+
     <property name="debug" value="off"/>
     <property name="nowarn" value="on"/>
 
