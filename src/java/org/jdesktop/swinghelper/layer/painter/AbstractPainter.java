@@ -35,13 +35,13 @@ import java.util.Map;
  * The default implementation of the {@link Painter} interface,<br/>
  * in the most usual case the only {@link #paint(Graphics2D,JXLayer)} is to be overriden.
  * <p/>
- * The {@link Painter} interface is designed to support a single painter for multiple {@link JXLayer} objects,<br/>
+ * The {@link Painter} interface is designed to support a single painter 
+ * for multiple {@link JXLayer} objects,<br/>
  * so it is a rare situation when a painter really needs to have a link to its layer.<br/>
  * If you want an {@link AbstractPainter} to repaint all {@link JXLayer}s it is used for,<br/>
  * call {@link #fireLayerItemChanged()} after a painter's state has been changed
  * <p/>
  * For a new public state of the painter the following pattern should be used:
- * <p/>
  * <pre>                                                                          
  * public class ColorPainter&lt;V extends JComponent&gt; extends AbstractPainter&lt;V&gt; {
  *   // The color we want to fill the layer with
@@ -79,13 +79,21 @@ import java.util.Map;
  *       return new Ellipse2D.Float(0, 0, l.getWidth(), l.getHeight());
  *   }
  * </pre>
- * 
+ * <p/>
  * <strong>Note:</strong>If you want to have a translucent or transparent JXLayer,
  * you need to wrap any of its parent with another JXLayer,<br/>
  * for more details, please see
  * <p/>
  * <a href="http://weblogs.java.net/blog/alexfromsun/archive/2006/12/advanced_painti_3.html">
  * Advanced painting IV - translucency and non rectangular components</a>
+ * <p/>
+ * If you are going to change the alpha value for the layer
+ * with a component inside, consider using {@link BufferedPainter}
+ * instead of {@link DefaultPainter}<br/> 
+ * because only with an intermediate buffer it will always work correctly, 
+ * for more info please refer to this
+ * <a href="http://forums.java.net/jive/thread.jspa?threadID=18952">
+ * Java2D forum's thread</a> 
  */
 abstract public class AbstractPainter<V extends JComponent>
         extends AbstractLayerItem implements Painter<V>, LayerItemListener {
@@ -162,8 +170,9 @@ abstract public class AbstractPainter<V extends JComponent>
      * The default implementation of the {@link Painter#paint(Graphics2D,JXLayer)} method,
      * it only set up the {@link Graphics2D} instance
      * <p/>
-     * <strong>Note:</strong>You are free to change any state of the <code>g2</code> during painting,
-     * there is no need to reset them at the end or create a defensive copy of <code>g2</code>;
+     * <strong>Note:</strong>You are free to change any state of the <code>g2</code> 
+     * during painting, there is no need to reset them at the end or 
+     * create a defensive copy of <code>g2</code>;
      * {@link JXLayer} creates a defensive copy itself and passes it to its painters
      *
      * @param g2 the {@link Graphics2D} instance to paint on
@@ -214,7 +223,8 @@ abstract public class AbstractPainter<V extends JComponent>
     }
 
     /**
-     * Gets the map of the {@link RenderingHints} to be used during painting for this {@link JXLayer};
+     * Gets the map of the {@link RenderingHints} to be used during painting 
+     * for this {@link JXLayer};
      * the default implementation reads it from the painter's model
      *
      * @param l the {@link JXLayer} to paint for

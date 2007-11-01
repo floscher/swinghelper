@@ -25,7 +25,15 @@ import java.awt.*;
 
 /**
  * The default implementation of the {@link AbstractPainter}
- * which paints the given {@link JXLayer} as is 
+ * which paints the given {@link JXLayer} as is
+ * <p/>
+ * <strong>Note:</strong>If you are going to change the alpha value for the layer
+ * with a component inside, consider using {@link BufferedPainter}
+ * instead of {@link DefaultPainter}<br/> 
+ * because only with an intermediate buffer it will always work correctly, 
+ * for more info please refer to this
+ * <a href="http://forums.java.net/jive/thread.jspa?threadID=18952">
+ * Java2D forum's thread</a> 
  */
 public class DefaultPainter <V extends JComponent>
         extends AbstractPainter<V> {
@@ -33,8 +41,9 @@ public class DefaultPainter <V extends JComponent>
     /**
      * Paints the given {@link JXLayer} as is  
      * <p/>
-     * <strong>Note:</strong>You are free to change any state of the <code>g2</code> during painting,
-     * there is no need to reset them at the end or create a defensive copy of <code>g2</code>;
+     * <strong>Note:</strong>You are free to change any state of the <code>g2</code> 
+     * during painting, there is no need to reset them at the end or 
+     * create a defensive copy of <code>g2</code>;
      * {@link JXLayer} creates a defensive copy itself and passes it to its painters
 
      * @param g2 the {@link Graphics2D} instance to paint on

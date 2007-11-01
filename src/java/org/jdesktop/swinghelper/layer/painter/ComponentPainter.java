@@ -30,7 +30,10 @@ import java.awt.*;
  * this painter can be used to create animation effects
  * like fade in and fade out of a component
  * <p/> 
- * <strong>Note:</strong> call {@link #update()} to take the up-to-date screenshot of the component
+ * <strong>Note:</strong> 
+ * call {@link #update()} to take the up-to-date screenshot of the component,<br/>
+ * this method must be called <b>outside</b> any paint methods<br/> 
+ * (e.g. any listener or is a good place to put {@link #update()} into)   
  * 
  * @see #getComponent() 
  * @see #setComponent(JComponent)
