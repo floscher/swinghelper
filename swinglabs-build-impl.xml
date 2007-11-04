@@ -44,6 +44,7 @@
     <target name="-pre-init">
         <mkdir dir="src/test"/>
         <mkdir dir="src/beaninfo"/>
+        <mkdir dir="docs"/>
     </target>
     <!-- path element used by EMMA taskdef below: -->
     <!--<path id="emma.lib" >
