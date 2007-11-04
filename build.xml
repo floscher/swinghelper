@@ -2,7 +2,8 @@
 <project default="build.all">
 
     <import file="swinglabs-build-impl.xml"/>
-
+    <import file="nbproject/build-impl.xml"/>
+    
     <property name="debug" value="off"/>
     <property name="nowarn" value="on"/>
 
