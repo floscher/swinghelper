@@ -27,21 +27,29 @@
     <property name="layer.bin.demo.jar" value="layer-demo.jar"/>
 
     <property name="layer.src.zip" value="layer-src.zip"/>
+    <property name="layer.doc.zip" value="layer-doc.zip"/>
 
     <property name="layer.path" value="org/jdesktop/swinghelper/layer"/>    
     <property name="layer.bin.dir" value="${bin.dir}/layer"/>    
     <property name="layer.javadoc.dir" value="${base.dir}/api"/>
 
     <target name="layer.javadoc">
+        <delete dir="${layer.javadoc.dir}"/>
         <mkdir dir="${layer.javadoc.dir}"/>
         <javadoc destdir="${layer.javadoc.dir}" 
         author="true"
         version="true"
         windowtitle="JXLayer API">
         <packageset dir="${src.dir}">
-        <exclude name="${layer.path}/demo/**"/>
+            <include name="${layer.path}/**"/>
         </packageset>
         </javadoc>
+        
+        <zip destfile="${layer.bin.dir}/${layer.doc.zip}">
+            <fileset dir="${layer.javadoc.dir}">
+            </fileset>
+        </zip>
+        
     </target>
 
     <target name="layer.compile">
@@ -61,7 +69,6 @@
         </jar>
         <jar destfile="${layer.bin.dir}/${layer.bin.demo.jar}">
             <fileset dir="${class.dir}" includes="${layer.path}/demo/**"/>
-            <fileset dir="${demo.dir}" includes="${layer.path}/demo/resources/**"/>
             <manifest>
                 <attribute name="Class-Path" value="${layer.bin.jar}"/>
                 <attribute name="Main-Class" value="${layer.path}/demo/InternalFrameDemo"/>
@@ -69,7 +76,7 @@
         </jar>
     </target>
 
-    <target name="layer.build" depends="layer.jar">
+    <target name="layer.build" depends="layer.jar, layer.javadoc">
         <mkdir dir="${bin.dir}"/>
 
         <!--Zipping src files-->
