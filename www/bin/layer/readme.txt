@@ -52,3 +52,9 @@ java -cp layer-demo.jar org.jdesktop.swinghelper.layer.demo.TextValidationDemo
 Debug repainting events
 
 java -cp layer-demo.jar org.jdesktop.swinghelper.layer.demo.DebugLayerDemo
+
+===
+
+Spotlight effect demo
+
+java -cp layer-demo.jar org.jdesktop.swinghelper.layer.demo.SpotLightDemo
