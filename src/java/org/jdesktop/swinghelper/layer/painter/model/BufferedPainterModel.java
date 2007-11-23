@@ -18,6 +18,8 @@
 
 package org.jdesktop.swinghelper.layer.painter.model;
 
+import org.jdesktop.swinghelper.layer.effect.Effect;
+
 /**
  * State model for the {@link org.jdesktop.swinghelper.layer.painter.AbstractBufferedPainter}
  * which can use data from its model to set up
@@ -49,4 +51,21 @@ public interface BufferedPainterModel extends PainterModel {
      *                          <code>false</code> otherwise
      */
     public boolean isIncrementalUpdate();
+    
+    /**
+     * Sets the collection of the {@link Effect}s 
+     *  
+     * @param effects the collection of the {@link Effect}s 
+     * 
+     * @see Effect
+     * @see org.jdesktop.swinghelper.layer.effect.ImageOpEffect
+     */
+    public void setEffects(Effect... effects);
+    
+    /**
+     * Gets the collection of the {@link Effect}s 
+     *  
+     * @return the collection of the {@link Effect}s 
+     */
+    public Effect[] getEffects();
 }

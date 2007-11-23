@@ -96,7 +96,7 @@ import java.util.Map;
  * Java2D forum's thread</a> 
  */
 abstract public class AbstractPainter<V extends JComponent>
-        extends AbstractLayerItem implements Painter<V>, LayerItemListener {
+        extends AbstractLayerItem implements Painter<V>{
     private PainterModel model;
 
     /**
@@ -253,17 +253,13 @@ abstract public class AbstractPainter<V extends JComponent>
     }
 
     /**
-     * The default implementation of the {@link LayerItemListener#layerItemChanged(LayerItemEvent)};
-     * this method listens to the changes of the {@link PainterModel}
-     * and all others child {@link LayerItem}s connected with this painter, if any
-     *
-     * @param e a LayerItemEvent object
+     * {@inheritDoc} 
      */
     public void layerItemChanged(LayerItemEvent e) {
         if (isEnabled() != getModel().isEnabled()) {
             setEnabled(getModel().isEnabled());
         }
-        fireLayerItemChanged();
+        super.layerItemChanged(e);
     }
 
     /**

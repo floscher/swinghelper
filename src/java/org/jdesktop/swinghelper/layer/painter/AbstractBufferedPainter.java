@@ -19,14 +19,16 @@
 package org.jdesktop.swinghelper.layer.painter;
 
 import org.jdesktop.swinghelper.layer.JXLayer;
-import org.jdesktop.swinghelper.layer.item.LayerItemEvent;
-import org.jdesktop.swinghelper.layer.effect.*;
+import org.jdesktop.swinghelper.layer.effect.Effect;
+import org.jdesktop.swinghelper.layer.effect.ImageOpEffect;
 import org.jdesktop.swinghelper.layer.painter.model.BufferedPainterModel;
 import org.jdesktop.swinghelper.layer.painter.model.DefaultBufferedPainterModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ConvolveOp;
 
 /**
  * The default implementation of the buffered painter 
@@ -55,7 +57,6 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
         extends AbstractPainter<V> {
 
     private BufferedImage buffer;
-    private Effect[] effects = new Effect[0];
 
     /**
      * Creates a new {@link AbstractBufferedPainter}
@@ -111,6 +112,17 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     }
 
     /**
+     * Gets the collection of the {@link Effect}s
+     * to applied for this painter 
+     *  
+     * @param l the {@link JXLayer} to paint for
+     * @return the collection of the {@link Effect}s 
+     */
+    public Effect[] getEffects(JXLayer<V> l) {
+        return getModel().getEffects();
+    }
+    
+    /**
      * Gets the current buffer of this painter
      *
      *  @return the current buffer of this painter
@@ -129,42 +141,12 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
     }
 
     /**
-     * Sets the collection of the {@link Effect}s 
-     * to be applied to the buffer of this painter
-     *  
-     * @param effects the collection of the {@link Effect}s 
-     * to be applied to the buffer of this painter
-     * 
-     * @see Effect
-     * @see ImageOpEffect
-     */
-    public void setEffects(Effect... effects) {
-        if (effects == null) {
-            effects = new Effect[0];
-        }
-        for (Effect effect : getEffects()) {
-            effect.removeLayerItemListener(this);
-        }
-        this.effects = new Effect[effects.length];
-        System.arraycopy(effects, 0, this.effects, 0, effects.length);
-        for (Effect effect : effects) {
-            effect.addLayerItemListener(this);
-        }
-        fireLayerItemChanged();
-    }
-
-    /**
      * Gets the collection of the {@link Effect}s 
      * to be applied to the buffer of this painter
      *  
      * @return the collection of the {@link Effect}s 
      * to be applied to the buffer of this painter
      */
-    public Effect[] getEffects() {
-        Effect[] result = new Effect[effects.length];
-        System.arraycopy(effects, 0, result, 0, result.length);
-        return result;
-    }
 
     /**
      * Iterates through all {@link Effect}s 
@@ -174,13 +156,13 @@ abstract public class AbstractBufferedPainter<V extends JComponent>
      * @param clip the current clipping shape
      * 
      * @see Effect
-     * @see #getEffects()
+     * @see BufferedPainterModel#getEffects()
      */
     protected void applyEffects(Shape clip) {
         if (getBuffer() == null) {
             throw new IllegalStateException("Buffer is null");
         }
-        for (Effect e : getEffects()) {
+        for (Effect e : getModel().getEffects()) {
             if (e.isEnabled()) {
                 e.apply(getBuffer(), clip);
             }

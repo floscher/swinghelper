@@ -21,6 +21,7 @@ package org.jdesktop.swinghelper.layer.painter;
 import org.jdesktop.swinghelper.layer.JXLayer;
 import org.jdesktop.swinghelper.layer.effect.Effect;
 import org.jdesktop.swinghelper.layer.item.*;
+import org.jdesktop.swinghelper.layer.painter.model.BufferedPainterModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +74,7 @@ public class ImagePainter<V extends JComponent>
      */
     public ImagePainter(Image image, Effect... effects) {
         setImage(image);
-        setEffects(effects);
+        getModel().setEffects(effects);
     }
 
     /**
@@ -136,7 +137,7 @@ public class ImagePainter<V extends JComponent>
      * and notifies all painter's {@link LayerItemListener}s
      *
      * @see #setImage(Image)
-     * @see #setEffects(Effect[])  
+     * @see BufferedPainterModel#setEffects(Effect[])  
      */
     public void validate() {
         Image image = getImage();

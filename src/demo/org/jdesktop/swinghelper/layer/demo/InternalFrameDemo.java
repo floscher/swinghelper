@@ -31,9 +31,9 @@ public class InternalFrameDemo extends JPanel {
     ImageIcon icon1, icon2, icon3, icon4;
     ImageIcon smIcon1, smIcon2, smIcon3, smIcon4;
 
-    public Integer FIRST_FRAME_LAYER = new Integer(1);
-    public Integer DEMO_FRAME_LAYER = new Integer(2);
-    public Integer PALETTE_LAYER = new Integer(3);
+    public Integer FIRST_FRAME_LAYER = 1;
+    public Integer DEMO_FRAME_LAYER = 2;
+    public Integer PALETTE_LAYER = 3;
 
     public int FRAME0_X = 15;
     public int FRAME0_Y = 280;
@@ -123,7 +123,7 @@ public class InternalFrameDemo extends JPanel {
         defaultItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (defaultItem.isSelected()) {
-                    p.setEffects((Effect[]) null);
+                    p.getModel().setEffects((Effect[]) null);
                 }
             }
         });
@@ -136,7 +136,7 @@ public class InternalFrameDemo extends JPanel {
         invertItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (invertItem.isSelected()) {
-                    p.setEffects(new ImageOpEffect(ImageOpFactory.getInvertColorOp()));
+                    p.getModel().setEffects(new ImageOpEffect(ImageOpFactory.getInvertColorOp()));
                 }
             }
         });
@@ -148,7 +148,7 @@ public class InternalFrameDemo extends JPanel {
         posterItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (posterItem.isSelected()) {
-                    p.setEffects(new ImageOpEffect(ImageOpFactory.getGrayScaleOp()));
+                    p.getModel().setEffects(new ImageOpEffect(ImageOpFactory.getGrayScaleOp()));
                 }
             }
         });
@@ -173,7 +173,7 @@ public class InternalFrameDemo extends JPanel {
         private Painter<JComponent> foregroundPainter;
 
         public CoverPainter() {
-            backgroundPainter = new AbstractPainter() {
+            backgroundPainter = new AbstractPainter<JComponent>() {
                 public void paint(Graphics2D g2, JXLayer l) {
                     g2.setColor(l.getView().getBackground());
                     g2.fillRect(0, 0, l.getWidth(), l.getHeight());
@@ -182,7 +182,7 @@ public class InternalFrameDemo extends JPanel {
                 }
             };
 
-            foregroundPainter = new AbstractPainter() {
+            foregroundPainter = new AbstractPainter<JComponent>() {
                 public void paint(Graphics2D g2, JXLayer l) {
                     g2.setColor(Color.GREEN.darker());
                     Font font = g2.getFont().deriveFont(40f);

@@ -18,6 +18,8 @@
 
 package org.jdesktop.swinghelper.layer.painter.model;
 
+import org.jdesktop.swinghelper.layer.effect.Effect;
+
 /**
  * The default implementation of the {@link BufferedPainterModel} interface,
  * which implements all methods and calls {@link DefaultBufferedPainterModel#fireLayerItemChanged()}
@@ -25,8 +27,10 @@ package org.jdesktop.swinghelper.layer.painter.model;
  * 
  * @see org.jdesktop.swinghelper.layer.painter.AbstractBufferedPainter
  */
-public class DefaultBufferedPainterModel extends DefaultPainterModel implements BufferedPainterModel {
+public class DefaultBufferedPainterModel 
+        extends DefaultPainterModel implements BufferedPainterModel {
     private boolean isIncrementalUpdate;
+    private Effect[] effects = new Effect[0];
 
     /**
      * {@inheritDoc} 
@@ -40,6 +44,33 @@ public class DefaultBufferedPainterModel extends DefaultPainterModel implements 
      */
     public void setIncrementalUpdate(boolean isIncrementalUpdate) {
         this.isIncrementalUpdate = isIncrementalUpdate;
+        fireLayerItemChanged();
+    }
+
+    /**
+     * {@inheritDoc} 
+     */
+    public Effect[] getEffects() {
+        Effect[] result = new Effect[effects.length];
+        System.arraycopy(effects, 0, result, 0, result.length);
+        return result;
+    }
+
+    /**
+     * {@inheritDoc} 
+     */
+    public void setEffects(Effect... effects) {
+        if (effects == null) {
+            effects = new Effect[0];
+        }
+        for (Effect effect : getEffects()) {
+            effect.removeLayerItemListener(this);
+        }
+        this.effects = new Effect[effects.length];
+        System.arraycopy(effects, 0, this.effects, 0, effects.length);
+        for (Effect effect : effects) {
+            effect.addLayerItemListener(this);
+        }
         fireLayerItemChanged();
     }
 }
