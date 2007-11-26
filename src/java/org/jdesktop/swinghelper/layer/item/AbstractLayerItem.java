@@ -28,7 +28,7 @@ import javax.swing.event.EventListenerList;
  * @see org.jdesktop.swinghelper.layer.painter.model.DefaultPainterModel
  * @see org.jdesktop.swinghelper.layer.effect.ImageOpEffect
  */
-abstract public class AbstractLayerItem implements LayerItem, LayerItemListener {
+abstract public class AbstractLayerItem implements LayerItem {
     private EventListenerList listenerList;
     private boolean isEnabled;
 
@@ -90,16 +90,5 @@ abstract public class AbstractLayerItem implements LayerItem, LayerItemListener 
                 ((LayerItemListener) listeners[i + 1]).layerItemChanged(event);
             }
         }
-    }
-
-    /**
-     * The default implementation of the {@link LayerItemListener#layerItemChanged(LayerItemEvent)};
-     * this method listens to the changes of this {@link AbstractLayerItem}
-     * and notifies all its listeners
-     *
-     * @param e a LayerItemEvent object
-     */
-    public void layerItemChanged(LayerItemEvent e) {
-        fireLayerItemChanged();
     }
 }
