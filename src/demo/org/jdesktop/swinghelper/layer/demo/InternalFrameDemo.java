@@ -123,7 +123,7 @@ public class InternalFrameDemo extends JPanel {
         defaultItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (defaultItem.isSelected()) {
-                    p.getModel().setEffects((Effect[]) null);
+                    p.setEffects((Effect[]) null);
                 }
             }
         });
@@ -136,7 +136,7 @@ public class InternalFrameDemo extends JPanel {
         invertItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (invertItem.isSelected()) {
-                    p.getModel().setEffects(new ImageOpEffect(ImageOpFactory.getInvertColorOp()));
+                    p.setEffects(new ImageOpEffect(ImageOpFactory.getInvertColorOp()));
                 }
             }
         });
@@ -148,7 +148,7 @@ public class InternalFrameDemo extends JPanel {
         posterItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (posterItem.isSelected()) {
-                    p.getModel().setEffects(new ImageOpEffect(ImageOpFactory.getGrayScaleOp()));
+                    p.setEffects(new ImageOpEffect(ImageOpFactory.getGrayScaleOp()));
                 }
             }
         });

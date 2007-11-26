@@ -72,7 +72,7 @@ public class ComponentPainter <V extends JComponent>
      */
     public ComponentPainter(JComponent component, Effect... effects) {
         setComponent(component);
-        getModel().setEffects(effects);
+        setEffects(effects);
     }
 
     /**

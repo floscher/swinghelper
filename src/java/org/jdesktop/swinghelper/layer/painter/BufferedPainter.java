@@ -42,7 +42,7 @@ import java.awt.*;
  *
  * @see Effect
  * @see ImageOpEffect
- * @see BufferedPainterModel#setEffects(Effect...)
+ * @see #setEffects(Effect...)
  * @see BufferedPainterModel#setIncrementalUpdate(boolean)
  * @see #isIncrementalUpdate(JXLayer)
  */
@@ -97,7 +97,7 @@ public class BufferedPainter<V extends JComponent>
      */
     public BufferedPainter(Painter<V> painter, Effect... effects) {
         setDelegatePainter(painter);
-        getModel().setEffects(effects);
+        setEffects(effects);
         getModel().setIncrementalUpdate(true);
     }
 
