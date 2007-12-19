@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/bin/blog/sam/color/" href="motif1.jnlp">
+  <information>
+    <title>ColorChooser demo (Motif L&amp;F)</title>
+    <vendor>Sergey Malenkov</vendor>
+    <description>ColorChooser demo application</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.5+"/>
+    <jar href="color1.jar"/>
+  </resources>
+  <application-desc main-class="Main">
+    <argument>motif</argument> 
+  </application-desc>
+</jnlp>
