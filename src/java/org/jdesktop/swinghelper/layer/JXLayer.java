@@ -95,13 +95,6 @@ public class JXLayer<V extends JComponent> extends JComponent {
     private LayerItemListener itemListener;
 
     // Locking/unlocking support
-    private final FocusTraversalPolicy
-            disabledPolicy = new LayoutFocusTraversalPolicy() {
-        protected boolean accept(Component component) {
-            return component == JXLayer.this;
-        }
-    };
-
     private final static FocusListener
             layerFocusListener = new FocusListener() {
         public void focusGained(FocusEvent e) {
@@ -110,10 +103,6 @@ public class JXLayer<V extends JComponent> extends JComponent {
 
         public void focusLost(FocusEvent e) {
         }
-    };
-
-    private final static MouseListener
-            emptyMouseListener = new MouseAdapter() {
     };
 
     private Component recentFocusOwner;
@@ -163,8 +152,6 @@ public class JXLayer<V extends JComponent> extends JComponent {
         setLayout(LayerLayout.getSharedInstance());
         setPainter(painter);
         setOpaque(true);
-        // it doesn't effect until we setFocusTraversalPolicyProvider(true);  
-        setFocusTraversalPolicy(disabledPolicy);
         addFocusListener(layerFocusListener);
     }
 
@@ -392,16 +379,14 @@ public class JXLayer<V extends JComponent> extends JComponent {
             boolean isFocusInsideLayer =
                     focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this);
             if (locked) {
-                getGlassPane().addMouseListener(emptyMouseListener);
-                setFocusTraversalPolicyProvider(true);
+                getView().setVisible(false);
                 if (isFocusInsideLayer) {
                     recentFocusOwner = focusOwner;
                     requestFocusInWindow();
                 }
                 getGlassPane().setCursor(getLockedCursor());
             } else {
-                getGlassPane().removeMouseListener(emptyMouseListener);
-                setFocusTraversalPolicyProvider(false);
+                getView().setVisible(true);
                 if (isFocusInsideLayer && recentFocusOwner != null) {
                     recentFocusOwner.requestFocusInWindow();
                 }

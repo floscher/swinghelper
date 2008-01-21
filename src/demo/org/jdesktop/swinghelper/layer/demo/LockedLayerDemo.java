@@ -44,7 +44,7 @@ public class LockedLayerDemo extends JFrame {
     private JRadioButtonMenuItem embossItem = new JRadioButtonMenuItem("Emboss effect");
 
     public LockedLayerDemo() {
-        super("Locked/unlocked layer demo");
+        super("Locked layer demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         layer = new JXLayer<JComponent>(createLayerPanel());
         layer.setPainter(translucentPainter);
@@ -60,7 +60,7 @@ public class LockedLayerDemo extends JFrame {
     }
 
     private JMenuBar createMenuBar() {
-        JMenu menu = new JMenu("Menu");
+        JMenu menu = new JMenu("Options");
 
         disablingItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.ALT_MASK));
 
@@ -114,7 +114,15 @@ public class LockedLayerDemo extends JFrame {
         panel.add(new JCheckBox("JCheckBox"));
         panel.add(new JRadioButton("JRadioButton"));
         panel.add(new JTextField(15));
-        panel.add(new JButton("Have a nice day"));
+        final JButton button = new JButton("Show a dialog");
+        button.setMnemonic('W');
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(button.getTopLevelAncestor(), "This button has a mnemonic (alt + W) " +
+                        "which is locked together with the layer", "It works!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        panel.add(button);
         panel.add(new JTextField(15));
         panel.add(new JCheckBox("JCheckBox"));
         panel.add(new JRadioButton("JRadioButton"));
@@ -149,6 +157,10 @@ public class LockedLayerDemo extends JFrame {
         public void paint(Graphics2D g2, JXLayer<V> l) {
             l.paint(g2);
             if (l.isLocked()) {
+                // the view is hidden, so we need to paint it manually,
+                // it is important to call print() instead of paint() here
+                // because print() doesn't affect the frame's double buffer
+                l.getView().print(g2);
                 g2.setColor(new Color(0, 128, 128, 128));
                 g2.fillRect(0, 0, l.getWidth(), l.getHeight());
             }
@@ -165,6 +177,10 @@ public class LockedLayerDemo extends JFrame {
         protected void paintToBuffer(Graphics2D g2, JXLayer<V> l) {
             super.paintToBuffer(g2, l);
             if (l.isLocked()) {
+                // the view is hidden, so we need to paint it manually,
+                // it is important to call print() instead of paint() here
+                // because print() doesn't affect the frame's double buffer
+                l.getView().print(g2);
                 disablingEffect.apply(getBuffer(), g2.getClip());
             }
         }
