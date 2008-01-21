@@ -11,5 +11,5 @@
   <j2se version="1.5+"/>
   <jar href="bin/blog/lock/lock.jar"/>
  </resources>  
- <application-desc main-class="lock.LockedFrameDemo"/>
+<application-desc main-class="lock.LockedFrameDemo"/>
 </jnlp>
