@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="bin/blog/lock/RunDemo.jnlp">
+  <information>
+    <title>Locking GUI blog, the demo</title>    
+    <vendor>Alexander Potochkin</vendor>    
+    <homepage href="https://swinghelper.dev.java.net/" />
+    <description>Locking GlassPane demo</description>
+    <offline-allowed />
+  </information>
+  <resources>     
+  <j2se version="1.5+"/>
+  <jar href="bin/blog/lock/lock.jar"/>
+ </resources>  
+ <application-desc main-class="lock.LockedFrameDemo"/>
+</jnlp>
