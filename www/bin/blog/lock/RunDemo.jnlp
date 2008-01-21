@@ -8,6 +8,7 @@
     <offline-allowed />
   </information>
   <resources>     
-<j2se version="1.5+"/>
+  <j2se version="1.5+"/>
  </resources>  
+ <application-desc main-class="lock.LockedFrameDemo"/>
 </jnlp>
