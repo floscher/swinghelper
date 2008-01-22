@@ -2,6 +2,7 @@ package lock;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.*;
 
 /**
  * @author Alexander Potochkin
@@ -10,7 +11,7 @@ import java.awt.event.*;
  * http://weblogs.java.net/blog/alexfromsun/ 
  */ 
 public class LockedFrameDemo extends JFrame {
-    private LockingGlassPane lockingGlassPane = new LockingGlassPane();
+    private LockingGlassPane lockingGlassPane;
 
     public LockedFrameDemo() {
         super("Locked frame demo");
@@ -30,8 +31,30 @@ public class LockedFrameDemo extends JFrame {
 
         bar.add(menu);
         setJMenuBar(bar);
+        
+        // GlassPane related code start
+        lockingGlassPane = new LockingGlassPane();
+        lockingGlassPane.setLayout(new GridBagLayout());
+        final JButton unlockButton = new JButton("Cancel");
+        unlockButton.setCursor(Cursor.getDefaultCursor());
+        lockingGlassPane.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                unlockButton.requestFocusInWindow();
+            }
 
-        setGlassPane(lockingGlassPane);
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
+        unlockButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                lockingGlassPane.setVisible(false);
+            }
+        });
+        lockingGlassPane.add(unlockButton);        
+
+        setGlassPane(lockingGlassPane);        
+        // GlassPane related code end
 
         add(createPanel());
         setSize(250, 250);

@@ -1,7 +1,6 @@
 package lock;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.*;
 
 /**
@@ -12,35 +11,10 @@ import java.awt.*;
  */
 public class LockingGlassPane extends JPanel {
     private Component recentFocusOwner;
-    private Component unlockComponent;
 
     public LockingGlassPane() {
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        setLayout(new GridBagLayout());
-        unlockComponent = createUnlockComponent();
-        if (unlockComponent != null) {
-            add(unlockComponent);
-            unlockComponent.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {
-                    LockingGlassPane.this.repaint();
-                }
-
-                public void focusLost(FocusEvent e) {
-                }
-            });
-        }
-
-    }
-
-    protected Component createUnlockComponent() {
-        JButton unlockButton = new JButton("Cancel");
-        unlockButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                LockingGlassPane.this.setVisible(false);
-            }
-        });
-        return unlockButton;
     }
 
     public void setVisible(boolean isVisible) {
@@ -56,9 +30,7 @@ public class LockingGlassPane extends JPanel {
                     recentFocusOwner = focusOwner;
                 }
                 rootPane.getLayeredPane().setVisible(false);
-                if (unlockComponent != null) {
-                    unlockComponent.requestFocusInWindow();
-                }                
+                requestFocusInWindow();
             } else {
                 rootPane.getLayeredPane().setVisible(true);
                 if (recentFocusOwner != null) {
