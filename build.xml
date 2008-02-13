@@ -20,6 +20,34 @@
     <target name="clean.all" 
             depends="layer.clean, buttonpanel.clean, debug.clean, transformer.clean"/>
 
+    <!-- Module "JXTrayIcon" -->
+    
+    <property name="tray.bin.jar" value="tray.jar"/>   
+    <property name="tray.path" value="org/jdesktop/swinghelper/tray"/>
+    <property name="tray.bin.dir" value="${bin.dir}/tray"/>
+    
+    <target name="tray.compile">
+        <mkdir dir="${class.dir}"/>
+        <javac destdir="${class.dir}" debug="${debug}" nowarn="${nowarn}" fork="true">
+            <src location="${src.dir}/${tray.path}"/>
+        </javac>
+    </target>
+
+    <target name="tray.jar" depends="tray.compile">
+        <mkdir dir="${tray.bin.dir}"/>
+        <jar destfile="${tray.bin.dir}/${tray.bin.jar}">
+            <fileset dir="${class.dir}" includes="${tray.path}/**"/>
+            <manifest>
+                <attribute name="Class-Path" value="${tray.bin.jar}"/>
+                <attribute name="Main-Class" value="${tray.path}/JXTrayIcon"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="tray.clean">
+        <delete dir="${tray.bin.dir}"/>
+    </target>
+    
     <!-- Module "JXLayer" -->
 
     <property name="layer.bin.zip" value="layer-bin.zip"/>
@@ -96,6 +124,7 @@
             <fileset dir="${layer.bin.dir}" includes="${layer.bin.demo.jar}"/>
             <fileset dir="${demo.dir}/${layer.path}/demo/lib"/>
             <fileset dir="${layer.bin.dir}" includes="readme.txt"/>
+            <fileset dir="${layer.bin.dir}" includes="${layer.doc.zip}"/>
         </zip>
     </target>
 
