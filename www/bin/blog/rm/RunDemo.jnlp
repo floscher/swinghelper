@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="bin/blog/rm/RunDemo.jnlp">
+  <information>
+    <title>Working with RepaintManager side effects</title>    
+    <vendor>Alexander Potochkin</vendor>    
+    <homepage href="https://swinghelper.dev.java.net/" />
+    <description>Working with RepaintManager side effects</description>
+    <offline-allowed />
+  </information>
+  <resources>     
+  <j2se version="1.6+"/>
+  <jar href="bin/blog/rm/rmtest.jar"/>
+ </resources>  
+<application-desc main-class="RepaintManagerTest"/>
+</jnlp>
