@@ -6,7 +6,7 @@
     <description>JavaFX demo</description>
   </information>
   <resources>
-    <j2se version="1.5+"/>
+    <j2se version="1.6+"/>
     <jar href="nodes/demo.jar" main="true" download="eager"/>
     <jar href="javafxrt.jar" download="eager"/>
     <jar href="Scenario.jar" download="eager"/>
