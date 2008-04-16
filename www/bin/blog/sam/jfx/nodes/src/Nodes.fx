@@ -7,6 +7,7 @@ import javafx.gui.CheckBox;
 import javafx.gui.Circle;
 import javafx.gui.Color;
 import javafx.gui.ComponentView;
+import javafx.gui.CustomNode;
 import javafx.gui.Frame;
 import javafx.gui.GridPanel;
 import javafx.gui.Group;
@@ -21,47 +22,129 @@ import javafx.gui.Text;
 //import javafx.gui.TitledBorder;
 import javafx.gui.Transform;
 
-class Point {
-  attribute x: Number;
-  attribute y: Number;
-}
-
-class Bounds extends Point {
-  attribute width: Integer;
-  attribute height: Integer;
-}
-
 class Model {
-  attribute panel = Bounds {};
-  attribute scale: Number = 3;
-  attribute opacity: Number = 1;
+  attribute value = 0.0;
+  attribute speed = 500ms;
+  attribute selected = false on replace {
+    timer.stop();
+    var min = value;
+    var max = if (selected)
+            then 1.0
+            else 0.0;
+    var diff = if (selected)
+             then max - min
+             else min - max;
+    timer = Timeline {
+      keyFrames: [
+        KeyFrame {time: 0ms            values: value => min},
+        KeyFrame {time: speed * diff   values: value => max tween Interpolator.LINEAR},
+      ]
+    };
+    timer.start();
+  }
+  private attribute timer: Timeline;
+}
 
-  attribute angle: Number = 0;
-  attribute point = Point {};
-  attribute timer: Timeline;
+public class Nodes extends CustomNode {
+  private attribute x: Number;
+  private attribute y: Number;
+  private attribute angle: Number;
 
-  attribute text: Boolean;
-  attribute shape: Boolean;
-  attribute image: Boolean;
-  attribute animation: Boolean;
-  attribute translucency: Boolean;
+  private attribute text  = Model {};
+  private attribute shape = Model {};
+  private attribute image = Model {};
+  private attribute alpha = Model {};
+  private attribute jump  = Model {};
+  private attribute scale = Model {
+    speed: 200ms
+    selected: bind text.selected or shape.selected or image.selected
+  };
 
-  function update(): Void {
-    if (text or shape or image) {
-      scale = 1;
-    } else {
-      scale = 3;
-      animation = false;
+  private attribute panel: GridPanel = GridPanel {
+    //border: TitledBorder {title: "Customize:"}
+    rows:    6
+    columns: 1
+    content: [
+      Label    {text: "Customize:"},
+      CheckBox {text: "Use text"    action: update    selected: bind  text.selected with inverse},
+      CheckBox {text: "Use shape"   action: update    selected: bind shape.selected with inverse},
+      CheckBox {text: "Use image"   action: update    selected: bind image.selected with inverse},
+      CheckBox {text: "Animation"   action: animate   selected: bind  jump.selected with inverse   enabled: bind scale.selected},
+      CheckBox {text: "Translucency"                  selected: bind alpha.selected with inverse},
+    ]
+  }
+
+  function create() {
+    Group {
+      content: [
+        Rectangle {
+          width:  bind 3 * panel.width
+          height: bind 3 * panel.height
+          fill: LinearGradient {
+            endY: 400
+            proportional: false
+            stops: [
+              Stop {offset: 0     color: Color.SILVER},
+              Stop {offset: 0.6   color: Color.LIGHTBLUE},
+              Stop {offset: 1     color: Color.BLUE}
+            ]
+          }
+        },
+        Group {
+          transform: bind Transform.rotate(angle, 50, 50)
+          translateX: bind x
+          translateY: bind y
+          content: [
+            Circle {
+              opacity: bind shape.value
+              centerX: 50   centerY: 50   radius: 50
+              stroke: Color.YELLOW
+              fill: RadialGradient {
+                centerX: 50   centerY: 50   radius: 50
+                focusX: 70   focusY: 30
+                proportional: false
+                stops: [
+                  Stop {offset: 0   color: Color.YELLOW},
+                  Stop {offset: 1   color: Color.WHITE}
+                ]
+              }
+            },
+            Text {
+              transform: bind Transform.rotate(33, 10, 100)
+              opacity: bind text.value
+              content: "Duke"
+            },
+            ImageView {
+              transform: bind Transform.translate(31, 27)
+              opacity: bind image.value
+              image: Image {url: this.getClass().getResource("duke.png").toString()}
+            },
+          ]
+        },
+        ComponentView {
+          transform: bind Transform.scale(3 - 2 * scale.value, 3 - 2 * scale.value)
+          translateX: bind 1.8 * scale.value * panel.width
+          translateY: bind 1.8 * scale.value * panel.height
+          opacity: bind 1.0 - 0.6 * alpha.value
+          component: bind panel
+        }
+      ]
     }
-    panel.x = 0.9 * (3 - scale) * panel.width;
-    panel.y = 0.9 * (3 - scale) * panel.height;
-    opacity = if (translucency) then 0.4 else 1.0;
-    if (animation) {
+  }
+
+  private function update(): Void {
+    if (not scale.selected) {
+      jump.selected = false;
+      timer.pause();
+    }
+  }
+
+  private attribute timer: Timeline;
+  private function animate(): Void {
+    if (jump.selected) {
       if (timer == null) {
         timer = Timeline {
-          repeatCount: Timeline.INDEFINITE
           keyFrames: KeyFrame {
-            time: 0s
             timelines: [
               Timeline {
                 var max = bind 3 * panel.width - 100;
@@ -69,12 +152,12 @@ class Model {
                 autoReverse: true
                 keyFrames: [
                   KeyFrame {time: 0s   values: [
-                    angle   => 0.0,
-                    point.x => 0.0,
+                    x     => 0.0,
+                    angle => 0.0,
                   ]},
                   KeyFrame {time: 6s   values: [
-                    angle   => 360.0 tween Interpolator.LINEAR,
-                    point.x => max   tween Interpolator.LINEAR,
+                    x     => max tween Interpolator.LINEAR,
+                    angle => 360 tween Interpolator.LINEAR,
                   ]}
                 ]
               },
@@ -82,10 +165,10 @@ class Model {
                 var max = bind 3 * panel.height - 100;
                 repeatCount: Timeline.INDEFINITE
                 keyFrames: [
-                  KeyFrame {time:   0s   values: point.y => 0.0},
-                  KeyFrame {time: 2.2s   values: point.y => max tween Interpolator.SPLINE(0, 0, .9, 0)},
-                  KeyFrame {time: 2.3s   values: point.y => max},
-                  KeyFrame {time: 4.5s   values: point.y => 0.0 tween Interpolator.SPLINE(0, 0, 0, .9)}
+                  KeyFrame {time:   0s   values: y => 0.0},
+                  KeyFrame {time: 2.2s   values: y => max tween Interpolator.SPLINE(0, 0, .9, 0)},
+                  KeyFrame {time: 2.3s   values: y => max},
+                  KeyFrame {time: 4.5s   values: y => 0.0 tween Interpolator.SPLINE(0, 0, 0, .9)}
                 ]
               }
             ]
@@ -99,84 +182,12 @@ class Model {
       timer.pause();
     }
   }
-  public function load(name: String): String {
-    this.getClass().getResource(name).toString()
-  }
 }
 
 Frame {
-  var model = Model {}
   title: "Nodes (JavaFX demo)"
   content: Canvas {
-    content: [
-      Rectangle {
-        width: bind 3 * model.panel.width
-        height: bind 3 * model.panel.height
-        fill: LinearGradient {
-          endY: 450
-          proportional: false
-          stops: [
-            Stop {offset: 0     color: Color.SILVER},
-            Stop {offset: 0.5   color: Color.LIGHTBLUE},
-            Stop {offset: 1     color: Color.BLUE}
-          ]
-        }
-      },
-      Group {
-        transform: bind [
-          Transform.translate(model.point.x, model.point.y),
-          Transform.rotate(model.angle, 50, 50),
-        ]
-        content: [
-          Circle {
-            visible: bind model.shape
-            centerX: 50   centerY: 50   radius: 50
-            stroke: Color.YELLOW
-            fill: RadialGradient {
-              centerX: 50   centerY: 50   radius: 50
-              focusX: 70   focusY: 30
-              proportional: false
-              stops: [
-                Stop {offset: 0   color: Color.YELLOW},
-                Stop {offset: 1   color: Color.WHITE}
-              ]
-            }
-          },
-          Text {
-            transform: bind Transform.rotate(33, 10, 100)
-            visible: bind model.text
-            content: "Duke"
-          },
-          ImageView {
-            transform: bind Transform.translate(31, 27)
-            visible: bind model.image
-            image: Image {url: model.load("duke.png")}
-          },
-        ]
-      },
-      ComponentView {
-        transform: bind [
-          Transform.translate(model.panel.x, model.panel.y),
-          Transform.scale(model.scale, model.scale)
-        ]
-        opacity: bind model.opacity
-        component: GridPanel {
-          //border: TitledBorder {title: "Customize:"}
-          width: bind model.panel.width with inverse
-          height: bind model.panel.height with inverse
-          columns: 1
-          rows: 6
-          content: [
-            Label    {text: "Customize:"},
-            CheckBox {text: "Use text"       action: model.update   selected: bind model.text with inverse},
-            CheckBox {text: "Use shape"      action: model.update   selected: bind model.shape with inverse},
-            CheckBox {text: "Use image"      action: model.update   selected: bind model.image with inverse},
-            CheckBox {text: "Animation"      action: model.update   selected: bind model.animation with inverse   enabled: bind model.text or model.shape or model.image},
-            CheckBox {text: "Translucency"   action: model.update   selected: bind model.translucency with inverse},
-          ]
-        }
-      }
-    ]
+    content: Nodes {}
   }
   visible: true
 }
