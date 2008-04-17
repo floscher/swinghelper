@@ -190,4 +190,8 @@ Frame {
     content: Nodes {}
   }
   visible: true
+  //TODO: temporary solution
+  closeAction: function() {
+    java.lang.System.exit(0);
+  }
 }
