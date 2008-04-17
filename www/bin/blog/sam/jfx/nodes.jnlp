@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/bin/blog/sam/jfx/" href="nodes.jnlp">
   <information>
-    <title>Nodes</title>
-    <vendor>Sergey Malenkov</vendor>
+    <title>Nodes (JavaFX demo)</title>
+    <vendor>Sun Microsystems, Inc.</vendor>
     <description>JavaFX demo</description>
   </information>
   <resources>
