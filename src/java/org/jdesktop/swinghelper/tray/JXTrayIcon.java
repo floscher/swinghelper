@@ -77,11 +77,11 @@ public class JXTrayIcon extends TrayIcon {
         }
     }
 
-    public JPopupMenu getJPopuMenu() {
+    public JPopupMenu getJPopupMenu() {
         return menu;
     }
 
-    public void setJPopuMenu(JPopupMenu menu) {
+    public void setJPopupMenu(JPopupMenu menu) {
         if (this.menu != null) {
             this.menu.removePopupMenuListener(popupListener);
         }
@@ -91,7 +91,7 @@ public class JXTrayIcon extends TrayIcon {
 
     private static void createGui() {
         JXTrayIcon tray = new JXTrayIcon(createImage());
-        tray.setJPopuMenu(createJPopupMenu());
+        tray.setJPopupMenu(createJPopupMenu());
         try {
             SystemTray.getSystemTray().add(tray);
         } catch (AWTException e) {
