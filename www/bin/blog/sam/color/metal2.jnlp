@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/bin/blog/sam/color/" href="color2.jnlp">
+  <information>
+    <title>ColorChooser demo (Metal L&amp;F)</title>
+    <vendor>Sergey Malenkov</vendor>
+    <description>ColorChooser demo application</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+"/>
+    <jar href="color2.jar"/>
+  </resources>
+  <application-desc main-class="Main">
+    <argument>metal</argument> 
+  </application-desc>
+</jnlp>
