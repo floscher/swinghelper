@@ -353,11 +353,11 @@ public class StopwatchWidget extends Widget {
                     translateX: 180 translateY: 180
                     onMousePressed: function(e:MouseEvent) {
                         resetPressedAmount=0;
-                        ShapedWindowHelper.refreshShape(frame.getJFrame());
+                        //TODO: ShapedWindowHelper.refreshShape(frame.getJFrame());
                     }
                     onMouseReleased: function(e:MouseEvent) {
                         resetPressedAmount=7;
-                        ShapedWindowHelper.refreshShape(frame.getJFrame());
+                        //TODO: ShapedWindowHelper.refreshShape(frame.getJFrame());
                     }
                     onMouseClicked: function(e:MouseEvent) {
                         reset();
@@ -399,11 +399,11 @@ public class StopwatchWidget extends Widget {
                     translateX: 180 translateY: 180
                     onMousePressed: function(e:MouseEvent) {
                         startPressedAmount=0;
-                        ShapedWindowHelper.refreshShape(frame.getJFrame());
+                        //TODO: ShapedWindowHelper.refreshShape(frame.getJFrame());
                     }
                     onMouseReleased: function(e:MouseEvent) {
                         startPressedAmount=7;
-                        ShapedWindowHelper.refreshShape(frame.getJFrame());
+                        //TODO: ShapedWindowHelper.refreshShape(frame.getJFrame());
                     }
                     onMouseClicked: function(e:MouseEvent) {
                         startStop();

@@ -13,5 +13,5 @@ import java.awt.event.*;
  */
 var sw = StopwatchWidget{};
 sw.frame = Frame { content: sw.canvas width: 500 height: 500 };
-ShapedWindowHelper.makeShaped(sw.frame.getJFrame());
+//TODO: ShapedWindowHelper.makeShaped(sw.frame.getJFrame());
 sw.frame.visible = true;
