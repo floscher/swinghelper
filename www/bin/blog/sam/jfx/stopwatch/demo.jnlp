@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/bin/blog/sam/jfx/" href="stopwatch/demo.jnlp">
+  <information>
+    <title>StopWatch</title>
+    <vendor>Sergey Malenkov</vendor>
+    <description>JavaFX demo</description>
+  </information>
+  <resources>
+    <j2se version="1.6+"/>
+    <jar href="stopwatch/demo.jar" main="true" download="eager"/>
+    <jar href="javafxrt.jar" download="eager"/>
+    <jar href="Scenario.jar" download="eager"/>
+    <jar href="Reprise.jar" download="eager"/>
+  </resources>
+  <application-desc main-class="stopwatch.Main"/>
+</jnlp>

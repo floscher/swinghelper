@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="sam" default="run">
+    <property name="lib" value="${basedir}/.."/>
+
+    <property name="debug" value="off"/>
+    <property name="nowarn" value="on"/>
+
+    <property name="sources" value="${basedir}/src"/>
+    <property name="classes" value="${basedir}/classes"/>
+    <property name="build"   value="${basedir}/demo.jar"/>
+
+
+    <path id="classpath">
+        <pathelement path="${classes}"/>
+        <pathelement location="${lib}/javafxrt.jar"/>
+        <pathelement location="${lib}/Reprise.jar"/>
+        <pathelement location="${lib}/Scenario.jar"/>
+    </path>
+
+
+    <target name="clean">
+        <delete dir="${classes}"/>
+    </target>
+
+
+    <target name="compile">
+        <mkdir dir="${classes}"/>
+        <copy todir="${classes}">
+            <fileset dir="${sources}">
+                <type type="file"/>
+                <patternset>
+                    <include name="**/?*.jpg"/>
+                    <include name="**/?*.png"/>
+                    <include name="**/?*.wav"/>
+                </patternset>
+            </fileset>
+        </copy>
+        <javac fork="true" destdir="${classes}" debug="${debug}" nowarn="${nowarn}">
+            <src path="${sources}"/>
+        </javac>
+        <taskdef name="javafxc" classname="com.sun.tools.javafx.ant.JavaFxAntTask">
+            <classpath>
+                <pathelement location="${ant.home}/lib/ant.jar"/>
+                <pathelement location="${lib}/javafxc.jar"/>
+            </classpath>
+        </taskdef>
+        <javafxc destdir="${classes}" debug="${debug}" includeantruntime="false"
+                 classpath="${classes}:${lib}/Reprise.jar:${lib}/Scenario.jar"
+                 compilerclasspath="${lib}/javafxc.jar">
+            <src path="${sources}"/>
+        </javafxc>
+    </target>
+
+
+    <target name="run" depends="compile">
+        <java fork="true" spawn="true" classpathref="classpath" classname="Nodes"/>
+    </target>
+
+
+    <target name="build" depends="compile">
+        <jar file="${build}" level="9" basedir="${classes}">
+            <manifest>
+                <attribute name="Created-By" value="${user.name}"/>
+                <attribute name="Main-Class" value="Nodes"/>
+                <attribute name="Class-Path" value="../javafxrt.jar ../Reprise.jar ../Scenario.jar"/>
+            </manifest>
+        </jar>
+    </target>
+
+</project>
