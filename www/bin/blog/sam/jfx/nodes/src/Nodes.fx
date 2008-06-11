@@ -22,6 +22,8 @@ import javafx.gui.Text;
 //import javafx.gui.TitledBorder;
 import javafx.gui.Transform;
 
+javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+
 class Model {
   attribute value = 0.0;
   attribute speed = 500ms;
