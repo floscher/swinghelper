@@ -2,32 +2,31 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
-import javafx.gui.Canvas;
-import javafx.gui.CheckBox;
-import javafx.gui.Circle;
-import javafx.gui.Color;
-import javafx.gui.ComponentView;
-import javafx.gui.CustomNode;
-import javafx.gui.Frame;
-import javafx.gui.GridPanel;
-import javafx.gui.Group;
-import javafx.gui.Image;
-import javafx.gui.ImageView;
-import javafx.gui.Label;
-import javafx.gui.LinearGradient;
-import javafx.gui.RadialGradient;
-import javafx.gui.Rectangle;
-import javafx.gui.Stop;
-import javafx.gui.Text;
-//import javafx.gui.TitledBorder;
-import javafx.gui.Transform;
+import javafx.scene.CustomNode;
+import javafx.scene.Group;
+import javafx.scene.geometry.Circle;
+import javafx.scene.geometry.Rectangle;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.swing.Canvas;
+import javafx.scene.swing.CheckBox;
+import javafx.scene.swing.ComponentView;
+import javafx.scene.swing.Frame;
+import javafx.scene.swing.GridPanel;
+import javafx.scene.swing.Label;
+import javafx.scene.text.Text;
+import javafx.scene.transform.Transform;
 
 javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 
-class Model {
-  attribute value = 0.0;
-  attribute speed = 500ms;
-  attribute selected = false on replace {
+class SmoothSwitch {
+  public attribute value = 0.0;
+  public attribute speed = 300ms;
+  public attribute selected = false on replace {
     timer.stop();
     var min = value;
     var max = if (selected)
@@ -48,19 +47,18 @@ class Model {
 }
 
 public class Nodes extends CustomNode {
+  function toString() {"SceneGraph Nodes"}
+
   private attribute x: Number;
   private attribute y: Number;
   private attribute angle: Number;
 
-  private attribute text  = Model {};
-  private attribute shape = Model {};
-  private attribute image = Model {};
-  private attribute alpha = Model {};
-  private attribute jump  = Model {};
-  private attribute scale = Model {
-    speed: 200ms
-    selected: bind text.selected or shape.selected or image.selected
-  };
+  private attribute text  = SmoothSwitch {speed: 1s};
+  private attribute shape = SmoothSwitch {speed: 1s};
+  private attribute image = SmoothSwitch {speed: 1s};
+  private attribute alpha = SmoothSwitch {speed: 1s};
+  private attribute jump  = SmoothSwitch {speed: 1s};
+  private attribute scale = SmoothSwitch {selected: bind text.selected or shape.selected or image.selected};
 
   private attribute panel: GridPanel = GridPanel {
     //border: TitledBorder {title: "Customize:"}

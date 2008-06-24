@@ -6,7 +6,8 @@
 
 package stopwatch;
 
-import javafx.gui.*;
+import javafx.scene.paint.*;
+import javafx.scene.swing.*;
 import java.lang.System;
 
 /**

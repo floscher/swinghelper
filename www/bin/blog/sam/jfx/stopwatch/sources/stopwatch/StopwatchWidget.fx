@@ -7,9 +7,14 @@
 package stopwatch;
 
 import java.lang.*;
-import javafx.gui.*;
-import javafx.gui.effect.*;
-import javafx.gui.effect.light.*;
+import javafx.input.*;
+import javafx.scene.*;
+import javafx.scene.geometry.*;
+import javafx.scene.paint.*;
+import javafx.scene.swing.*;
+import javafx.scene.text.*;
+import javafx.scene.effect.*;
+import javafx.scene.effect.light.*;
 import stopwatch.Widget;
 import stopwatch.ShapedWindowHelper;
 import java.awt.event.ActionListener;
@@ -58,14 +63,14 @@ public class StopwatchWidget extends Widget {
         var marks = for (i in [1..numOfMarks]) {
             Rectangle{x: 0-2 y: 108 width: 4 height: 13
                     fill: webcolor("#9fff81")
-                    rotation: (360/numOfMarks)*i
+                    rotate: (360/numOfMarks)*i
                     translateX: 140
                     translateY: 140}
         };
         var minorMarks = for (i in [1..numOfMinorMarks]) {
-            Line{x1: 0 y1: 120 x2: 0 y2: 114
+            Line{startX: 0 startY: 120 endX: 0 endY: 114
                     stroke: webcolor("#FFFFFF")
-                    rotation: (360/numOfMinorMarks)*i
+                    rotate: (360/numOfMinorMarks)*i
                     translateX: 140
                     translateY: 140}
         };
@@ -74,24 +79,24 @@ public class StopwatchWidget extends Widget {
         var hundredthsMarks = for (i in [1..hundredthsNumOfMarks]) {
             Rectangle{x: -1 y: 24 width: 2 height: 6
                     fill: webcolor("#9fff81")
-                    rotation: (360/hundredthsNumOfMarks)*i}
+                    rotate: (360/hundredthsNumOfMarks)*i}
         };
         var hundredthsMinorMarks = for (i in [1..hundredthsNumOfMinorMarks]) {
-            Line{x1: 0 y1: 30 x2: 0 y2: 28
+            Line{startX: 0 startY: 30 endX: 0 endY: 28
                     stroke: webcolor("#FFFFFF")
-                    rotation: (360/hundredthsNumOfMinorMarks)*i}
+                    rotate: (360/hundredthsNumOfMinorMarks)*i}
         };
         var tenthsNumOfMarks = 10;
         var tenthsNumOfMinorMarks = 50;
         var tenthsMarks = for (i in [1..tenthsNumOfMarks]) {
             Rectangle{x: -1 y: 24 width: 2 height: 6
                     fill: webcolor("#9fff81")
-                    rotation: (360/tenthsNumOfMarks)*i}
+                    rotate: (360/tenthsNumOfMarks)*i}
         };
         var tenthsMinorMarks = for (i in [1..tenthsNumOfMinorMarks]) {
-            Line{x1: 0 y1: 30 x2: 0 y2: 28
+            Line{startX: 0 startY: 30 endX: 0 endY: 28
                     stroke: webcolor("#FFFFFF")
-                    rotation: (360/tenthsNumOfMinorMarks)*i}
+                    rotate: (360/tenthsNumOfMinorMarks)*i}
         };
 
         canvas = Canvas {
@@ -177,7 +182,7 @@ public class StopwatchWidget extends Widget {
                                         fill: webcolor("#FFFFFF")},
                                     Rectangle{x: -1 y: -8 width: 2 height: 35
                                             fill: webcolor("#FFFFFF")
-                                            rotation: bind tenthsHandAngle},
+                                            rotate: bind tenthsHandAngle},
                                 ]}
                         ]
                         translateX: 100 translateY: 100
@@ -202,7 +207,7 @@ public class StopwatchWidget extends Widget {
                                         fill: webcolor("#FFFFFF")},
                                     Rectangle{x: -1 y: -8 width: 2 height: 35
                                             fill: webcolor("#FFFFFF")
-                                            rotation: bind hundredthsHandAngle},
+                                            rotate: bind hundredthsHandAngle},
                                 ]}
                         ]
                         translateX: 180 translateY: 100
@@ -283,12 +288,12 @@ public class StopwatchWidget extends Widget {
                                         fill: webcolor("#FF0000")},
                                     Rectangle{x: -1.5 y: -20 width: 3 height: 120
                                             fill: webcolor("#FF0000")
-                                            rotation: bind handAngle
+                                            rotate: bind handAngle
                                             translateX: 140
                                             translateY: 140},
                                     Rectangle{x: -1.5 y: -40 width: 3 height: 20
                                             fill: webcolor("#FFFFFF")
-                                            rotation: bind handAngle
+                                            rotate: bind handAngle
                                             translateX: 140
                                             translateY: 140}
 
@@ -349,7 +354,7 @@ public class StopwatchWidget extends Widget {
                             }
                         },
                     ]
-                    rotation: -30
+                    rotate: -30
                     translateX: 180 translateY: 180
                     onMousePressed: function(e:MouseEvent) {
                         resetPressedAmount=0;
@@ -395,7 +400,7 @@ public class StopwatchWidget extends Widget {
                             }
                         },
                     ]
-                    rotation: 30
+                    rotate: 30
                     translateX: 180 translateY: 180
                     onMousePressed: function(e:MouseEvent) {
                         startPressedAmount=0;

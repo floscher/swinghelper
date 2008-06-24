@@ -3,7 +3,7 @@
  */
 package stopwatch;
 
-import javafx.gui.*;
+import javafx.scene.swing.*;
 import java.lang.*;
 import javax.swing.*;
 import java.awt.event.*;
