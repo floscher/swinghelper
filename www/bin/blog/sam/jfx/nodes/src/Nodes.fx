@@ -2,6 +2,13 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
+import javafx.ext.swing.Canvas;
+import javafx.ext.swing.CheckBox;
+import javafx.ext.swing.ComponentView;
+import javafx.ext.swing.GridPanel;
+import javafx.ext.swing.Label;
+import javafx.ext.swing.SwingFrame;
+
 import javafx.scene.CustomNode;
 import javafx.scene.Group;
 import javafx.scene.geometry.Circle;
@@ -12,12 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
-import javafx.scene.swing.Canvas;
-import javafx.scene.swing.CheckBox;
-import javafx.scene.swing.ComponentView;
-import javafx.scene.swing.Frame;
-import javafx.scene.swing.GridPanel;
-import javafx.scene.swing.Label;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Transform;
 
@@ -47,7 +48,6 @@ class SmoothSwitch {
 }
 
 public class Nodes extends CustomNode {
-  function toString() {"SceneGraph Nodes"}
 
   private attribute x: Number;
   private attribute y: Number;
@@ -184,7 +184,7 @@ public class Nodes extends CustomNode {
   }
 }
 
-Frame {
+SwingFrame {
   title: "Nodes (JavaFX demo)"
   content: Canvas {
     content: Nodes {}

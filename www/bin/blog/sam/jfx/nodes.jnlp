@@ -9,8 +9,9 @@
     <j2se version="1.6+"/>
     <jar href="nodes/demo.jar" main="true" download="eager"/>
     <jar href="javafxrt.jar" download="eager"/>
+    <jar href="javafxgui.jar" download="eager"/>
+    <jar href="javafx-swing.jar" download="eager"/>
     <jar href="Scenario.jar" download="eager"/>
-    <jar href="Reprise.jar" download="eager"/>
   </resources>
   <application-desc main-class="Nodes"/>
 </jnlp>

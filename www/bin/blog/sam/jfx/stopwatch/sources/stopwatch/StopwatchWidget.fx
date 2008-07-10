@@ -7,11 +7,11 @@
 package stopwatch;
 
 import java.lang.*;
+import javafx.ext.swing.*;
 import javafx.input.*;
 import javafx.scene.*;
 import javafx.scene.geometry.*;
 import javafx.scene.paint.*;
-import javafx.scene.swing.*;
 import javafx.scene.text.*;
 import javafx.scene.effect.*;
 import javafx.scene.effect.light.*;
@@ -37,18 +37,18 @@ public class StopwatchWidget extends Widget {
             var elapsedMillis:Integer = ((System.currentTimeMillis() as Integer) - startTime);
             var elapsedHundredthsSecond:Integer = ((System.currentTimeMillis() as Integer) - startTime)/10;
 
-            var hundredthsExact:Number = (elapsedMillis/10.0)%10;
-            var tenthsExact:Number = (elapsedMillis/100.0)%100;
+            var hundredthsExact:Number = (elapsedMillis/10.0) mod 10;
+            var tenthsExact:Number = (elapsedMillis/100.0) mod 100;
 
-            var hundredths:Integer = elapsedHundredthsSecond%10;
-            var tenths:Integer = (elapsedHundredthsSecond/10)%10;
-            var seconds:Integer = (elapsedHundredthsSecond/100)%60;
+            var hundredths:Integer = elapsedHundredthsSecond mod 10;
+            var tenths:Integer = (elapsedHundredthsSecond/10) mod 10;
+            var seconds:Integer = (elapsedHundredthsSecond/100) mod 60;
 
             handAngle = 180+6*seconds;
             tenthsHandAngle = 180+36*tenthsExact;
             hundredthsHandAngle = 180+36*hundredthsExact;
 
-            var decimalSeconds:Number = (elapsedHundredthsSecond/100.0)%60.0;
+            var decimalSeconds:Number = (elapsedHundredthsSecond/100.0) mod 60.0;
             var mins:Integer = elapsedHundredthsSecond/6000;
 
             timeString = "{%02d mins}:{%05.2f decimalSeconds}";

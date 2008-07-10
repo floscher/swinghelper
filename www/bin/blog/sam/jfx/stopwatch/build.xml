@@ -13,7 +13,8 @@
     <path id="classpath">
         <pathelement path="${classes}"/>
         <pathelement location="${lib}/javafxrt.jar"/>
-        <pathelement location="${lib}/Reprise.jar"/>
+        <pathelement location="${lib}/javafxgui.jar"/>
+        <pathelement location="${lib}/javafx-swing.jar"/>
         <pathelement location="${lib}/Scenario.jar"/>
     </path>
 
@@ -45,7 +46,7 @@
             </classpath>
         </taskdef>
         <javafxc destdir="${classes}" debug="${debug}" includeantruntime="false"
-                 classpath="${classes}:${lib}/Reprise.jar:${lib}/Scenario.jar"
+                 classpath="${classes}:${lib}/javafxgui.jar:${lib}/javafx-swing.jar:${lib}/Scenario.jar"
                  compilerclasspath="${lib}/javafxc.jar">
             <src path="${sources}"/>
         </javafxc>
@@ -62,7 +63,7 @@
             <manifest>
                 <attribute name="Created-By" value="${user.name}"/>
                 <attribute name="Main-Class" value="stopwatch.Main"/>
-                <attribute name="Class-Path" value="../javafxrt.jar ../Reprise.jar ../Scenario.jar"/>
+                <attribute name="Class-Path" value="../javafxrt.jar ../javafxgui.jar ../javafx-swing.jar ../Scenario.jar"/>
             </manifest>
         </jar>
     </target>

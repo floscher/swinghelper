@@ -3,7 +3,7 @@
  */
 package stopwatch;
 
-import javafx.scene.swing.*;
+import javafx.ext.swing.*;
 import java.lang.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -12,6 +12,6 @@ import java.awt.event.*;
  * @author Jasper
  */
 var sw = StopwatchWidget{};
-sw.frame = Frame { content: sw.canvas width: 500 height: 500 };
+sw.frame = SwingFrame { content: sw.canvas width: 500 height: 500 };
 //TODO: ShapedWindowHelper.makeShaped(sw.frame.getJFrame());
 sw.frame.visible = true;

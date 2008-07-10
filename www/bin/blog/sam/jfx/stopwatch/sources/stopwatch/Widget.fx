@@ -6,15 +6,15 @@
 
 package stopwatch;
 
+import javafx.ext.swing.*;
 import javafx.scene.paint.*;
-import javafx.scene.swing.*;
 import java.lang.System;
 
 /**
  * @author Richard
  */
 public class Widget {
-    public attribute frame : Frame;
+    public attribute frame : SwingFrame;
     public attribute canvas : Canvas;
     public attribute configCanvas : Canvas;
     
@@ -51,12 +51,12 @@ public class Widget {
     protected static function webcolor(color:String) : Color {
         var s = color.toLowerCase();
         var c = standardColors.get(s) as Color;
-        if (c <> null) { return c; }
+        if (c != null) { return c; }
         
         //remove all non-hex digits
         if (s.startsWith("0x")) { s = s.substring(2); }
         s = s.replaceAll("[^0-9abcdef]", "");
-        if (s.length() <> 3 and s.length() <> 6) {
+        if (s.length() != 3 and s.length() != 6) {
             throw new java.lang.IllegalArgumentException("Bad color {color}");
         }
         return parseColor(s);
