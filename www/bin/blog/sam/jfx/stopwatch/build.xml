@@ -54,7 +54,7 @@
 
 
     <target name="run" depends="compile">
-        <java fork="true" spawn="true" classpathref="classpath" classname="stopwatch.Main"/>
+        <java fork="true" spawn="true" classpathref="classpath" classname="Main"/>
     </target>
 
 
@@ -62,7 +62,7 @@
         <jar file="${build}" level="9" basedir="${classes}">
             <manifest>
                 <attribute name="Created-By" value="${user.name}"/>
-                <attribute name="Main-Class" value="stopwatch.Main"/>
+                <attribute name="Main-Class" value="Main"/>
                 <attribute name="Class-Path" value="../javafxrt.jar ../javafxgui.jar ../javafx-swing.jar ../Scenario.jar"/>
             </manifest>
         </jar>

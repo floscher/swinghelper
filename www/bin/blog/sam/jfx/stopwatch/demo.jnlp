@@ -13,5 +13,5 @@
     <jar href="javafx-swing.jar" download="eager"/>
     <jar href="Scenario.jar" download="eager"/>
   </resources>
-  <application-desc main-class="stopwatch.Main"/>
+  <application-desc main-class="Main"/>
 </jnlp>
