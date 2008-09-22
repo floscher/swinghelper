@@ -32,11 +32,10 @@ import java.awt.event.ActionEvent;
 
 public class JXTrayIcon extends TrayIcon {
     private JPopupMenu menu;
-    private static JDialog dialog;
+    private static JWindow window;
     static {
-        dialog = new JDialog((Frame) null, "TrayDialog");
-        dialog.setUndecorated(true);
-        dialog.setAlwaysOnTop(true);
+        window = new JWindow((Frame) null);
+        window.setAlwaysOnTop(true);
     }
     
     private static PopupMenuListener popupListener = new PopupMenuListener() {
@@ -44,11 +43,11 @@ public class JXTrayIcon extends TrayIcon {
         }
 
         public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-            dialog.setVisible(false);
+            window.setVisible(false);
         }
 
         public void popupMenuCanceled(PopupMenuEvent e) {
-            dialog.setVisible(false);
+            window.setVisible(false);
         }
     };
 
@@ -66,15 +65,19 @@ public class JXTrayIcon extends TrayIcon {
         });
     }
 
-    private void showJPopupMenu(MouseEvent e) {
+    protected void showJPopupMenu(MouseEvent e) {
         if (e.isPopupTrigger() && menu != null) {
             Dimension size = menu.getPreferredSize();
-            dialog.setLocation(e.getX(), e.getY() - size.height);
-            dialog.setVisible(true);
-            menu.show(dialog.getContentPane(), 0, 0);
-            // popup works only for focused windows
-            dialog.toFront();
+            showJPopupMenu(e.getX(), e.getY() - size.height);
         }
+    }
+    
+    protected void showJPopupMenu(int x, int y) {
+        window.setLocation(x, y);
+        window.setVisible(true);
+        menu.show(window.getContentPane(), 0, 0);
+        // popup works only for focused windows
+        window.toFront();
     }
 
     public JPopupMenu getJPopupMenu() {
