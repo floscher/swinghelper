@@ -32,10 +32,11 @@ import java.awt.event.ActionEvent;
 
 public class JXTrayIcon extends TrayIcon {
     private JPopupMenu menu;
-    private static JWindow window;
+    private static JDialog dialog;
     static {
-        window = new JWindow((Frame) null);
-        window.setAlwaysOnTop(true);
+        dialog = new JDialog((Frame) null);
+        dialog.setUndecorated(true);
+        dialog.setAlwaysOnTop(true);
     }
     
     private static PopupMenuListener popupListener = new PopupMenuListener() {
@@ -43,11 +44,11 @@ public class JXTrayIcon extends TrayIcon {
         }
 
         public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-            window.setVisible(false);
+            dialog.setVisible(false);
         }
 
         public void popupMenuCanceled(PopupMenuEvent e) {
-            window.setVisible(false);
+            dialog.setVisible(false);
         }
     };
 
@@ -73,11 +74,11 @@ public class JXTrayIcon extends TrayIcon {
     }
     
     protected void showJPopupMenu(int x, int y) {
-        window.setLocation(x, y);
-        window.setVisible(true);
-        menu.show(window.getContentPane(), 0, 0);
+        dialog.setLocation(x, y);
+        dialog.setVisible(true);
+        menu.show(dialog.getContentPane(), 0, 0);
         // popup works only for focused windows
-        window.toFront();
+        dialog.toFront();
     }
 
     public JPopupMenu getJPopupMenu() {
