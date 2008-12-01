@@ -98,12 +98,16 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
                 return;
             }
             lastComponent = new WeakReference<JComponent>(c);
-            System.out.println();
-            System.out.println("EDT violation detected");
-            System.out.println(c);
-            for (StackTraceElement st : stackTrace) {
-                System.out.println("\tat " + st);
-            }
+            violationFound(c, stackTrace);
+        }
+    }
+
+    protected void violationFound(JComponent c, StackTraceElement[] stackTrace) {
+        System.out.println();
+        System.out.println("EDT violation detected");
+        System.out.println(c);
+        for (StackTraceElement st : stackTrace) {
+            System.out.println("\tat " + st);
         }
     }
 
