@@ -45,10 +45,9 @@ public final class MemoryClassLoader extends ClassLoader {
     private static final String EXPRESSION = "Math.cos(Math.PI/6)";
     private static final String CONTENT
             = "public class " + CLASS + " {"
-            + "\tpublic static Object " + METHOD + "() {"
-            + "\t\treturn " + EXPRESSION + ";"
-            + "\t"
-            + "\t}"
+            + "    public static Object " + METHOD + "() {"
+            + "        return " + EXPRESSION + ";"
+            + "    }"
             + "}";
 
     public static void main(String[] args) throws Exception {
