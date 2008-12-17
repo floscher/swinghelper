@@ -99,7 +99,7 @@ public final class MemoryClassLoader extends ClassLoader {
     }
 
     private static final class Output extends SimpleJavaFileObject {
-        private ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Output(String name, Kind kind) {
             super(URI.create("memo:///" + name.replace('.', '/') + kind.extension), kind);
