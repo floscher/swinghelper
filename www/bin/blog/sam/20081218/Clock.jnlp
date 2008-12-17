@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/bin/blog/sam/20081218/" href="Clock.jnlp">
+    <information>
+        <title>Clock Widget</title>
+        <vendor>Sergey Malenkov</vendor>
+        <homepage href="http://weblogs.java.net/blog/malenkov/"/>
+    </information>
+    <resources>
+        <j2se version="1.5+"/>
+        <extension name="JavaFX Runtime" href="http://dl.javafx.com/javafx-rt.jnlp"/>
+        <jar href="Clock.jar" main="true"/>
+    </resources>
+    <application-desc main-class="Main"/>
+</jnlp>
