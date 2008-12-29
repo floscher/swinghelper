@@ -63,11 +63,8 @@ def stage = Stage {
 }
 for (node in stage.scene.content) Timeline {
   repeatCount: Timeline.INDEFINITE
-  keyFrames: [
-    at (0s) {node.translateX => -image.width}
-    KeyFrame {
-      time: Math.random() * 200ms + 2s
-      values: node.translateX => stage.scene.width
-    }
-  ]
+  keyFrames: KeyFrame {
+    time: Math.random() * 200ms + 2s
+    values: node.translateX => stage.scene.width
+  }
 }.play()
