@@ -73,7 +73,10 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
             boolean imageUpdate = false;
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
             for (StackTraceElement st : stackTrace) {
-                if (repaint && st.getClassName().startsWith("javax.swing.")) {
+                if (repaint && st.getClassName().startsWith("javax.swing.") &&
+                        // for details see 
+                        // https://swinghelper.dev.java.net/issues/show_bug.cgi?id=1
+                         !st.getClassName().startsWith("javax.swing.SwingWorker")) {
                     fromSwing = true;
                 }
                 if (repaint && "imageUpdate".equals(st.getMethodName())) {
