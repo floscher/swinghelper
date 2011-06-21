@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="https://swinghelper.dev.java.net/" href="bin/transformer/TransformerDemo.jnlp">
+<jnlp spec="1.0+" codebase="https://swinghelper.java.net/" href="bin/transformer/TransformerDemo.jnlp">
   <information>
     <title>JXTransformer demo</title>    
     <vendor>Alexander Potochkin</vendor>    
-    <homepage href="https://swinghelper.dev.java.net/" />
+    <homepage href="https://swinghelper.java.net/" />
     <description>JXTransformer component in action!</description>
     <offline-allowed />
   </information>
