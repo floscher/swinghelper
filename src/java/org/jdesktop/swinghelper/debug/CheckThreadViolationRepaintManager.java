@@ -18,7 +18,6 @@ package org.jdesktop.swinghelper.debug;
 
 import javax.swing.*;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * <p>This class is used to detect Event Dispatch Thread rule violations<br>
@@ -85,6 +84,10 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
                 if ("repaint".equals(st.getMethodName())) {
                     repaint = true;
                     fromSwing = false;
+                }
+                if ("read".equals(st.getMethodName()) && "javax.swing.JEditorPane".equals(st.getClassName())) {
+                    // Swing reads html from a background thread
+                    return;
                 }
             }
             if (imageUpdate) {
