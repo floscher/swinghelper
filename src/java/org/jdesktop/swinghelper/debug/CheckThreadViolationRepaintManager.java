@@ -16,8 +16,14 @@
 
 package org.jdesktop.swinghelper.debug;
 
-import javax.swing.*;
 import java.lang.ref.WeakReference;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
 
 /**
  * <p>This class is used to detect Event Dispatch Thread rule violations<br>
@@ -31,11 +37,11 @@ import java.lang.ref.WeakReference;
  *
  * @author Scott Delap
  * @author Alexander Potochkin
- * 
+ *
  * https://swinghelper.dev.java.net/
  */
 public class CheckThreadViolationRepaintManager extends RepaintManager {
-    // it is recommended to pass the complete check  
+    // it is recommended to pass the complete check
     private boolean completeCheck = true;
     private WeakReference<JComponent> lastComponent;
 
@@ -55,11 +61,13 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         this.completeCheck = completeCheck;
     }
 
+    @Override
     public synchronized void addInvalidComponent(JComponent component) {
         checkThreadViolations(component);
         super.addInvalidComponent(component);
     }
 
+    @Override
     public void addDirtyRegion(JComponent component, int x, int y, int w, int h) {
         checkThreadViolations(component);
         super.addDirtyRegion(component, x, y, w, h);
@@ -73,9 +81,9 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
             for (StackTraceElement st : stackTrace) {
                 if (repaint && st.getClassName().startsWith("javax.swing.") &&
-                        // for details see 
+                        // for details see
                         // https://swinghelper.dev.java.net/issues/show_bug.cgi?id=1
-                         !st.getClassName().startsWith("javax.swing.SwingWorker")) {
+                        !st.getClassName().startsWith("javax.swing.SwingWorker")) {
                     fromSwing = true;
                 }
                 if (repaint && "imageUpdate".equals(st.getMethodName())) {
@@ -91,8 +99,8 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
                 }
             }
             if (imageUpdate) {
-                //assuming it is java.awt.image.ImageObserver.imageUpdate(...) 
-                //image was asynchronously updated, that's ok 
+                //assuming it is java.awt.image.ImageObserver.imageUpdate(...)
+                //image was asynchronously updated, that's ok
                 return;
             }
             if (repaint && !fromSwing) {
@@ -118,9 +126,9 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
     }
 
     public static void main(String[] args) throws Exception {
-        //set CheckThreadViolationRepaintManager 
+        //set CheckThreadViolationRepaintManager
         RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
-        //Valid code  
+        //Valid code
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
                 test();
@@ -129,7 +137,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         System.out.println("Valid code passed...");
         repaintTest();
         System.out.println("Repaint test - correct code");
-        //Invalide code (stack trace expected) 
+        //Invalide code (stack trace expected)
         test();
     }
 
@@ -149,7 +157,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         JEditorPane editor = new JEditorPane();
         frame.setContentPane(editor);
         editor.setContentType("text/html");
-        //it works with no valid image as well 
+        //it works with no valid image as well
         editor.setText("<html><img src=\"file:\\lala.png\"></html>");
         frame.setSize(300, 200);
         frame.setVisible(true);
@@ -166,7 +174,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
             });
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
         // repaint(Rectangle) should be ok
         test.repaint(test.getBounds());
         test.repaint(0, 0, 100, 100);
